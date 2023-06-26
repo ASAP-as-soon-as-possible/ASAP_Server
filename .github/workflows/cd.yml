@@ -93,5 +93,5 @@ jobs:
         --application-name asap-server-codedeploy
         --deployment-group-name asap-server-codedeploy-group
         --file-exists-behavior OVERWRITE 
-        --s3-location bucket=sopt32-seminar,bundleType=zip,key=sopt_server.zip
+        --s3-location bucket=asap-server,bundleType=zip,key=asap_server.zip
         --region ap-northeast-2
