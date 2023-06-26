@@ -81,7 +81,7 @@ jobs:
         aws-region: ap-northeast-2
         
     - name: Upload to S3
-      run: aws s3 cp --region ap-northeast-2 ./sopt_server.zip s3://$S3_BUCKET_NAME/
+      run: aws s3 cp --region ap-northeast-2 ./asap_server.zip s3://$S3_BUCKET_NAME/
       
     # Deploy
     - name: Deploy
@@ -90,8 +90,8 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
       run:
         aws deploy create-deployment 
-        --application-name sopt-server-codedeploy
-        --deployment-group-name sopt-server-codedeploy-group
+        --application-name asap-server-codedeploy
+        --deployment-group-name asap-server-codedeploy-group
         --file-exists-behavior OVERWRITE 
         --s3-location bucket=sopt32-seminar,bundleType=zip,key=sopt_server.zip
         --region ap-northeast-2
