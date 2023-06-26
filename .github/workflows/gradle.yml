@@ -50,4 +50,7 @@ jobs:
       run: chmod +x gradlew
       
     - name: Build with Gradle # 실제 application build(-x 옵션을 통해 test는 제외)
-      run: ./gradlew build
+      run: ./gradlew build -x test
+    
+    - name: Test with Gradle
+      run: ./gradlew build test
