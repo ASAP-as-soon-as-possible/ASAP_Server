@@ -1,7 +1,7 @@
 ---
-name: Custom issue template
-about: Describe this issue template's purpose here.
-title: ''
+name: feature template
+about: feature 이슈 템플릿
+title: "[Type] 이슈 내용"
 labels: ''
 assignees: ''
 
