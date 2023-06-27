@@ -8,8 +8,6 @@
 name: Java CI with Gradle
 
 on:
-  push:
-    branches: [ "develop", "main" ]
   pull_request:
     branches: [ "develop" ]
 
@@ -51,3 +49,6 @@ jobs:
       
     - name: Build with Gradle # 실제 application build(-x 옵션을 통해 test는 제외)
       run: ./gradlew build -x test
+    
+    - name: Test with Gradle
+      run: ./gradlew build test
