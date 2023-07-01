@@ -41,7 +41,7 @@ public class SlackUtil {
                         // 메시지 전송 유저명
                         p.username("Exception is detected")
                                 // 메시지 전송 유저 아이콘 이미지 URL
-                                .iconUrl("<https://ibb.co/wzqtz8G>")
+                                .iconUrl("https://yt3.googleusercontent.com/ytc/AGIKgqMVUzRrhoo1gDQcqvPo0PxaJz7e0gqDXT0D78R5VQ=s900-c-k-c0x00ffffff-no-rj")
                                 // 메시지 내용
                                 .blocks(layoutBlocks)));
     }
@@ -49,14 +49,14 @@ public class SlackUtil {
     // 전체 메시지가 담긴 LayoutBlock 생성
     private List generateLayoutBlock(Exception error, HttpServletRequest request) {
         return Blocks.asBlocks(
-                getHeader("서버 측 오류로 예상되는 예외 상황이 발생하였습니다."),
+                getHeader("Internal Server Error Detected"),
                 Blocks.divider(),
                 getSection(generateErrorMessage(error)),
                 Blocks.divider(),
                 getSection(generateErrorPointMessage(request)),
                 Blocks.divider(),
                 // 이슈 생성을 위해 프로젝트의 Issue URL을 입력하여 바로가기 링크를 생성
-                getSection("[이슈 생성] (https://github.com/ASAP-as-soon-as-posiible/ASAP_Server/issues)")
+                getSection("<https://github.com/ASAP-as-soon-as-posiible/ASAP_Server/issues | Go To Make Issue >")
         );
     }
 
@@ -97,5 +97,4 @@ public class SlackUtil {
         return Blocks.section(s->
                 s.text(BlockCompositions.markdownText(message)));
     }
-
 }
