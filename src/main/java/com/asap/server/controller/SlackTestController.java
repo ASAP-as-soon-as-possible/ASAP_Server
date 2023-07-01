@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/test")
 public class SlackTestController {
-//    @GetMapping
-//    @ResponseStatus(HttpStatus.OK)
-//    public ApiResponse test(){
-//        throw new IllegalArgumentException();
-//    }
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse test() {
+        throw new IllegalArgumentException();
+    }
 }
