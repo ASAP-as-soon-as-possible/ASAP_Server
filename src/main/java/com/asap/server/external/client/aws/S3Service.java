@@ -59,7 +59,7 @@ public class S3Service {
                     .withCannedAcl(CannedAccessControlList.PublicRead));
             return amazonS3.getUrl(bucket+"/"+ folder + "/image", fileName).toString();
         } catch(IOException e) {
-            throw new NotFoundException(Error.NOT_FOUND_SAVE_IMAGE_EXCEPTION, Error.NOT_FOUND_SAVE_IMAGE_EXCEPTION.getMessage());
+            throw new NotFoundException(Error.NOT_FOUND_SAVE_IMAGE_EXCEPTION));
         }
     }
     public List<String> uploadImages(List<MultipartFile> multipartFileList, String folder){
@@ -75,7 +75,7 @@ public class S3Service {
                         .withCannedAcl(CannedAccessControlList.PublicRead));
                 urls.add(amazonS3.getUrl(bucket+"/"+ folder + "/image", fileName).toString());
             } catch(IOException e) {
-                throw new NotFoundException(Error.NOT_FOUND_SAVE_IMAGE_EXCEPTION, Error.NOT_FOUND_SAVE_IMAGE_EXCEPTION.getMessage());
+                throw new NotFoundException(Error.NOT_FOUND_SAVE_IMAGE_EXCEPTION);
             }
         }
         return urls;
@@ -88,7 +88,7 @@ public class S3Service {
     private String getFileExtension(String fileName){
         //파일 확장자 유효성 검사
         if (fileName.length() == 0) {
-            throw new NotFoundException(Error.NOT_FOUND_IMAGE_EXCEPTION, Error.NOT_FOUND_IMAGE_EXCEPTION.getMessage());
+            throw new NotFoundException(Error.NOT_FOUND_IMAGE_EXCEPTION);
         }
         ArrayList<String> fileValidate = new ArrayList<>();
         fileValidate.add(".jpg");
@@ -99,7 +99,7 @@ public class S3Service {
         fileValidate.add(".PNG");
         String idxFileName = fileName.substring(fileName.lastIndexOf("."));
         if (!fileValidate.contains(idxFileName)) {
-            throw new BadRequestException(Error.INVALID_MULTIPART_EXTENSION_EXCEPTION, Error.INVALID_MULTIPART_EXTENSION_EXCEPTION.getMessage());
+            throw new BadRequestException(Error.INVALID_MULTIPART_EXTENSION_EXCEPTION);
         }
         return fileName.substring(fileName.lastIndexOf("."));
     }
