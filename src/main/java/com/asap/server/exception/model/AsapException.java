@@ -7,7 +7,7 @@ import lombok.Getter;
 public class AsapException extends RuntimeException {
     private final Error error;
 
-    public AsapException(Error error){
+    public AsapException(Error error, String message){
         super(error.getMessage());
         this.error = error;
     }
