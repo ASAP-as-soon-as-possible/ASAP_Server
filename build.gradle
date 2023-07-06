@@ -41,6 +41,10 @@ dependencies {
 	implementation 'com.squareup.okhttp3:okhttp:4.10.0'
 	implementation 'com.slack.api:slack-app-backend:1.28.0'
 	implementation 'com.slack.api:slack-api-model:1.28.0'
+
+	//Aws S3
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
+
 }
 
 tasks.named('test') {
