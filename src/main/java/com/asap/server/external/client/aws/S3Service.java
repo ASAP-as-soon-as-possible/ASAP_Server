@@ -59,7 +59,7 @@ public class S3Service {
                     .withCannedAcl(CannedAccessControlList.PublicRead));
             return amazonS3.getUrl(bucket+"/"+ folder + "/image", fileName).toString();
         } catch(IOException e) {
-            throw new NotFoundException(Error.NOT_FOUND_SAVE_IMAGE_EXCEPTION));
+            throw new NotFoundException(Error.NOT_FOUND_SAVE_IMAGE_EXCEPTION);
         }
     }
     public List<String> uploadImages(List<MultipartFile> multipartFileList, String folder){
