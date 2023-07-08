@@ -13,6 +13,7 @@ public enum Error {
     400 BAD REQUEST
      **/
     INVALID_MULTIPART_EXTENSION_EXCEPTION(HttpStatus.BAD_REQUEST, "지원하지 않는 파일입니다"),
+    INVALID_MEETING_URL_EXCEPTION(HttpStatus.BAD_REQUEST, "유효하지 않는 URL 입니다."),
 
     /**
     404 NOT FOUND
