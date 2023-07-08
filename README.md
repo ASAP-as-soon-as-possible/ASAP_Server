@@ -12,4 +12,4 @@
 | [방장 뷰] 큐카드 정보 불러오는 API  |[가능 시간 입력 뷰] 선택지 제공 |
 
 # 💼 Server Architecture
-![image](https://github.com/ASAP-as-soon-as-possible/ASAP_Server/assets/79795051/14debff8-fb29-47a7-ac9c-1f68ff256152)
+![image](https://github.com/ASAP-as-soon-as-possible/ASAP_Server/assets/79795051/d1aae75e-4ce9-4b1e-9b70-8a5ea07e37e2)
