@@ -1,7 +1,6 @@
 package com.asap.server.domain;
 
 
-import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,5 +19,11 @@ public class DateAvailability {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDate availableDate;
+    private String month;
+
+    @Column(nullable = false)
+    private String day;
+
+    @Column(nullable = false)
+    private String dayOfWeek;
 }

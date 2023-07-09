@@ -1,6 +1,5 @@
 package com.asap.server.domain;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,6 +40,14 @@ public class Meeting {
     @Column(nullable = false)
     private String url;
     private String imageUrl;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    @Column(nullable = false)
+    private String month;
+    @Column(nullable = false)
+    private String day;
+    @Column(nullable = false)
+    private String dayOfWeek;
+    @Column(nullable = false)
+    private String startTime;
+    @Column(nullable = false)
+    private String endTime;
 }
