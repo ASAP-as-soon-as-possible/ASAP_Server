@@ -1,6 +1,8 @@
 package com.asap.server.config.resolver.user;
 
 import com.asap.server.config.jwt.JwtService;
+import com.asap.server.exception.Error;
+import com.asap.server.exception.model.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -27,14 +29,14 @@ public class UserIdResolver implements HandlerMethodArgumentResolver {
         final String token = request.getHeader("Authorization").split(" ")[1];
 
         if (!jwtService.verifyToken(token)) {
-            throw new RuntimeException(String.format("USER_ID를 가져오지 못했습니다. (%s - %s)", parameter.getClass(), parameter.getMethod()));
+            throw new NotFoundException(Error.USER_NOT_FOUND_EXCEPTION);
         }
 
         final String tokenContents = jwtService.getJwtContents(token);
         try {
             return Long.parseLong(tokenContents);
         } catch (NumberFormatException e) {
-            throw new RuntimeException(String.format("USER_ID를 가져오지 못했습니다. (%s - %s)", parameter.getClass(), parameter.getMethod()));
+            throw new NotFoundException(Error.USER_NOT_FOUND_EXCEPTION);
         }
     }
 
