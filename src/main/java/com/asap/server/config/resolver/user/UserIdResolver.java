@@ -26,12 +26,10 @@ public class UserIdResolver implements HandlerMethodArgumentResolver {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final String token = request.getHeader("Authorization").split(" ")[1];
 
-        // 토큰 검증
         if (!jwtService.verifyToken(token)) {
             throw new RuntimeException(String.format("USER_ID를 가져오지 못했습니다. (%s - %s)", parameter.getClass(), parameter.getMethod()));
         }
 
-        // 유저 아이디 반환
         final String tokenContents = jwtService.getJwtContents(token);
         try {
             return Long.parseLong(tokenContents);

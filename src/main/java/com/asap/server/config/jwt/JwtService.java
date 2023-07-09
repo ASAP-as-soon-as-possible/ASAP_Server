@@ -1,9 +1,13 @@
 package com.asap.server.config.jwt;
 
+<<<<<<< Updated upstream
 import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.exception.Error;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+=======
+import io.jsonwebtoken.Claims;
+>>>>>>> Stashed changes
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -49,6 +53,7 @@ public class JwtService {
         final byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+<<<<<<< Updated upstream
     public boolean verifyToken(String token) {
         try {
             final Claims claims = getBody(token);
@@ -74,4 +79,6 @@ public class JwtService {
         final Claims claims = getBody(token);
         return (String) claims.get("userId");
     }
+=======
+>>>>>>> Stashed changes
 }
