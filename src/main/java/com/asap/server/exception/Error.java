@@ -16,10 +16,10 @@ public enum Error {
     INVALID_MEETING_URL_EXCEPTION(HttpStatus.BAD_REQUEST, "유효하지 않는 URL 입니다."),
 
     /**
-    404 NOT FOUND
+     401 UNAUTHORIZED
      **/
-    NOT_FOUND_IMAGE_EXCEPTION(HttpStatus.NOT_FOUND, "이미지가 존재하지 않습니다."),
-    NOT_FOUND_SAVE_IMAGE_EXCEPTION(HttpStatus.NOT_FOUND, "이미지가 저장되지 않았습니다."),
+    TOKEN_TIME_EXPIRED_EXCEPTION(HttpStatus.UNAUTHORIZED, "토큰이 유효하지 않습니다."),
+
     /**
      * 500 INTERNAL SERVER ERROR
      */
