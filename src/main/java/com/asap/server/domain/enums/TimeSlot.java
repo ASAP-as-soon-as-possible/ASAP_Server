@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
+@Getter
 public enum TimeSlot {
     SLOT_6_00("06:00"),
     SLOT_6_30("06:30"),

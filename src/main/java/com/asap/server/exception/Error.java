@@ -10,14 +10,15 @@ import org.springframework.http.HttpStatus;
 public enum Error {
 
     /**
-    400 BAD REQUEST
+     * 400 BAD REQUEST
      **/
     INVALID_MEETING_URL_EXCEPTION(HttpStatus.BAD_REQUEST, "유효하지 않는 URL 입니다."),
 
     /**
-     401 UNAUTHORIZED
+     * 401 UNAUTHORIZED
      **/
     TOKEN_TIME_EXPIRED_EXCEPTION(HttpStatus.UNAUTHORIZED, "토큰이 유효하지 않습니다."),
+    INVALID_MEETING_HOST_EXCEPTION(HttpStatus.UNAUTHORIZED, "해당 유저는 해당 방의 방장이 아닙니다."),
 
     /**
      * 404 NOT FOUND

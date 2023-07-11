@@ -1,5 +1,8 @@
 package com.asap.server.domain;
 
+import com.asap.server.domain.enums.Duration;
+import com.asap.server.domain.enums.Place;
+import com.asap.server.domain.enums.TimeSlot;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,19 +11,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-
-import com.asap.server.domain.enums.Duration;
-import com.asap.server.domain.enums.Place;
-import com.asap.server.domain.enums.TimeSlot;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.util.Base64Utils;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Meeting {
+public class Meeting extends AuditingTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -58,7 +56,7 @@ public class Meeting {
                     String placeDetail,
                     Duration duration,
                     String additionalInfo
-                    ) {
+    ) {
         this.host = host;
         this.dateAvailabilities = dateAvailabilities;
         this.preferTimes = preferTimes;
@@ -82,7 +80,27 @@ public class Meeting {
         return new Meeting(host, dateAvailabilities, preferTimes, password, title, place, placeDetail, duration, additionalInfo);
     }
 
-    public void setUrl(String url){
+    public void setUrl(String url) {
         this.url = url;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public void setDayOfWeek(String dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    public void setStartTime(TimeSlot startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(TimeSlot endTime) {
+        this.endTime = endTime;
     }
 }

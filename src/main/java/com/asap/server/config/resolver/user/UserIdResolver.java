@@ -20,13 +20,14 @@ public class UserIdResolver implements HandlerMethodArgumentResolver {
     private final JwtService jwtService;
 
     @Override
-    public boolean supportsParameter(MethodParameter parameter){
+    public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasParameterAnnotation(UserId.class) && Long.class.equals(parameter.getParameterType());
     }
+
     @Override
     public Object resolveArgument(@NotNull MethodParameter parameter, ModelAndViewContainer modelAndViewContainer, @NotNull NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        final String token = request.getHeader("Authorization").split(" ")[1];
+        final String token = request.getHeader("Authorization").split(" ")[0];
 
         if (!jwtService.verifyToken(token)) {
             throw new NotFoundException(Error.USER_NOT_FOUND_EXCEPTION);
