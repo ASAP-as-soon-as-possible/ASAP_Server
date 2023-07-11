@@ -8,6 +8,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.asap.server.domain.enums.Duration;
+import com.asap.server.domain.enums.Place;
+import com.asap.server.domain.enums.TimeSlot;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,10 +36,10 @@ public class Meeting {
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
-    private String place;
+    private Place place;
     private String placeDetail;
     @Column(nullable = false)
-    private String duration;
+    private Duration duration;
     private String additionalInfo;
     @Column(nullable = false)
     private String url;
@@ -47,7 +51,7 @@ public class Meeting {
     @Column(nullable = false)
     private String dayOfWeek;
     @Column(nullable = false)
-    private String startTime;
+    private TimeSlot startTime;
     @Column(nullable = false)
-    private String endTime;
+    private TimeSlot endTime;
 }
