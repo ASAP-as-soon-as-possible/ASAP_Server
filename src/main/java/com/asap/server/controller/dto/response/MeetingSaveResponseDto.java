@@ -1,6 +1,5 @@
 package com.asap.server.controller.dto.response;
 
-import com.asap.server.domain.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

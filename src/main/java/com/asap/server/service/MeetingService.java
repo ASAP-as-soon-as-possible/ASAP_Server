@@ -7,12 +7,9 @@ import com.asap.server.domain.DateAvailability;
 import com.asap.server.domain.Meeting;
 import com.asap.server.domain.PreferTime;
 import com.asap.server.domain.User;
-import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.repository.DateAvailabilityRepository;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.PreferTimeRepository;
-import com.asap.server.repository.UserRepository;
-import com.asap.server.exception.Error;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

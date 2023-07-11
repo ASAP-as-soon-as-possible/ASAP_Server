@@ -1,6 +1,5 @@
 package com.asap.server.service;
 
-import com.asap.server.config.jwt.JwtService;
 import com.asap.server.domain.User;
 import com.asap.server.domain.enums.Role;
 import com.asap.server.repository.UserRepository;
@@ -15,7 +14,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final JwtService jwtService;
     @Transactional
     public User createHost(String name){
         User newUser = User.newInstance(name, Role.HOST);

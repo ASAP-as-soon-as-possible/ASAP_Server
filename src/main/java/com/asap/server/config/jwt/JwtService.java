@@ -37,6 +37,7 @@ public class JwtService {
                 .setExpiration(new Date(now.getTime() + 24 * 60 * 60 * 1000L));
 
         claims.put("userId",userId);
+        claims.put("role", "HOST");
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)

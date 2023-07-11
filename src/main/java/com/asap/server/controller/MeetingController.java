@@ -5,7 +5,6 @@ import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.exception.Success;
 import com.asap.server.service.MeetingService;
-import com.asap.server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
