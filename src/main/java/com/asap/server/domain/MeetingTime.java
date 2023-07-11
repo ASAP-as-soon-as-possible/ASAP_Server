@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+
+import com.asap.server.domain.enums.TimeSlot;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +30,7 @@ public class MeetingTime {
     @Column(nullable = false)
     private String dayOfWeek;
     @Column(nullable = false)
-    private String startTime;
+    private TimeSlot startTime;
     @Column(nullable = false)
-    private String endTime;
+    private TimeSlot endTime;
 }

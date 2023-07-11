@@ -1,14 +1,19 @@
 package com.asap.server.domain.enums;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
 public enum TimeSlot {
-    SLOT_6_00("6:00"),
-    SLOT_6_30("6:30"),
-    SLOT_7_00("7:00"),
-    SLOT_7_30("7:30"),
-    SLOT_8_00("8:00"),
-    SLOT_8_30("8:30"),
-    SLOT_9_00("9:00"),
-    SLOT_9_30("9:30"),
+    SLOT_6_00("06:00"),
+    SLOT_6_30("06:30"),
+    SLOT_7_00("07:00"),
+    SLOT_7_30("07:30"),
+    SLOT_8_00("08:00"),
+    SLOT_8_30("08:30"),
+    SLOT_9_00("09:00"),
+    SLOT_9_30("09:30"),
     SLOT_10_00("10:00"),
     SLOT_10_30("10:30"),
     SLOT_11_00("11:00"),
@@ -39,13 +44,7 @@ public enum TimeSlot {
     SLOT_23_30("23:30"),
     SLOT_24_00("24:00");
 
+    @Getter
+    @JsonValue
     private final String time;
-
-    private TimeSlot(String time) {
-        this.time = time;
-    }
-
-    public String getTime() {
-        return time;
-    }
 }

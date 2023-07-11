@@ -28,6 +28,9 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+	// VALIDATION
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 	// JPA & Database
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'mysql:mysql-connector-java:8.0.32'

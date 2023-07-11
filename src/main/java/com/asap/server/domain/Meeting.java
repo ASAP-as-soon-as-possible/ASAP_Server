@@ -15,6 +15,7 @@ import com.asap.server.domain.enums.TimeSlot;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.Base64Utils;
 
 @Entity
 @Getter
@@ -41,17 +42,47 @@ public class Meeting {
     @Column(nullable = false)
     private Duration duration;
     private String additionalInfo;
-    @Column(nullable = false)
     private String url;
-    private String imageUrl;
-    @Column(nullable = false)
     private String month;
-    @Column(nullable = false)
     private String day;
-    @Column(nullable = false)
     private String dayOfWeek;
-    @Column(nullable = false)
     private TimeSlot startTime;
-    @Column(nullable = false)
     private TimeSlot endTime;
+
+    private Meeting(User host,
+                    List<DateAvailability> dateAvailabilities,
+                    List<PreferTime> preferTimes,
+                    String password,
+                    String title,
+                    Place place,
+                    String placeDetail,
+                    Duration duration,
+                    String additionalInfo
+                    ) {
+        this.host = host;
+        this.dateAvailabilities = dateAvailabilities;
+        this.preferTimes = preferTimes;
+        this.password = password;
+        this.title = title;
+        this.place = place;
+        this.placeDetail = placeDetail;
+        this.duration = duration;
+        this.additionalInfo = additionalInfo;
+    }
+
+    public static Meeting newInstance(User host,
+                                      List<DateAvailability> dateAvailabilities,
+                                      List<PreferTime> preferTimes,
+                                      String password,
+                                      String title,
+                                      Place place,
+                                      String placeDetail,
+                                      Duration duration,
+                                      String additionalInfo) {
+        return new Meeting(host, dateAvailabilities, preferTimes, password, title, place, placeDetail, duration, additionalInfo);
+    }
+
+    public void setUrl(String url){
+        this.url = url;
+    }
 }

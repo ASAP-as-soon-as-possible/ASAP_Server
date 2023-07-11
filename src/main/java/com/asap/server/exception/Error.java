@@ -23,6 +23,7 @@ public enum Error {
      * 404 NOT FOUND
      */
     USER_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 유저는 존재하지 않습니다."),
+    MEETING_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 회의는 존재하지 않습니다."),
     /**
      * 500 INTERNAL SERVER ERROR
      */
