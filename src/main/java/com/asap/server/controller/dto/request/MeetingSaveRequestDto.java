@@ -2,27 +2,26 @@ package com.asap.server.controller.dto.request;
 
 import com.asap.server.domain.enums.Duration;
 import com.asap.server.domain.enums.Place;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import java.util.List;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MeetingSaveRequestDto {
 
     @NotBlank(message = "회의 제목이 입력되지 않았습니다.")
     @Size(max = 15 , message = "제목의 최대 입력 길이(15자)를 초과했습니다.")
     private String title;
 
-    private List<String> availableDateList;
+    private List<String> availableDates;
 
-    private List<PreferTimeSaveRequestDto> preferTimeSaveRequestDtoList;
+    private List<PreferTimeSaveRequestDto> preferTimes;
 
     @NotNull(message = "회의 형식이 입력되지 않았습니다.")
     private Place place;

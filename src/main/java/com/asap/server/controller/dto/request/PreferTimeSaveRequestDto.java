@@ -2,11 +2,11 @@ package com.asap.server.controller.dto.request;
 
 import com.asap.server.domain.enums.TimeSlot;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PreferTimeSaveRequestDto {
 
     private TimeSlot startTime;

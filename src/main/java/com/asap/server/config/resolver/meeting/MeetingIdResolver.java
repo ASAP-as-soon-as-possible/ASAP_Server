@@ -32,7 +32,7 @@ public class MeetingIdResolver implements HandlerMethodArgumentResolver {
         final String meetingId = pathVariables.get("meetingId");
         try {
             return secureUrlUtil.decodeUrl(meetingId);
-        } catch (NumberFormatException e) {
+        } catch (IllegalArgumentException e) {
             throw new BadRequestException(Error.INVALID_MEETING_URL_EXCEPTION);
         }
     }
