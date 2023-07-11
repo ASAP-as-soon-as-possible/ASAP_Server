@@ -13,7 +13,7 @@ public enum Duration {
     TWO_HOUR_HALF("TWO_HOUR_HALF"),
     THREE_HOUR("THREE_HOUR");
 
-    @JsonValue
     @Getter
+    @JsonValue
     private String duration;
 }

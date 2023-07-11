@@ -44,7 +44,7 @@ public enum TimeSlot {
     SLOT_23_30("23:30"),
     SLOT_24_00("24:00");
 
-    @JsonValue
     @Getter
+    @JsonValue
     private final String time;
 }

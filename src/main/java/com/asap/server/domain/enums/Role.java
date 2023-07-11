@@ -9,7 +9,7 @@ public enum Role {
     HOST("HOST"),
     MEMBER("MEMBER");
 
-    @JsonValue
     @Getter
+    @JsonValue
     private String role;
 }
