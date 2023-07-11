@@ -19,12 +19,9 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class MeetingController {
     private final MeetingService meetingService;
-    private final UserService userService;
 
     @PostMapping("")
-    public ApiResponse create(@RequestBody @Valid MeetingSaveRequestDto meetingSaveRequestDto){
-        String accessToken = userService.createHost(meetingSaveRequestDto.getName());
-        String uri = meetingService.create(meetingSaveRequestDto);
-        return ApiResponse.success(Success.CREATE_MEETING_SUCCESS, new MeetingSaveResponseDto(uri, accessToken));
+    public ApiResponse<MeetingSaveResponseDto> create(@RequestBody @Valid MeetingSaveRequestDto meetingSaveRequestDto){
+        return ApiResponse.success(Success.CREATE_MEETING_SUCCESS, meetingService.create(meetingSaveRequestDto) );
     }
 }

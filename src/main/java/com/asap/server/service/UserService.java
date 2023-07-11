@@ -17,9 +17,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     @Transactional
-    public String createHost(String name){
+    public User createHost(String name){
         User newUser = User.newInstance(name, Role.HOST);
         userRepository.save(newUser);
-        return jwtService.issuedToken(newUser.getId().toString());
+        return newUser;
     }
 }

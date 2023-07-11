@@ -1,6 +1,8 @@
 package com.asap.server.service;
 
+import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
+import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.domain.DateAvailability;
 import com.asap.server.domain.Meeting;
 import com.asap.server.domain.PreferTime;
@@ -25,12 +27,13 @@ import java.util.stream.Collectors;
 public class MeetingService {
 
     private final MeetingRepository meetingRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final DateAvailabilityRepository dateAvailabilityRepository;
     private final PreferTimeRepository preferTimeRepository;
+    private final JwtService jwtService;
 
     @Transactional
-    public String create(MeetingSaveRequestDto meetingSaveRequestDto){
+    public MeetingSaveResponseDto create(MeetingSaveRequestDto meetingSaveRequestDto){
         List<DateAvailability> dateAvailabilityList = meetingSaveRequestDto
                 .getAvailableDateList()
                 .stream()
@@ -43,7 +46,7 @@ public class MeetingService {
                 .map(PreferTimeSaveRequestDto -> PreferTime.newInstance(PreferTimeSaveRequestDto.getStartTime(), PreferTimeSaveRequestDto.getEndTime()))
                 .collect(Collectors.toList());
         preferTimeRepository.saveAllAndFlush(preferTimeList);
-        User host = userRepository.findByName(meetingSaveRequestDto.getName()).orElseThrow(() -> new NotFoundException(Error.USER_NOT_FOUND_EXCEPTION));
+        User host = userService.createHost(meetingSaveRequestDto.getName());
         Meeting newMeeting = Meeting.newInstance(
                 host,
                 dateAvailabilityList,
@@ -55,9 +58,8 @@ public class MeetingService {
                 meetingSaveRequestDto.getDuration(),
                 meetingSaveRequestDto.getAdditionalInfo());
         meetingRepository.save(newMeeting);
-        Meeting meeting = meetingRepository.findById(newMeeting.getId()).orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-        meeting.setUrl(Base64Utils.encodeToUrlSafeString(meeting.getId().toString().getBytes()));
-        meetingRepository.save(meeting);
-        return newMeeting.getUrl();
+        String accessToken = jwtService.issuedToken(host.getId().toString());
+        newMeeting.setUrl(Base64Utils.encodeToUrlSafeString(newMeeting.getId().toString().getBytes()));
+        return new MeetingSaveResponseDto(newMeeting.getUrl(), accessToken);
     }
 }
