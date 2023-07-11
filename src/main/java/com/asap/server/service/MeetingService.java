@@ -36,13 +36,13 @@ public class MeetingService {
     @Transactional
     public MeetingSaveResponseDto create(MeetingSaveRequestDto meetingSaveRequestDto) {
         List<DateAvailability> dateAvailabilityList = meetingSaveRequestDto
-                .getAvailableDateList()
+                .getAvailableDates()
                 .stream()
                 .map(s -> DateAvailability.newInstance(s))
                 .collect(Collectors.toList());
         dateAvailabilityRepository.saveAllAndFlush(dateAvailabilityList);
         List<PreferTime> preferTimeList = meetingSaveRequestDto
-                .getPreferTimeSaveRequestDtoList()
+                .getPreferTimes()
                 .stream()
                 .map(PreferTimeSaveRequestDto -> PreferTime.newInstance(PreferTimeSaveRequestDto.getStartTime(), PreferTimeSaveRequestDto.getEndTime()))
                 .collect(Collectors.toList());
