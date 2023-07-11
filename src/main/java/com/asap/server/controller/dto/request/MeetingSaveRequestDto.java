@@ -19,7 +19,7 @@ public class MeetingSaveRequestDto {
     @Size(max = 15 , message = "제목의 최대 입력 길이(15자)를 초과했습니다.")
     private String title;
 
-    private List<String> availableDates;
+    private List<@Pattern( regexp = "\\\\d{4}/\\\\d{2}/\\\\d{2}/[A-Z]{3}", message = "회의 가능 일자의 형식이 알맞지 않습니다.") String> availableDates;
 
     private List<PreferTimeSaveRequestDto> preferTimes;
 
