@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,4 +23,13 @@ public class PreferTime {
     private TimeSlot startTime;
     @Column(nullable = false)
     private TimeSlot endTime;
+
+    private PreferTime(TimeSlot startTime, TimeSlot endTime){
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public static PreferTime newInstance(TimeSlot startTime, TimeSlot endTime){
+        return new PreferTime(startTime, endTime);
+    }
 }
