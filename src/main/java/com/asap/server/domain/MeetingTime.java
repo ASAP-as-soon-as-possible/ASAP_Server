@@ -1,6 +1,5 @@
 package com.asap.server.domain;
 
-import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,7 +22,13 @@ public class MeetingTime {
     @Column(nullable = false)
     private int priority;
     @Column(nullable = false)
-    private LocalDateTime startTime;
+    private String month;
     @Column(nullable = false)
-    private LocalDateTime endTime;
+    private String day;
+    @Column(nullable = false)
+    private String dayOfWeek;
+    @Column(nullable = false)
+    private String startTime;
+    @Column(nullable = false)
+    private String endTime;
 }

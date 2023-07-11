@@ -1,6 +1,5 @@
 package com.asap.server.domain;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +8,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.asap.server.domain.enums.Duration;
+import com.asap.server.domain.enums.Place;
+import com.asap.server.domain.enums.TimeSlot;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,14 +36,22 @@ public class Meeting {
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
-    private String place;
+    private Place place;
     private String placeDetail;
     @Column(nullable = false)
-    private String duration;
+    private Duration duration;
     private String additionalInfo;
     @Column(nullable = false)
     private String url;
     private String imageUrl;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    @Column(nullable = false)
+    private String month;
+    @Column(nullable = false)
+    private String day;
+    @Column(nullable = false)
+    private String dayOfWeek;
+    @Column(nullable = false)
+    private TimeSlot startTime;
+    @Column(nullable = false)
+    private TimeSlot endTime;
 }
