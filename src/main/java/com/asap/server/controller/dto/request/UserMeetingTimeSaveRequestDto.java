@@ -1,16 +1,17 @@
 package com.asap.server.controller.dto.request;
 
 import com.asap.server.domain.enums.TimeSlot;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.*;
 
 @Getter
-@AllArgsConstructor
-public class MeetingTimeSaveRequestDto {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class UserMeetingTimeSaveRequestDto {
 
     @NotNull
     private DateDto date;
