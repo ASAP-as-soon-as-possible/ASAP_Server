@@ -14,3 +14,29 @@
 
 # 💼 Server Architecture
 ![image](https://github.com/ASAP-as-soon-as-possible/ASAP_Server/assets/79795051/d1aae75e-4ce9-4b1e-9b70-8a5ea07e37e2)
+
+# 🗂️ Directory
+```
+├── java
+│   └── com
+│       └── asap
+│           └── server
+│               ├── common
+│               │   ├── advice
+│               │   ├── dto
+│               │   └── utils
+│               ├── config
+│               │   ├── jwt
+│               │   ├── resolver
+│               │   │   ├── meeting
+│               │   │   └── user
+│               │   └── swagger
+│               ├── controller
+│               ├── domain
+│               │   └── enums
+│               ├── exception
+│               │   └── model
+│               ├── repository
+│               └── service
+└── test
+```
