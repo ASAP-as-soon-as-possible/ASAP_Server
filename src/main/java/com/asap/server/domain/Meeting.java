@@ -43,7 +43,6 @@ public class Meeting {
     private Duration duration;
     private String additionalInfo;
     private String url;
-    private String imageUrl;
     private String month;
     private String day;
     private String dayOfWeek;

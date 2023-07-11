@@ -41,4 +41,5 @@ public class DateAvailability {
         String dayOfWeek = date.substring(11,14);
         return new DateAvailability(month, day, dayOfWeek);
     }
+
 }
