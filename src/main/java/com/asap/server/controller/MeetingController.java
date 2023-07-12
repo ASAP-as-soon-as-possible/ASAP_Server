@@ -24,7 +24,8 @@ public class MeetingController {
 
     @PostMapping
     public ApiResponse<MeetingSaveResponseDto> create(
-            @RequestBody @Valid MeetingSaveRequestDto meetingSaveRequestDto) {
+            @RequestBody @Valid MeetingSaveRequestDto meetingSaveRequestDto
+    ) {
         return ApiResponse.success(Success.CREATE_MEETING_SUCCESS, meetingService.create(meetingSaveRequestDto));
     }
 
