@@ -19,7 +19,7 @@ public class ControllerExceptionAdvice {
 
     private final SlackUtil slackUtil;
     /**
-     *
+     * 400 Bad Request
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)

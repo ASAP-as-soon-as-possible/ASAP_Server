@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -16,11 +17,11 @@ import javax.validation.Valid;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("host/{meetingId}/time")
+    @PostMapping("/host/{meetingId}/time")
     public ApiResponse createHostTime(
             @PathVariable("meetingId") String _meetingId,
-            @RequestBody @Valid UserMeetingTimeSaveRequestDto requestDto,
+            @RequestBody @Valid List<UserMeetingTimeSaveRequestDto> requestDtoList,
             @MeetingId Long meetingId){
-        return ApiResponse.success(Success.CREATE_HOST_TIME_SUCCESS, userService.createHostTime(requestDto));
+        return ApiResponse.success(Success.CREATE_HOST_TIME_SUCCESS, userService.createHostTime(_meetingId, meetingId, requestDtoList));
     }
 }
