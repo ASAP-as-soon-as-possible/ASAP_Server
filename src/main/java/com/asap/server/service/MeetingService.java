@@ -3,7 +3,10 @@ package com.asap.server.service;
 import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
+import com.asap.server.controller.dto.response.AvailableDateResponseDto;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
+import com.asap.server.controller.dto.response.MeetingScheduleResponseDto;
+import com.asap.server.controller.dto.response.PreferTimeResponseDto;
 import com.asap.server.domain.DateAvailability;
 import com.asap.server.domain.Meeting;
 import com.asap.server.domain.PreferTime;
@@ -81,5 +84,31 @@ public class MeetingService {
         meeting.setDayOfWeek(meetingConfirmRequestDto.getDayOfWeek());
         meeting.setStartTime(meetingConfirmRequestDto.getStartTime());
         meeting.setEndTime(meetingConfirmRequestDto.getEndTime());
+    }
+
+    @Transactional(readOnly = true)
+    public MeetingScheduleResponseDto getMeetingSchedule(Long meetingId){
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+        List<AvailableDateResponseDto> availableDateResponseDtoList = meeting.getDateAvailabilities()
+                .stream()
+                .map(DateAvailability -> new AvailableDateResponseDto(
+                        DateAvailability.getMonth(),
+                        DateAvailability.getDay(),
+                        DateAvailability.getDayOfWeek()))
+                .collect(Collectors.toList());
+        List<PreferTimeResponseDto> preferTimeResponseDtoList = meeting.getPreferTimes()
+                .stream()
+                .map(PreferTime -> new PreferTimeResponseDto(
+                        PreferTime.getStartTime(),
+                        PreferTime.getEndTime()
+                ))
+                .collect(Collectors.toList());
+        return new MeetingScheduleResponseDto(
+                meeting.getDuration(),
+                meeting.getPlace(),
+                meeting.getPlaceDetail(),
+                availableDateResponseDtoList,
+                preferTimeResponseDtoList);
     }
 }
