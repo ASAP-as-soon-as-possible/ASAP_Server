@@ -3,9 +3,6 @@ package com.asap.server.controller.dto.request;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.validation.annotation.Validated;
-
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.*;
