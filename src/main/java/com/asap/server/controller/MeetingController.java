@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @RequestMapping("/meeting")
@@ -42,6 +44,12 @@ public class MeetingController {
         return ApiResponse.success(Success.CONFIRM_MEETING_SUCCESS);
     }
 
+    @GetMapping("/{meetingId}/schedule")
+    public ApiResponse getMeetingSchedule(
+            @PathVariable("meetingId") String _meetingId,
+            @MeetingId Long meetingId
+    ){
+        return ApiResponse.success(Success.FIND_MEETING_SCHEDULE_SUCCESS, meetingService.getMeetingSchedule(meetingId));
     @GetMapping("/{meetingId}/card")
     public ApiResponse<FixedMeetingResponseDto> getFixedMeetingInformation(
             @PathVariable("meetingId") String _meetingId,

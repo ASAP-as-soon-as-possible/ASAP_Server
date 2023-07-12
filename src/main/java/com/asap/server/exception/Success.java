@@ -15,6 +15,7 @@ public enum Success {
     CONFIRM_MEETING_SUCCESS(HttpStatus.OK, "회의 시간 확정 성공입니다."),
     FIXED_MEETING_SUCCESS(HttpStatus.OK, "큐카드 조회 성공입니다."),
 
+    FIND_MEETING_SCHEDULE_SUCCESS(HttpStatus.OK, "회의 선택지가 성공적으로 조회되었습니다."),
     /**
      * 201 CREATED SUCCESS
      */
