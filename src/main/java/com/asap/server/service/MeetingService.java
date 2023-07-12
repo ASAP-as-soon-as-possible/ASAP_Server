@@ -3,6 +3,7 @@ package com.asap.server.service;
 import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
+import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.domain.DateAvailability;
 import com.asap.server.domain.Meeting;
@@ -81,5 +82,31 @@ public class MeetingService {
         meeting.setDayOfWeek(meetingConfirmRequestDto.getDayOfWeek());
         meeting.setStartTime(meetingConfirmRequestDto.getStartTime());
         meeting.setEndTime(meetingConfirmRequestDto.getEndTime());
+    }
+
+    public FixedMeetingResponseDto getFixedMeetingInformation(Long meetingId) {
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+
+        List<String> userNames = meeting
+                .getUsers()
+                .stream()
+                .map(User::getName)
+                .collect(Collectors.toList());
+
+        return FixedMeetingResponseDto
+                .builder()
+                .title(meeting.getTitle())
+                .place(meeting.getPlace().toString())
+                .placeDetail(meeting.getPlaceDetail())
+                .month(meeting.getMonth())
+                .day(meeting.getDay())
+                .dayOfWeek(meeting.getDayOfWeek())
+                .startTime(meeting.getStartTime().getTime())
+                .endTime(meeting.getEndTime().getTime())
+                .hostName(meeting.getHost().getName())
+                .userNames(userNames)
+                .additionalInfo(meeting.getAdditionalInfo())
+                .build();
     }
 }
