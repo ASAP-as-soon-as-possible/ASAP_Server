@@ -33,4 +33,30 @@ public class MeetingTime extends AuditingTimeEntity {
     private TimeSlot startTime;
     @Column(nullable = false)
     private TimeSlot endTime;
+
+    private MeetingTime(User user,
+                        int priority,
+                        String month,
+                        String day,
+                        String dayOfWeek,
+                        TimeSlot startTime,
+                        TimeSlot endTime){
+        this.user = user;
+        this.priority = priority;
+        this.month = month;
+        this.day = day;
+        this.dayOfWeek = dayOfWeek;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public static MeetingTime newInstance(User user,
+                                          int priority,
+                                          String month,
+                                          String day,
+                                          String dayOfWeek,
+                                          TimeSlot startTime,
+                                          TimeSlot endTime){
+        return new MeetingTime(user, priority, month, day, dayOfWeek, startTime, endTime);
+    }
 }
