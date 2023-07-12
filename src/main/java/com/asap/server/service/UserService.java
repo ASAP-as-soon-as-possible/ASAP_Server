@@ -34,8 +34,8 @@ public class UserService {
     }
 
     @Transactional
-    public UserMeetingTimeResponseDto createHostTime(String _meetingId, Long meetingId, List<UserMeetingTimeSaveRequestDto> requestDtoList) {
-        User host = meetingRepository.findById(meetingId).orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION)).getHost();
+    public UserMeetingTimeResponseDto createHostTime(String url, Long userId, List<UserMeetingTimeSaveRequestDto> requestDtoList) {
+        User host = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
         List<MeetingTime> meetingTimeList = requestDtoList
                 .stream()
                 .map(UserMeetingTimeSaveRequestDto -> MeetingTime.newInstance(host,
@@ -48,6 +48,6 @@ public class UserService {
                 .collect(Collectors.toList());
         meetingTimeRepository.saveAllAndFlush(meetingTimeList);
         String accessToken = jwtService.issuedToken(host.getId().toString());
-        return new UserMeetingTimeResponseDto(_meetingId, accessToken);
+        return new UserMeetingTimeResponseDto(url, accessToken);
     }
 }

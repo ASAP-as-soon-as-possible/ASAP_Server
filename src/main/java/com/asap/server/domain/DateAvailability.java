@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import com.asap.server.exception.Error;
+import com.asap.server.exception.model.BadRequestException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -59,7 +62,7 @@ public class DateAvailability extends AuditingTimeEntity {
             case "SUN":
                 return "일";
             default:
-                return "잘못된 값";
+                throw new BadRequestException(Error.VALIDATION_REQUEST_MISSING_EXCEPTION);
         }
     }
 }

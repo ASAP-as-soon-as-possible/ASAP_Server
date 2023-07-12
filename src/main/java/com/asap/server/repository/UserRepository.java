@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface UserRepository extends Repository<User, Long> {
 
     void save(User user);
-    Optional<User> findByName(String name);
+    Optional<User> findById(Long id);
 }
