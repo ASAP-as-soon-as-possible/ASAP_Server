@@ -13,7 +13,7 @@ public enum Success {
      * 200 OK SUCCESS
      */
     CONFIRM_MEETING_SUCCESS(HttpStatus.OK, "회의 시간 확정 성공입니다."),
-
+    USER_MATCH_SUCCESS(HttpStatus.OK,"해당 유저는 해당 방의 방장이 맞습니다."),
     /**
      * 201 CREATED SUCCESS
      */
