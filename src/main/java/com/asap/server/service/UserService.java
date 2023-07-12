@@ -38,13 +38,13 @@ public class UserService {
         User host = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
         List<MeetingTime> meetingTimeList = requestDtoList
                 .stream()
-                .map(UserMeetingTimeSaveRequestDto -> MeetingTime.newInstance(host,
-                        UserMeetingTimeSaveRequestDto.getPriority(),
-                        UserMeetingTimeSaveRequestDto.getMonth(),
-                        UserMeetingTimeSaveRequestDto.getDay(),
-                        UserMeetingTimeSaveRequestDto.getDayOfWeek(),
-                        UserMeetingTimeSaveRequestDto.getStartTime(),
-                        UserMeetingTimeSaveRequestDto.getEndTime()))
+                .map(userMeetingTimeSaveRequestDto -> MeetingTime.newInstance(host,
+                        userMeetingTimeSaveRequestDto.getPriority(),
+                        userMeetingTimeSaveRequestDto.getMonth(),
+                        userMeetingTimeSaveRequestDto.getDay(),
+                        userMeetingTimeSaveRequestDto.getDayOfWeek(),
+                        userMeetingTimeSaveRequestDto.getStartTime(),
+                        userMeetingTimeSaveRequestDto.getEndTime()))
                 .collect(Collectors.toList());
         meetingTimeRepository.saveAllAndFlush(meetingTimeList);
         String accessToken = jwtService.issuedToken(host.getId().toString());
