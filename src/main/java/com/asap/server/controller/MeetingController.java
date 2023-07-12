@@ -10,11 +10,7 @@ import com.asap.server.exception.Success;
 import com.asap.server.service.MeetingService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/meeting")
@@ -38,5 +34,15 @@ public class MeetingController {
     ) {
         meetingService.confirmMeeting(meetingConfirmRequestDto, meetingId, userId);
         return ApiResponse.success(Success.CONFIRM_MEETING_SUCCESS);
+    }
+
+    @GetMapping("/host/{meetingId}")
+    public ApiResponse checkRightHost(
+            @PathVariable("meetingId") String _meetingId,
+            @UserId Long userId,
+            @MeetingId Long meetingId
+    ){
+        meetingService.checkRightHost(meetingId, userId);
+        return ApiResponse.success(Success.USER_MATCH_SUCCESS);
     }
 }
