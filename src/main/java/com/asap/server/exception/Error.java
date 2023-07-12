@@ -13,6 +13,7 @@ public enum Error {
      * 400 BAD REQUEST
      **/
     INVALID_MEETING_URL_EXCEPTION(HttpStatus.BAD_REQUEST, "유효하지 않는 URL 입니다."),
+    VALIDATION_REQUEST_MISSING_EXCEPTION(HttpStatus.BAD_REQUEST, "요청값이 유효하지 않습니다."),
 
     /**
      * 401 UNAUTHORIZED
