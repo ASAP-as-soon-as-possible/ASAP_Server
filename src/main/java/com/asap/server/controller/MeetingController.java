@@ -5,12 +5,15 @@ import com.asap.server.config.resolver.meeting.MeetingId;
 import com.asap.server.config.resolver.user.UserId;
 import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
+import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.exception.Success;
 import com.asap.server.service.MeetingService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,7 +48,15 @@ public class MeetingController {
     public ApiResponse getMeetingSchedule(
             @PathVariable("meetingId") String _meetingId,
             @MeetingId Long meetingId
-    ){
+    ) {
         return ApiResponse.success(Success.FIND_MEETING_SCHEDULE_SUCCESS, meetingService.getMeetingSchedule(meetingId));
+    }
+
+    @GetMapping("/{meetingId}/card")
+    public ApiResponse<FixedMeetingResponseDto> getFixedMeetingInformation(
+            @PathVariable("meetingId") String _meetingId,
+            @MeetingId Long meetingId
+    ) {
+        return ApiResponse.success(Success.FIXED_MEETING_SUCCESS, meetingService.getFixedMeetingInformation(meetingId));
     }
 }
