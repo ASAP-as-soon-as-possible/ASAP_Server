@@ -48,8 +48,10 @@ public class MeetingController {
     public ApiResponse getMeetingSchedule(
             @PathVariable("meetingId") String _meetingId,
             @MeetingId Long meetingId
-    ){
+    ) {
         return ApiResponse.success(Success.FIND_MEETING_SCHEDULE_SUCCESS, meetingService.getMeetingSchedule(meetingId));
+    }
+
     @GetMapping("/{meetingId}/card")
     public ApiResponse<FixedMeetingResponseDto> getFixedMeetingInformation(
             @PathVariable("meetingId") String _meetingId,

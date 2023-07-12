@@ -88,7 +88,7 @@ public class MeetingService {
     }
 
     @Transactional(readOnly = true)
-    public MeetingScheduleResponseDto getMeetingSchedule(Long meetingId){
+    public MeetingScheduleResponseDto getMeetingSchedule(Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
         List<AvailableDateResponseDto> availableDateResponseDtoList = meeting.getDateAvailabilities()
@@ -111,6 +111,8 @@ public class MeetingService {
                 meeting.getPlaceDetail(),
                 availableDateResponseDtoList,
                 preferTimeResponseDtoList);
+    }
+
     public FixedMeetingResponseDto getFixedMeetingInformation(Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
