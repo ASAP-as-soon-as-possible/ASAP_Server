@@ -36,20 +36,17 @@ public class UserService {
     @Transactional
     public UserMeetingTimeResponseDto createHostTime(String _meetingId, Long meetingId, List<UserMeetingTimeSaveRequestDto> requestDtoList) {
         User host = meetingRepository.findById(meetingId).orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION)).getHost();
-        for (UserMeetingTimeSaveRequestDto requestDto : requestDtoList) {
-            List<MeetingTime> meetingTimeList = requestDto
-                    .getSchedule()
-                    .stream()
-                    .map(ScheduleDto -> MeetingTime.newInstance(host,
-                            ScheduleDto.getPriority(),
-                            requestDto.getDate().getMonth(),
-                            requestDto.getDate().getDay(),
-                            requestDto.getDate().getDayOfWeek(),
-                            ScheduleDto.getStartTime(),
-                            ScheduleDto.getEndTime()))
-                    .collect(Collectors.toList());
-            meetingTimeRepository.saveAllAndFlush(meetingTimeList);
-        }
+        List<MeetingTime> meetingTimeList = requestDtoList
+                .stream()
+                .map(UserMeetingTimeSaveRequestDto -> MeetingTime.newInstance(host,
+                        UserMeetingTimeSaveRequestDto.getPriority(),
+                        UserMeetingTimeSaveRequestDto.getMonth(),
+                        UserMeetingTimeSaveRequestDto.getDay(),
+                        UserMeetingTimeSaveRequestDto.getDayOfWeek(),
+                        UserMeetingTimeSaveRequestDto.getStartTime(),
+                        UserMeetingTimeSaveRequestDto.getEndTime()))
+                .collect(Collectors.toList());
+        meetingTimeRepository.saveAllAndFlush(meetingTimeList);
         String accessToken = jwtService.issuedToken(host.getId().toString());
         return new UserMeetingTimeResponseDto(_meetingId, accessToken);
     }

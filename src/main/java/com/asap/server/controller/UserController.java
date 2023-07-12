@@ -20,7 +20,7 @@ public class UserController {
     @PostMapping("/host/{meetingId}/time")
     public ApiResponse createHostTime(
             @PathVariable("meetingId") String _meetingId,
-            @RequestBody @Valid List<UserMeetingTimeSaveRequestDto> requestDtoList,
+            @RequestBody List< @Valid UserMeetingTimeSaveRequestDto> requestDtoList,
             @MeetingId Long meetingId){
         return ApiResponse.success(Success.CREATE_HOST_TIME_SUCCESS, userService.createHostTime(_meetingId, meetingId, requestDtoList));
     }
