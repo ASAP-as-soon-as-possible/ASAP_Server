@@ -11,11 +11,14 @@ import com.asap.server.domain.User;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.NotFoundException;
+import com.asap.server.exception.model.UserMismatchException;
 import com.asap.server.repository.DateAvailabilityRepository;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.PreferTimeRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.asap.server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +32,7 @@ public class MeetingService {
 
     private final MeetingRepository meetingRepository;
     private final UserService userService;
+    private final UserRepository userRepository;
     private final DateAvailabilityRepository dateAvailabilityRepository;
     private final PreferTimeRepository preferTimeRepository;
     private final JwtService jwtService;
@@ -81,5 +85,14 @@ public class MeetingService {
         meeting.setDayOfWeek(meetingConfirmRequestDto.getDayOfWeek());
         meeting.setStartTime(meetingConfirmRequestDto.getStartTime());
         meeting.setEndTime(meetingConfirmRequestDto.getEndTime());
+    }
+    public void checkRightHost(Long meetingId, Long userId){
+        User userByToken = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(Error.USER_NOT_FOUND_EXCEPTION));
+        User userByMeetingId = meetingRepository.findById(meetingId).orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION)).getHost();
+        if(userByToken.equals(userByMeetingId)){
+            return;
+        }else{
+            throw new UserMismatchException(INVALID_MEETING_HOST_EXCEPTION);
+        }
     }
 }
