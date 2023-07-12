@@ -92,16 +92,16 @@ public class MeetingService {
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
         List<AvailableDateResponseDto> availableDateResponseDtoList = meeting.getDateAvailabilities()
                 .stream()
-                .map(DateAvailability -> new AvailableDateResponseDto(
-                        DateAvailability.getMonth(),
-                        DateAvailability.getDay(),
-                        DateAvailability.getDayOfWeek()))
+                .map(dateAvailability -> new AvailableDateResponseDto(
+                        dateAvailability.getMonth(),
+                        dateAvailability.getDay(),
+                        dateAvailability.getDayOfWeek()))
                 .collect(Collectors.toList());
         List<PreferTimeResponseDto> preferTimeResponseDtoList = meeting.getPreferTimes()
                 .stream()
-                .map(PreferTime -> new PreferTimeResponseDto(
-                        PreferTime.getStartTime(),
-                        PreferTime.getEndTime()
+                .map(preferTime -> new PreferTimeResponseDto(
+                        preferTime.getStartTime().getTime(),
+                        preferTime.getEndTime().getTime()
                 ))
                 .collect(Collectors.toList());
         return new MeetingScheduleResponseDto(

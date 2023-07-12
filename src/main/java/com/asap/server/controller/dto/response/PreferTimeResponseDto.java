@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class PreferTimeResponseDto {
-    private TimeSlot startTime;
-    private TimeSlot endTime;
+    private String startTime;
+    private String endTime;
 }
