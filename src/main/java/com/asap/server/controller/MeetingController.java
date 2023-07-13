@@ -58,11 +58,10 @@ public class MeetingController {
         return ApiResponse.success(Success.FIXED_MEETING_SUCCESS, meetingService.getFixedMeetingInformation(meetingId));
     }
     @GetMapping("/{meetingId}")
-    public ApiResponse validateMeeting(
+    public ApiResponse getIsFixedMeeting(
             @PathVariable("meetingId") String _meetingId,
             @MeetingId Long meetingId
     ){
-        meetingService.validateMeeting(meetingId);
-        return ApiResponse.success(Success.MEETING_VALIDATION_SUCCESS);
+        return ApiResponse.success(Success.MEETING_VALIDATION_SUCCESS, meetingService.getIsFixedMeeting(meetingId));
     }
 }

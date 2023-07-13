@@ -27,15 +27,7 @@ public class ControllerExceptionAdvice {
     protected ApiResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         return ApiResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION);
     }
-
-    /**
-     *
-     */
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(ConflictException.class)
-    protected ApiResponse handleConflictException(final ConflictException e){
-        return ApiResponse.error(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
-    }
+    
     /**
      * 500 Internal Server
      */
