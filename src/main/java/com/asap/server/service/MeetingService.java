@@ -165,7 +165,7 @@ public class MeetingService {
             for (MeetingTime meetingTime : meetingTimes) {
                 List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(meetingTime.getStartTime().ordinal(), meetingTime.getEndTime().ordinal());
                 for (TimeSlot timeSlot : timeSlots) {
-                    String colTime = String.format("%s", timeSlot.getTime());
+                    String colTime = timeSlot.getTime();
                     String col = String.format("%s %s %s", meetingTime.getMonth(), meetingTime.getDay(), meetingTime.getDayOfWeek());
                     if (dateAvailable.containsKey(col)) {
                         if (dateAvailable.get(col).containsKey(colTime)) {
@@ -189,7 +189,7 @@ public class MeetingService {
         List<AvailableDatesDto> availableDatesDtos = new ArrayList<>();
         dateAvailable.forEach((key, value) -> {
                     List<TimeSlotDto> timeSlotDtos = new ArrayList<>();
-                    value.forEach((col, userNameList) ->
+                    value.forEach((timeSlot, userNameList) ->
                             {
                                 int colorLevel;
                                 if (userNameList.size() > 0 && userNameList.size() <= users.size() * (1 / 5)) {
