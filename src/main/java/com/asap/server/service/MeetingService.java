@@ -5,6 +5,7 @@ import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
 import com.asap.server.controller.dto.response.AvailableDateResponseDto;
 import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
+import com.asap.server.controller.dto.response.IsFixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.controller.dto.response.MeetingScheduleResponseDto;
 import com.asap.server.controller.dto.response.PreferTimeResponseDto;
@@ -14,6 +15,7 @@ import com.asap.server.domain.PreferTime;
 import com.asap.server.domain.User;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
+import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.repository.DateAvailabilityRepository;
 import com.asap.server.repository.MeetingRepository;
@@ -137,5 +139,16 @@ public class MeetingService {
                 .userNames(userNames)
                 .additionalInfo(meeting.getAdditionalInfo())
                 .build();
+    }
+    public IsFixedMeetingResponseDto getIsFixedMeeting(Long meetingId) throws ConflictException{
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+        if(meeting.getMonth() != null){
+            throw new ConflictException(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
+        }
+        IsFixedMeetingResponseDto isFixedMeetingResponseDto = IsFixedMeetingResponseDto.builder()
+                .isFixed(true)
+                .build();
+        return isFixedMeetingResponseDto;
     }
 }
