@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @AllArgsConstructor
 @Getter
 public enum TimeSlot {
@@ -48,4 +51,16 @@ public enum TimeSlot {
     @Getter
     @JsonValue
     private final String time;
+
+    //유저 가능 Time Slot 을 start 부터 end 까지 추가
+    public static List<TimeSlot> getTimeSlots(int start, int end) {
+        TimeSlot[] timeSlots = TimeSlot.values();
+        List<TimeSlot> result = new ArrayList<>();
+        for (TimeSlot t : timeSlots) {
+            if (t.ordinal() >= start && t.ordinal() <= end) {
+                result.add(t);
+            }
+        }
+        return result;
+    }
 }

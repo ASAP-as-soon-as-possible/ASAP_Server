@@ -26,6 +26,7 @@ public enum Error {
      */
     USER_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 유저는 존재하지 않습니다."),
     MEETING_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 회의는 존재하지 않습니다."),
+    MEETING_TIME_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 유저의 회의 시간이 존재하지 않습니다."),
     /**
      * 500 INTERNAL SERVER ERROR
      */
