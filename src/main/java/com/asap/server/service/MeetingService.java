@@ -209,7 +209,7 @@ public class MeetingService {
                                 }
                                 timeSlotDtos.add(TimeSlotDto
                                         .builder()
-                                        .time(col)
+                                        .time(timeSlot)
                                         .userNames(userNameList)
                                         .colorLevel(colorLevel)
                                         .build());
