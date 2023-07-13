@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @RequestMapping("/meeting")
@@ -68,5 +66,13 @@ public class MeetingController {
             @MeetingId Long meetingId
     ){
         return ApiResponse.success(Success.FIND_TIME_TABLE_SUCCESS, meetingService.getTimeTable(meetingId));
+    }
+
+    @GetMapping("/{meetingId}")
+    public ApiResponse getIsFixedMeeting(
+            @PathVariable("meetingId") String _meetingId,
+            @MeetingId Long meetingId
+    ){
+        return ApiResponse.success(Success.MEETING_VALIDATION_SUCCESS, meetingService.getIsFixedMeeting(meetingId));
     }
 }
