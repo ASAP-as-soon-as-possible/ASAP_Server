@@ -14,6 +14,7 @@ import com.asap.server.domain.PreferTime;
 import com.asap.server.domain.User;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
+import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.repository.DateAvailabilityRepository;
 import com.asap.server.repository.MeetingRepository;
@@ -137,5 +138,12 @@ public class MeetingService {
                 .userNames(userNames)
                 .additionalInfo(meeting.getAdditionalInfo())
                 .build();
+    }
+    public void validateMeeting(Long meetingId) throws ConflictException{
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+        if(meeting.getMonth() != null || meeting.getMonth() != ""){
+            throw new ConflictException(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
+        }
     }
 }
