@@ -7,6 +7,7 @@ import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
 import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
+import com.asap.server.controller.dto.response.TimeTableResponseDto;
 import com.asap.server.exception.Success;
 import com.asap.server.service.MeetingService;
 import javax.validation.Valid;
@@ -57,6 +58,16 @@ public class MeetingController {
     ) {
         return ApiResponse.success(Success.FIXED_MEETING_SUCCESS, meetingService.getFixedMeetingInformation(meetingId));
     }
+
+    @GetMapping("/{meetingId}/timetable")
+    public ApiResponse<TimeTableResponseDto> getTimeTable(
+            @PathVariable("meetingId") String _meetingId,
+            @UserId Long userId,
+            @MeetingId Long meetingId
+    ){
+        return ApiResponse.success(Success.FIND_TIME_TABLE_SUCCESS, meetingService.getTimeTable(meetingId));
+    }
+
     @GetMapping("/{meetingId}")
     public ApiResponse getIsFixedMeeting(
             @PathVariable("meetingId") String _meetingId,
