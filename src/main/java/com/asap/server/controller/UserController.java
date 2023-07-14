@@ -32,11 +32,11 @@ public class UserController {
     }
 
     @PostMapping("/{meetingId}/time")
-    public ApiResponse createUserTime(
+    public ApiResponse createMemberTime(
             @PathVariable("meetingId") String _meetingId,
             @RequestBody @Valid AvailableTimeRequestDto requestDto,
             @MeetingId Long meetingId
     ){
-        return ApiResponse.success(Success.CREATE_MEETING_TIME_SUCCESS, userService.createUserMeetingTime(meetingId, requestDto));
+        return ApiResponse.success(Success.CREATE_MEETING_TIME_SUCCESS, userService.createMemberMeetingTime(meetingId, requestDto));
     }
 }

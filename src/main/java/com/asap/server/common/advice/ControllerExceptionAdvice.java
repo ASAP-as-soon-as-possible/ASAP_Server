@@ -3,7 +3,6 @@ package com.asap.server.common.advice;
 import com.asap.server.common.dto.ApiResponse;
 import com.asap.server.common.utils.SlackUtil;
 import com.asap.server.exception.model.AsapException;
-import com.asap.server.exception.model.ConflictException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
