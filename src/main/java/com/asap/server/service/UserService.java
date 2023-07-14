@@ -36,10 +36,10 @@ public class UserService {
         return newUser;
     }
 
-    @Transactional
     public UserTimeResponseDto createMemberMeetingTime(
             Long meetingId,
-            AvailableTimeRequestDto requestDto) {
+            AvailableTimeRequestDto requestDto
+    ){
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
         User newUser = User.newInstance(requestDto.getName(), Role.MEMBER);
@@ -56,7 +56,8 @@ public class UserService {
     public UserMeetingTimeResponseDto createHostTime(
             String url,
             Long userId,
-            List<UserMeetingTimeSaveRequestDto> requestDtoList) {
+            List<UserMeetingTimeSaveRequestDto> requestDtoList
+    ) {
         User host = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
         createMeetingTimeList(host, requestDtoList);
@@ -67,7 +68,8 @@ public class UserService {
     @Transactional
     public void createMeetingTimeList(
             User user,
-            List<UserMeetingTimeSaveRequestDto> requestDtoList) {
+            List<UserMeetingTimeSaveRequestDto> requestDtoList
+    ) {
         List<MeetingTime> meetingTimeList = requestDtoList
                 .stream()
                 .map(userMeetingTimeSaveRequestDto -> MeetingTime.newInstance(user,
