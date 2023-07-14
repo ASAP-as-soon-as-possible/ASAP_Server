@@ -17,6 +17,7 @@ public enum Success {
     FIND_TIME_TABLE_SUCCESS(HttpStatus.OK, "종합 일정 시간표 조회 성공입니다."),
     FIND_MEETING_SCHEDULE_SUCCESS(HttpStatus.OK, "회의 선택지가 성공적으로 조회되었습니다."),
     MEETING_VALIDATION_SUCCESS(HttpStatus.OK, "유효한 회의입니다."),
+    LOGIN_SUCCESS(HttpStatus.OK, "로그인 성공입니다"),
     /**
      * 201 CREATED SUCCESS
      */
