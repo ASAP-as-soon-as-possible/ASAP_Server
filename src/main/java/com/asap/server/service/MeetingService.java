@@ -68,10 +68,13 @@ public class MeetingService {
                 .collect(Collectors.toList());
         preferTimeRepository.saveAllAndFlush(preferTimeList);
         User host = userService.createHost(meetingSaveRequestDto.getName());
+        List<User> users = new ArrayList<>();
+        users.add(host);
         Meeting newMeeting = Meeting.newInstance(
                 host,
                 dateAvailabilityList,
                 preferTimeList,
+                users,
                 meetingSaveRequestDto.getPassword(),
                 meetingSaveRequestDto.getTitle(),
                 meetingSaveRequestDto.getPlace(),
@@ -161,7 +164,6 @@ public class MeetingService {
         List<User> users = meeting.getUsers();
         List<String> userNames = new ArrayList<>();
         Map<String, Map<String, List<String>>> dateAvailable = new HashMap<>();
-        users.add(meeting.getHost());
         for (User user : users) {
             List<MeetingTime> meetingTimes = meetingTimeRepository.findByUser(user);
             for (MeetingTime meetingTime : meetingTimes) {

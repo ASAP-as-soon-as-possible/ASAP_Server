@@ -3,6 +3,7 @@ package com.asap.server.domain;
 import com.asap.server.domain.enums.Duration;
 import com.asap.server.domain.enums.Place;
 import com.asap.server.domain.enums.TimeSlot;
+
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,6 +52,7 @@ public class Meeting extends AuditingTimeEntity {
     private Meeting(User host,
                     List<DateAvailability> dateAvailabilities,
                     List<PreferTime> preferTimes,
+                    List<User> users,
                     String password,
                     String title,
                     Place place,
@@ -60,6 +63,7 @@ public class Meeting extends AuditingTimeEntity {
         this.host = host;
         this.dateAvailabilities = dateAvailabilities;
         this.preferTimes = preferTimes;
+        this.users = users;
         this.password = password;
         this.title = title;
         this.place = place;
@@ -71,13 +75,14 @@ public class Meeting extends AuditingTimeEntity {
     public static Meeting newInstance(User host,
                                       List<DateAvailability> dateAvailabilities,
                                       List<PreferTime> preferTimes,
+                                      List<User> users,
                                       String password,
                                       String title,
                                       Place place,
                                       String placeDetail,
                                       Duration duration,
                                       String additionalInfo) {
-        return new Meeting(host, dateAvailabilities, preferTimes, password, title, place, placeDetail, duration, additionalInfo);
+        return new Meeting(host, dateAvailabilities, preferTimes, users, password, title, place, placeDetail, duration, additionalInfo);
     }
 
     public void setUrl(String url) {

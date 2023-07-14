@@ -3,14 +3,14 @@ package com.asap.server.common.advice;
 import com.asap.server.common.dto.ApiResponse;
 import com.asap.server.common.utils.SlackUtil;
 import com.asap.server.exception.model.AsapException;
-import com.asap.server.exception.model.ConflictException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ValidationException;
+
 import com.asap.server.exception.Error;
 import java.io.IOException;
 
@@ -23,11 +23,11 @@ public class ControllerExceptionAdvice {
      * 400 Bad Request
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ApiResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+    @ExceptionHandler(ValidationException.class)
+    protected ApiResponse handleMethodArgumentNotValidException(final ValidationException e) {
         return ApiResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION);
     }
-    
+
     /**
      * 500 Internal Server
      */
