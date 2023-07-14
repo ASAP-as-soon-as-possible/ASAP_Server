@@ -37,8 +37,12 @@ public class UserService {
     }
 
     @Transactional
-    public UserTimeResponseDto createUserMeetingTime(Long meetingId, AvailableTimeRequestDto requestDto){
-        Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+    public UserTimeResponseDto createUserMeetingTime(
+            Long meetingId,
+            AvailableTimeRequestDto requestDto
+    ){
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
         User newUser = User.newInstance(requestDto.getName(), Role.MEMBER);
         userRepository.save(newUser);
         List<MeetingTime> meetingTimeList = requestDto.getAvailableTimes()
@@ -60,8 +64,13 @@ public class UserService {
                 .build();
     }
     @Transactional
-    public UserMeetingTimeResponseDto createHostTime(String url, Long userId, List<UserMeetingTimeSaveRequestDto> requestDtoList) {
-        User host = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+    public UserMeetingTimeResponseDto createHostTime(
+            String url,
+            Long userId,
+            List<UserMeetingTimeSaveRequestDto> requestDtoList
+    ){
+        User host = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
         List<MeetingTime> meetingTimeList = requestDtoList
                 .stream()
                 .map(userMeetingTimeSaveRequestDto -> MeetingTime.newInstance(host,
