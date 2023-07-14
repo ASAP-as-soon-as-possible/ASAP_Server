@@ -36,7 +36,6 @@ public class UserService {
         return newUser;
     }
 
-    @Transactional
     public UserTimeResponseDto createUserMeetingTime(
             Long meetingId,
             AvailableTimeRequestDto requestDto
@@ -44,36 +43,35 @@ public class UserService {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
         User newUser = User.newInstance(requestDto.getName(), Role.MEMBER);
-        userRepository.save(newUser);
-        List<MeetingTime> meetingTimeList = requestDto.getAvailableTimes()
-                .stream()
-                .map(userMeetingTimeSaveRequestDto -> MeetingTime.newInstance(newUser,
-                        userMeetingTimeSaveRequestDto.getPriority(),
-                        userMeetingTimeSaveRequestDto.getMonth(),
-                        userMeetingTimeSaveRequestDto.getDay(),
-                        userMeetingTimeSaveRequestDto.getDayOfWeek(),
-                        userMeetingTimeSaveRequestDto.getStartTime(),
-                        userMeetingTimeSaveRequestDto.getEndTime()))
-                .collect(Collectors.toList());
         meeting.getUsers().add(newUser);
-        meetingTimeRepository.saveAllAndFlush(meetingTimeList);
-        meetingRepository.save(meeting);
+        userRepository.save(newUser);
+        createMeetingTimeList(newUser, requestDto.getAvailableTimes());
         return UserTimeResponseDto
                 .builder()
                 .role(newUser.getRole().getRole())
                 .build();
     }
+
     @Transactional
     public UserMeetingTimeResponseDto createHostTime(
             String url,
             Long userId,
-            List<UserMeetingTimeSaveRequestDto> requestDtoList
-    ){
+            List<UserMeetingTimeSaveRequestDto> requestDtoList) {
         User host = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+        createMeetingTimeList(host, requestDtoList);
+        String accessToken = jwtService.issuedToken(host.getId().toString());
+        return new UserMeetingTimeResponseDto(url, accessToken);
+    }
+
+    @Transactional
+    public void createMeetingTimeList(
+            User user,
+            List<UserMeetingTimeSaveRequestDto> requestDtoList
+    ) {
         List<MeetingTime> meetingTimeList = requestDtoList
                 .stream()
-                .map(userMeetingTimeSaveRequestDto -> MeetingTime.newInstance(host,
+                .map(userMeetingTimeSaveRequestDto -> MeetingTime.newInstance(user,
                         userMeetingTimeSaveRequestDto.getPriority(),
                         userMeetingTimeSaveRequestDto.getMonth(),
                         userMeetingTimeSaveRequestDto.getDay(),
@@ -82,7 +80,5 @@ public class UserService {
                         userMeetingTimeSaveRequestDto.getEndTime()))
                 .collect(Collectors.toList());
         meetingTimeRepository.saveAllAndFlush(meetingTimeList);
-        String accessToken = jwtService.issuedToken(host.getId().toString());
-        return new UserMeetingTimeResponseDto(url, accessToken);
     }
 }
