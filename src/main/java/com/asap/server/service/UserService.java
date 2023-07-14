@@ -36,7 +36,7 @@ public class UserService {
         return newUser;
     }
 
-    public UserTimeResponseDto createUserMeetingTime(
+    public UserTimeResponseDto createMemberMeetingTime(
             Long meetingId,
             AvailableTimeRequestDto requestDto
     ){
@@ -56,7 +56,8 @@ public class UserService {
     public UserMeetingTimeResponseDto createHostTime(
             String url,
             Long userId,
-            List<UserMeetingTimeSaveRequestDto> requestDtoList) {
+            List<UserMeetingTimeSaveRequestDto> requestDtoList
+    ) {
         User host = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
         createMeetingTimeList(host, requestDtoList);
