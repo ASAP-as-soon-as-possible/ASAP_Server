@@ -43,16 +43,16 @@ public class UserService {
     public HostLoginResponseDto loginByHost(
             Long meetingId,
             HostLoginRequestDto requestDto
-    ){
+    ) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-        if(requestDto.getName().equals(meeting.getHost().getName())
-                && requestDto.getPassword().equals(meeting.getPassword())){
+        if (requestDto.getName().equals(meeting.getHost().getName())
+                && requestDto.getPassword().equals(meeting.getPassword())) {
             return HostLoginResponseDto
                     .builder()
                     .accessToken(jwtService.issuedToken(meeting.getHost().getId().toString()))
                     .build();
-        }else{
+        } else {
             throw new UnauthorizedException(Error.INVALID_HOST_ID_PASSWORD_EXCEPTION);
         }
     }
@@ -60,7 +60,7 @@ public class UserService {
     public UserTimeResponseDto createMemberMeetingTime(
             Long meetingId,
             AvailableTimeRequestDto requestDto
-    ){
+    ) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
         User newUser = User.newInstance(requestDto.getName(), Role.MEMBER);

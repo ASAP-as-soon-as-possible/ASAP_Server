@@ -10,7 +10,9 @@ import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.controller.dto.response.TimeTableResponseDto;
 import com.asap.server.exception.Success;
 import com.asap.server.service.MeetingService;
+
 import javax.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,7 +66,7 @@ public class MeetingController {
             @PathVariable("meetingId") String _meetingId,
             @UserId Long userId,
             @MeetingId Long meetingId
-    ){
+    ) {
         return ApiResponse.success(Success.FIND_TIME_TABLE_SUCCESS, meetingService.getTimeTable(meetingId));
     }
 
@@ -72,7 +74,7 @@ public class MeetingController {
     public ApiResponse getIsFixedMeeting(
             @PathVariable("meetingId") String _meetingId,
             @MeetingId Long meetingId
-    ){
+    ) {
         return ApiResponse.success(Success.MEETING_VALIDATION_SUCCESS, meetingService.getIsFixedMeeting(meetingId));
     }
 }

@@ -28,7 +28,7 @@ public class UserController {
             @RequestBody List<@Valid UserMeetingTimeSaveRequestDto> requestDtoList,
             @UserId Long userId,
             @MeetingId Long meetingId
-    ){
+    ) {
         return ApiResponse.success(Success.CREATE_HOST_TIME_SUCCESS, userService.createHostTime(_meetingId, meetingId, requestDtoList));
     }
 
@@ -37,7 +37,7 @@ public class UserController {
             @PathVariable("meetingId") String _meetingId,
             @RequestBody @Valid AvailableTimeRequestDto requestDto,
             @MeetingId Long meetingId
-    ){
+    ) {
         return ApiResponse.success(Success.CREATE_MEETING_TIME_SUCCESS, userService.createMemberMeetingTime(meetingId, requestDto));
     }
 
@@ -46,7 +46,7 @@ public class UserController {
             @PathVariable("meetingId") String _meetingId,
             @RequestBody @Valid HostLoginRequestDto requestDto,
             @MeetingId Long meetingId
-    ){
+    ) {
         return ApiResponse.success(Success.LOGIN_SUCCESS, userService.loginByHost(meetingId, requestDto));
     }
 }
