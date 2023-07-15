@@ -23,6 +23,10 @@ public enum Error {
     INVALID_HOST_ID_PASSWORD_EXCEPTION(HttpStatus.UNAUTHORIZED, "유효하지 않은 사용자 이름 또는 비밀번호입니다."),
 
     /**
+     * 403 FORBIDDEN
+     */
+    HOST_MEETING_TIME_NOT_PROVIDED(HttpStatus.FORBIDDEN, "회의 가능 시간이 입력되지 않았습니다."),
+    /**
      * 404 NOT FOUND
      */
     USER_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 유저는 존재하지 않습니다."),

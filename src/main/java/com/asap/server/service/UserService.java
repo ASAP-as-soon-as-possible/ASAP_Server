@@ -12,6 +12,7 @@ import com.asap.server.domain.MeetingTime;
 import com.asap.server.domain.User;
 import com.asap.server.domain.enums.Role;
 import com.asap.server.exception.Error;
+import com.asap.server.exception.model.ForbiddenException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.MeetingRepository;
@@ -48,12 +49,20 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
         if (requestDto.getName().equals(meeting.getHost().getName())
                 && requestDto.getPassword().equals(meeting.getPassword())) {
+            isHostMeetingTimeSet(meeting.getHost());
             return HostLoginResponseDto
                     .builder()
                     .accessToken(jwtService.issuedToken(meeting.getHost().getId().toString()))
                     .build();
         } else {
             throw new UnauthorizedException(Error.INVALID_HOST_ID_PASSWORD_EXCEPTION);
+        }
+    }
+
+    public void isHostMeetingTimeSet(User host) {
+        List<MeetingTime> meetingTimeList = meetingTimeRepository.findByUser(host);
+        if (meetingTimeList.isEmpty()) {
+            throw new ForbiddenException(Error.HOST_MEETING_TIME_NOT_PROVIDED);
         }
     }
 
