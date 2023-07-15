@@ -2,7 +2,9 @@ package com.asap.server.common.utils;
 
 import com.asap.server.controller.dto.response.DateAvailabilityDto;
 import com.asap.server.controller.dto.response.MeetingDto;
+import com.asap.server.controller.dto.response.MeetingTimeDto;
 import com.asap.server.domain.enums.Duration;
+import com.asap.server.domain.enums.TimeSlot;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,5 +43,36 @@ public class BestMeetingUtilTest {
         assertThat(bestMeetingUtil.getTimeTable().get("7.11.화")).isNotNull();
         assertThat(bestMeetingUtil.getTimeTable().get("7.12.수")).isNotNull();
         assertThat(bestMeetingUtil.getTimeTable().get("7.13.목")).isNull();
+    }
+
+    @Test
+    @DisplayName("해당 회의의 meeting time 들을 time table 안에 넣는다.")
+    public void setUserMeetingTimeTest() {
+        // given
+        DateAvailabilityDto dateAvailability1 = new DateAvailabilityDto("7", "10", "월");
+        DateAvailabilityDto dateAvailability2 = new DateAvailabilityDto("7", "11", "화");
+        DateAvailabilityDto dateAvailability3 = new DateAvailabilityDto("7", "12", "수");
+        List<DateAvailabilityDto> dateAvailabilityDto = Arrays.asList(dateAvailability1, dateAvailability2, dateAvailability3);
+        MeetingDto meetingDto = new MeetingDto(dateAvailabilityDto, Duration.TWO_HOUR);
+
+        MeetingTimeDto meetingTimeDto = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_18_00, TimeSlot.SLOT_20_00, "원용", 0);
+        MeetingTimeDto meetingTimeDto2 = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_16_00, TimeSlot.SLOT_18_00, "소현", 0);
+        MeetingTimeDto meetingTimeDto3 = new MeetingTimeDto("7", "11", "화", TimeSlot.SLOT_11_00, TimeSlot.SLOT_12_00, "원용", 0);
+        MeetingTimeDto meetingTimeDto4 = new MeetingTimeDto("7", "11", "화", TimeSlot.SLOT_11_00, TimeSlot.SLOT_12_00, "소현", 0);
+        MeetingTimeDto meetingTimeDto5 = new MeetingTimeDto("7", "12", "수", TimeSlot.SLOT_7_00, TimeSlot.SLOT_9_00, "원용", 2);
+        MeetingTimeDto meetingTimeDto6 = new MeetingTimeDto("7", "12", "수", TimeSlot.SLOT_7_00, TimeSlot.SLOT_9_00, "소현", 1);
+
+        List<MeetingTimeDto> meetingTimes = Arrays.asList(meetingTimeDto, meetingTimeDto2, meetingTimeDto3, meetingTimeDto4, meetingTimeDto5, meetingTimeDto6);
+
+        ReflectionTestUtils.setField(bestMeetingUtil, "meeting", meetingDto);
+        ReflectionTestUtils.invokeMethod(bestMeetingUtil, "initTimeTable");
+
+        // when
+        ReflectionTestUtils.invokeMethod(bestMeetingUtil, "setUserMeetingTime", meetingTimes);
+
+        // then
+        assertThat(bestMeetingUtil.getTimeTable().get("7.11.화").get(TimeSlot.SLOT_11_00).getUserNames()).isEqualTo(Arrays.asList("원용", "소현"));
+        assertThat(bestMeetingUtil.getTimeTable().get("7.12.수").get(TimeSlot.SLOT_7_00).getUserNames()).isEqualTo(Arrays.asList("원용", "소현"));
+        assertThat(bestMeetingUtil.getTimeTable().get("7.12.수").get(TimeSlot.SLOT_7_00).getWeight()).isEqualTo(3);
     }
 }

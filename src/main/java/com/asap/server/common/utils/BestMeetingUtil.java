@@ -17,14 +17,13 @@ import org.springframework.stereotype.Component;
 public class BestMeetingUtil {
     private final Map<String, Map<TimeSlot, TimeSlotInfoDto>> timeTable = new HashMap<>();
     private MeetingDto meeting;
-    private List<MeetingTimeDto> meetingTimes;
     private final TimeSlot[] timeSlots = TimeSlot.values();
     private final Duration[] durations = Duration.values();
 
     public void getBestMeetingTime(MeetingDto meeting, List<MeetingTimeDto> meetingTimes) {
         this.meeting = meeting;
-        this.meetingTimes = meetingTimes;
         initTimeTable();
+        setUserMeetingTime(meetingTimes);
     }
 
     private void initTimeTable() {
@@ -37,4 +36,19 @@ public class BestMeetingUtil {
             timeTable.put(col, rowTable);
         }
     }
+
+    private void setUserMeetingTime(List<MeetingTimeDto> meetingTimes) {
+        for (MeetingTimeDto meetingTime : meetingTimes) {
+            String col = String.format("%s.%s.%s", meetingTime.getMonth(), meetingTime.getDay(), meetingTime.getDayOfWeek());
+            List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(meetingTime.getStartTime().ordinal(), meetingTime.getEndTime().ordinal());
+            Map<TimeSlot, TimeSlotInfoDto> rowTable = timeTable.get(col);
+
+            for (TimeSlot timeSlot : timeSlots) {
+                TimeSlotInfoDto timeSlotInfo = rowTable.get(timeSlot);
+                timeSlotInfo.addUserName(meetingTime.getName());
+                timeSlotInfo.addWeight(meetingTime.getPriority());
+            }
+        }
+    }
+
 }
