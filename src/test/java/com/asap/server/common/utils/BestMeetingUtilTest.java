@@ -1,5 +1,6 @@
 package com.asap.server.common.utils;
 
+import com.asap.server.controller.dto.response.AvailableMeetingTimeDto;
 import com.asap.server.controller.dto.response.DateAvailabilityDto;
 import com.asap.server.controller.dto.response.MeetingDto;
 import com.asap.server.controller.dto.response.MeetingTimeDto;
@@ -74,5 +75,47 @@ public class BestMeetingUtilTest {
         assertThat(bestMeetingUtil.getTimeTable().get("7.11.화").get(TimeSlot.SLOT_11_00).getUserNames()).isEqualTo(Arrays.asList("원용", "소현"));
         assertThat(bestMeetingUtil.getTimeTable().get("7.12.수").get(TimeSlot.SLOT_7_00).getUserNames()).isEqualTo(Arrays.asList("원용", "소현"));
         assertThat(bestMeetingUtil.getTimeTable().get("7.12.수").get(TimeSlot.SLOT_7_00).getWeight()).isEqualTo(3);
+    }
+
+    @Test
+    @DisplayName("특정 회의 시간 동안 가능한 회의 시간들을 모두 구한다.")
+    public void collectAvailableMeetingTimeByDurationTest() {
+        // given
+        DateAvailabilityDto dateAvailability1 = new DateAvailabilityDto("7", "10", "월");
+        DateAvailabilityDto dateAvailability2 = new DateAvailabilityDto("7", "11", "화");
+        List<DateAvailabilityDto> dateAvailabilityDto = Arrays.asList(dateAvailability1, dateAvailability2);
+        MeetingDto meetingDto = new MeetingDto(dateAvailabilityDto, Duration.TWO_HOUR);
+
+        MeetingTimeDto meetingTimeDto = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_18_00, TimeSlot.SLOT_20_00, "원용", 0);
+        MeetingTimeDto meetingTimeDto2 = new MeetingTimeDto("7", "11", "화", TimeSlot.SLOT_12_00, TimeSlot.SLOT_14_00, "원용", 0);
+        MeetingTimeDto meetingTimeDto3 = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_18_00, TimeSlot.SLOT_20_00, "소현", 0);
+        MeetingTimeDto meetingTimeDto4 = new MeetingTimeDto("7", "11", "화", TimeSlot.SLOT_12_00, TimeSlot.SLOT_14_00, "소현", 0);
+        List<MeetingTimeDto> meetingTimes = Arrays.asList(meetingTimeDto, meetingTimeDto2, meetingTimeDto3, meetingTimeDto4);
+
+        ReflectionTestUtils.setField(bestMeetingUtil, "meeting", meetingDto);
+        ReflectionTestUtils.invokeMethod(bestMeetingUtil, "initTimeTable");
+        ReflectionTestUtils.invokeMethod(bestMeetingUtil, "setUserMeetingTime", meetingTimes);
+
+        AvailableMeetingTimeDto result = new AvailableMeetingTimeDto(
+                "7.10.월",
+                TimeSlot.SLOT_18_00,
+                TimeSlot.SLOT_20_00,
+                0,
+                Arrays.asList("원용", "소현")
+        );
+
+        AvailableMeetingTimeDto result2 = new AvailableMeetingTimeDto(
+                "7.11.화",
+                TimeSlot.SLOT_12_00,
+                TimeSlot.SLOT_14_00,
+                0,
+                Arrays.asList("원용", "소현")
+        );
+
+        // when
+        ReflectionTestUtils.invokeMethod(bestMeetingUtil, "collectAvailableMeetingTimeByDuration", Duration.TWO_HOUR);
+
+        // then
+        assertThat(bestMeetingUtil.getAvailableMeetingTimesByDuration().get(Duration.TWO_HOUR)).isEqualTo(Arrays.asList(result, result2));
     }
 }
