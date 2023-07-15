@@ -28,6 +28,7 @@ public class BestMeetingUtil {
         this.meeting = meeting;
         initTimeTable();
         setUserMeetingTime(meetingTimes);
+        collectAvailableMeetingTime();
     }
 
     private void initTimeTable() {
@@ -56,6 +57,12 @@ public class BestMeetingUtil {
                 timeSlotInfo.addUserName(meetingTime.getName());
                 timeSlotInfo.addWeight(meetingTime.getPriority());
             }
+        }
+    }
+
+    private void collectAvailableMeetingTime() {
+        for (Duration duration : durations) {
+            collectAvailableMeetingTimeByDuration(duration);
         }
     }
 
