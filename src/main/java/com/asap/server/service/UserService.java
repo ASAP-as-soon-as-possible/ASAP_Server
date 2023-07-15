@@ -70,6 +70,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public UserTimeResponseDto createMemberMeetingTime(
             Long meetingId,
             AvailableTimeRequestDto requestDto
@@ -79,7 +80,7 @@ public class UserService {
         User newUser = User.newInstance(requestDto.getName(), Role.MEMBER);
         meeting.getUsers().add(newUser);
         userRepository.save(newUser);
-        createMeetingTimeList(newUser, requestDto.getAvailableTimes());
+        createMeetingTimeList(meetingId, newUser, requestDto.getAvailableTimes());
         return UserTimeResponseDto
                 .builder()
                 .role(newUser.getRole().getRole())
@@ -88,22 +89,25 @@ public class UserService {
 
     @Transactional
     public UserMeetingTimeResponseDto createHostTime(
+            Long meetingId,
             String url,
             Long userId,
             List<UserMeetingTimeSaveRequestDto> requestDtoList
     ) {
         User host = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-        createMeetingTimeList(host, requestDtoList);
+        createMeetingTimeList(meetingId, host, requestDtoList);
         String accessToken = jwtService.issuedToken(host.getId().toString());
         return new UserMeetingTimeResponseDto(url, accessToken);
     }
 
     @Transactional
     public void createMeetingTimeList(
+            Long meetingId,
             User user,
             List<UserMeetingTimeSaveRequestDto> requestDtoList
     ) {
+        checkMeetingTime(meetingId, requestDtoList);
         isDuplicatedDate(requestDtoList);
         List<MeetingTime> meetingTimeList = requestDtoList
                 .stream()
@@ -120,17 +124,32 @@ public class UserService {
 
     public void isDuplicatedDate(List<UserMeetingTimeSaveRequestDto> requestDtoList) {
         Map<String, List<TimeSlot>> meetingTimeAvailable = new HashMap<>();
-        for(UserMeetingTimeSaveRequestDto requestDto: requestDtoList){
+        for (UserMeetingTimeSaveRequestDto requestDto : requestDtoList) {
             String col = String.format("%s %s %s", requestDto.getMonth(), requestDto.getDay(), requestDto.getDayOfWeek());
             List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal());
             if (meetingTimeAvailable.containsKey(col)) {
                 if (meetingTimeAvailable.containsKey(col)) {
-                    if(meetingTimeAvailable.get(col).stream().anyMatch(timeSlots::contains)){
+                    if (meetingTimeAvailable.get(col).stream().anyMatch(timeSlots::contains)) {
                         throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
                     }
                 }
-            }else{
+            } else {
                 meetingTimeAvailable.put(col, timeSlots);
+            }
+        }
+    }
+
+    public void checkMeetingTime(Long meetingId, List<UserMeetingTimeSaveRequestDto> requestDtoList) {
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+        List<String> meetingDates = meeting.getDateAvailabilities()
+                .stream()
+                .map(dateAvailability -> dateAvailability.getMonth() + dateAvailability.getDay())
+                .collect(Collectors.toList());
+        for (UserMeetingTimeSaveRequestDto requestDto : requestDtoList) {
+            String userMeetingDate = Integer.valueOf(requestDto.getMonth()).toString() + Integer.valueOf(requestDto.getDay()).toString();
+            if (!meetingDates.contains(userMeetingDate)) {
+                throw new BadRequestException(Error.INVALID_TIME_RANGE);
             }
         }
     }
