@@ -11,7 +11,9 @@ import com.asap.server.domain.Meeting;
 import com.asap.server.domain.MeetingTime;
 import com.asap.server.domain.User;
 import com.asap.server.domain.enums.Role;
+import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.exception.Error;
+import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ForbiddenException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
@@ -22,7 +24,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -100,6 +104,7 @@ public class UserService {
             User user,
             List<UserMeetingTimeSaveRequestDto> requestDtoList
     ) {
+        isDuplicatedDate(requestDtoList);
         List<MeetingTime> meetingTimeList = requestDtoList
                 .stream()
                 .map(userMeetingTimeSaveRequestDto -> MeetingTime.newInstance(user,
@@ -111,5 +116,22 @@ public class UserService {
                         userMeetingTimeSaveRequestDto.getEndTime()))
                 .collect(Collectors.toList());
         meetingTimeRepository.saveAllAndFlush(meetingTimeList);
+    }
+
+    public void isDuplicatedDate(List<UserMeetingTimeSaveRequestDto> requestDtoList) {
+        Map<String, List<TimeSlot>> meetingTimeAvailable = new HashMap<>();
+        for(UserMeetingTimeSaveRequestDto requestDto: requestDtoList){
+            String col = String.format("%s %s %s", requestDto.getMonth(), requestDto.getDay(), requestDto.getDayOfWeek());
+            List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal());
+            if (meetingTimeAvailable.containsKey(col)) {
+                if (meetingTimeAvailable.containsKey(col)) {
+                    if(meetingTimeAvailable.get(col).stream().anyMatch(timeSlots::contains)){
+                        throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
+                    }
+                }
+            }else{
+                meetingTimeAvailable.put(col, timeSlots);
+            }
+        }
     }
 }
