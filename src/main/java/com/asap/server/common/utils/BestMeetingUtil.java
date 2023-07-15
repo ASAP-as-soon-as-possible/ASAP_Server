@@ -8,6 +8,7 @@ import com.asap.server.controller.dto.response.TimeSlotInfoDto;
 import com.asap.server.domain.enums.Duration;
 import com.asap.server.domain.enums.TimeSlot;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +64,7 @@ public class BestMeetingUtil {
     private void collectAvailableMeetingTime() {
         for (Duration duration : durations) {
             collectAvailableMeetingTimeByDuration(duration);
+            sortTimeTable(duration);
         }
     }
 
@@ -148,4 +150,12 @@ public class BestMeetingUtil {
 
         availableMeetingTimesByDuration.get(duration).add(result);
     }
+
+    private void sortTimeTable(Duration duration) {
+        List<AvailableMeetingTimeDto> availableMeetingTimes = availableMeetingTimesByDuration.get(duration);
+        if (!availableMeetingTimes.isEmpty()) {
+            Collections.sort(availableMeetingTimes);
+        }
+    }
+
 }
