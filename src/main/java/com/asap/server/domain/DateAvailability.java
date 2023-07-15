@@ -31,21 +31,22 @@ public class DateAvailability extends AuditingTimeEntity {
     private String dayOfWeek;
 
     private DateAvailability(String month,
-                            String day,
-                            String dayOfWeek){
+                             String day,
+                             String dayOfWeek) {
         this.month = Integer.valueOf(month).toString();
         this.day = Integer.valueOf(day).toString();
         this.dayOfWeek = dayOfWeek;
     }
 
-    public static DateAvailability newInstance(String date){
-        String month = date.substring(5,7);
-        String day = date.substring(8,10);
-        String dayOfWeek = dayConverter(date.substring(11,14));
+    public static DateAvailability newInstance(String date) {
+        String month = date.substring(5, 7);
+        String day = date.substring(8, 10);
+        String dayOfWeek = dayConverter(date.substring(11, 14));
 
         return new DateAvailability(month, day, dayOfWeek);
     }
-    public static String dayConverter(String s){
+
+    public static String dayConverter(String s) {
         switch (s) {
             case "MON":
                 return "월";

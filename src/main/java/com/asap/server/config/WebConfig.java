@@ -1,6 +1,7 @@
 package com.asap.server.config;
 
 import com.asap.server.config.resolver.meeting.MeetingIdResolver;
+
 import java.util.List;
 
 import com.asap.server.config.resolver.user.UserIdResolver;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
     private final MeetingIdResolver meetingIdResolver;
     private final UserIdResolver userIdResolver;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
@@ -22,6 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST")
                 .maxAge(3000);
     }
+
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(meetingIdResolver);

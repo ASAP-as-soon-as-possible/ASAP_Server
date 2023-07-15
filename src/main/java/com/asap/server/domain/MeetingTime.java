@@ -40,7 +40,7 @@ public class MeetingTime extends AuditingTimeEntity {
                         String day,
                         String dayOfWeek,
                         TimeSlot startTime,
-                        TimeSlot endTime){
+                        TimeSlot endTime) {
         this.user = user;
         this.priority = priority;
         this.month = month;
@@ -56,7 +56,7 @@ public class MeetingTime extends AuditingTimeEntity {
                                           String day,
                                           String dayOfWeek,
                                           TimeSlot startTime,
-                                          TimeSlot endTime){
+                                          TimeSlot endTime) {
         return new MeetingTime(user, priority, month, day, dayOfWeek, startTime, endTime);
     }
 }

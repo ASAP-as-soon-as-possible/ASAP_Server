@@ -206,7 +206,7 @@ public class MeetingService {
                                     colorLevel = 4;
                                 } else if (userNameList.size() > users.size() * (4 / 5) && userNameList.size() <= users.size()) {
                                     colorLevel = 5;
-                                } else{
+                                } else {
                                     colorLevel = 0;
                                 }
                                 timeSlotDtos.add(TimeSlotDto
@@ -237,10 +237,11 @@ public class MeetingService {
                 .availableDateTimes(availableDatesDtos)
                 .build();
     }
-    public IsFixedMeetingResponseDto getIsFixedMeeting(Long meetingId) throws ConflictException{
+
+    public IsFixedMeetingResponseDto getIsFixedMeeting(Long meetingId) throws ConflictException {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-        if(meeting.getMonth() != null){
+        if (meeting.getMonth() != null) {
             throw new ConflictException(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
         }
         IsFixedMeetingResponseDto isFixedMeetingResponseDto = IsFixedMeetingResponseDto.builder()

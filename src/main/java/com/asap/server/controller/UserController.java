@@ -4,6 +4,7 @@ import com.asap.server.common.dto.ApiResponse;
 import com.asap.server.config.resolver.meeting.MeetingId;
 import com.asap.server.config.resolver.user.UserId;
 import com.asap.server.controller.dto.request.AvailableTimeRequestDto;
+import com.asap.server.controller.dto.request.HostLoginRequestDto;
 import com.asap.server.controller.dto.request.UserMeetingTimeSaveRequestDto;
 import com.asap.server.exception.Success;
 import com.asap.server.service.UserService;
@@ -27,7 +28,7 @@ public class UserController {
             @RequestBody List<@Valid UserMeetingTimeSaveRequestDto> requestDtoList,
             @UserId Long userId,
             @MeetingId Long meetingId
-    ){
+    ) {
         return ApiResponse.success(Success.CREATE_HOST_TIME_SUCCESS, userService.createHostTime(_meetingId, meetingId, requestDtoList));
     }
 
@@ -36,7 +37,16 @@ public class UserController {
             @PathVariable("meetingId") String _meetingId,
             @RequestBody @Valid AvailableTimeRequestDto requestDto,
             @MeetingId Long meetingId
-    ){
+    ) {
         return ApiResponse.success(Success.CREATE_MEETING_TIME_SUCCESS, userService.createMemberMeetingTime(meetingId, requestDto));
+    }
+
+    @PostMapping("{meetingId}/host")
+    public ApiResponse loginByHost(
+            @PathVariable("meetingId") String _meetingId,
+            @RequestBody @Valid HostLoginRequestDto requestDto,
+            @MeetingId Long meetingId
+    ) {
+        return ApiResponse.success(Success.LOGIN_SUCCESS, userService.loginByHost(meetingId, requestDto));
     }
 }

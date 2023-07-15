@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends AuditingTimeEntity{
+public class User extends AuditingTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,7 +31,7 @@ public class User extends AuditingTimeEntity{
         this.role = role;
     }
 
-    public static User newInstance(String name, Role role){
+    public static User newInstance(String name, Role role) {
         return new User(name, role);
     }
 }
