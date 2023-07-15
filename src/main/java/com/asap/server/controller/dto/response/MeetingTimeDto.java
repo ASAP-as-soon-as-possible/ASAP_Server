@@ -13,5 +13,5 @@ public class MeetingTimeDto {
     private TimeSlot startTime;
     private TimeSlot endTime;
     private String name;
-    private String priority;
+    private int priority;
 }

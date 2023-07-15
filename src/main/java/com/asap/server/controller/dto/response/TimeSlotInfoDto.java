@@ -2,14 +2,20 @@ package com.asap.server.controller.dto.response;
 
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 public class TimeSlotInfoDto {
-    public List<String> userNames = new ArrayList<>();
-    public int weight = 0;
+    private final List<String> userNames = new ArrayList<>();
+    private int weight = 0;
+
+    public void addUserName(String name) {
+        userNames.add(name);
+    }
+
+    public void addWeight(int weight) {
+        this.weight += weight;
+    }
 }
