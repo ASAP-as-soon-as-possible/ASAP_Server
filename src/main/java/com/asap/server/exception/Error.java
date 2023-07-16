@@ -14,7 +14,8 @@ public enum Error {
      **/
     INVALID_MEETING_URL_EXCEPTION(HttpStatus.BAD_REQUEST, "유효하지 않는 URL 입니다."),
     VALIDATION_REQUEST_MISSING_EXCEPTION(HttpStatus.BAD_REQUEST, "요청값이 유효하지 않습니다."),
-
+    DUPLICATED_TIME_EXCEPTION(HttpStatus.BAD_REQUEST,"중복 입력된 시간이 있습니다."),
+    INVALID_TIME_RANGE(HttpStatus.BAD_REQUEST,"입력한 시간이 회의 가능 일시에 해당하지 않습니다."),
     /**
      * 401 UNAUTHORIZED
      **/
