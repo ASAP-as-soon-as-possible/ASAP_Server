@@ -29,7 +29,7 @@ public class UserController {
             @UserId Long userId,
             @MeetingId Long meetingId
     ) {
-        return ApiResponse.success(Success.CREATE_HOST_TIME_SUCCESS, userService.createHostTime(_meetingId, meetingId, requestDtoList));
+        return ApiResponse.success(Success.CREATE_HOST_TIME_SUCCESS, userService.createHostTime(meetingId, _meetingId, userId, requestDtoList));
     }
 
     @PostMapping("/{meetingId}/time")
