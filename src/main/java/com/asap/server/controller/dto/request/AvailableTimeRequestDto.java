@@ -14,9 +14,9 @@ import java.util.List;
 public class AvailableTimeRequestDto {
     @NotBlank
     @Size(max = 8 , message = "방장 이름의 최대 입력 길이(8자)를 초과했습니다.")
-    @Schema(description = "사용자 이름")
+    @Schema(description = "사용자 이름",example = "김아삽")
     private String name;
 
-    @Schema(description = "가능 일자")
+    @Schema(description = "가능 일자", example = "[\"2024/09/12/TUE\", \"2024/09/13/WED\"]")
     private List<UserMeetingTimeSaveRequestDto> availableTimes;
 }

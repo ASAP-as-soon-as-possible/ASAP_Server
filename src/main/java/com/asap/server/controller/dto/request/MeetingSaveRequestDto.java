@@ -30,22 +30,22 @@ public class MeetingSaveRequestDto {
     private List<PreferTimeSaveRequestDto> preferTimes;
 
     @NotNull(message = "회의 형식이 입력되지 않았습니다.")
-    @Schema(description = "회의 장소")
+    @Schema(description = "회의 방식", example = "ONLINE")
     private Place place;
 
     @Schema(description = "회의 장소 설명")
     private String placeDetail;
 
-    @Schema(description = "회의 진행 시간")
+    @Schema(description = "회의 진행 시간", example = "HALF")
     @NotNull(message = "회의 진행 시간이 입력되지 않았습니다.")
     private Duration duration;
 
-    @Schema(description = "회의 방장 이름")
+    @Schema(description = "회의 방장 이름", example = "김아삽")
     @NotBlank(message = "방장의 이름이 입력되지 않았습니다.")
     @Size(max = 8 , message = "방장 이름의 최대 입력 길이(8자)를 초과했습니다.")
     private String name;
 
-    @Schema(description = "회의 비밀번호")
+    @Schema(description = "회의 비밀번호", example = "0808")
     @NotBlank(message = "회의 비밀번호가 입력되지 않았습니다.")
     @Size(min = 4, message = "비밀번호의 최소 입력 길이는 4자입니다.")
     @Pattern(regexp = "\\d{4,}", message = "비밀번호는 4자리 이상 숫자입니다.")
