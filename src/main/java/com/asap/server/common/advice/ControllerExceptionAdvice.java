@@ -1,6 +1,6 @@
 package com.asap.server.common.advice;
 
-import com.asap.server.common.dto.ApiResponse;
+import com.asap.server.common.dto.ErrorResponse;
 import com.asap.server.common.utils.SlackUtil;
 import com.asap.server.exception.model.AsapException;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +24,8 @@ public class ControllerExceptionAdvice {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ValidationException.class)
-    protected ApiResponse handleMethodArgumentNotValidException(final ValidationException e) {
-        return ApiResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION);
+    protected ErrorResponse handleMethodArgumentNotValidException(final ValidationException e) {
+        return ErrorResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION);
     }
 
     /**
@@ -33,13 +33,13 @@ public class ControllerExceptionAdvice {
      */
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    protected ApiResponse<Object> handleException(final Exception error, final HttpServletRequest request) throws IOException {
+    protected ErrorResponse handleException(final Exception error, final HttpServletRequest request) throws IOException {
         slackUtil.sendAlert(error,request);
-        return ApiResponse.error(Error.INTERNAL_SERVER_ERROR);
+        return ErrorResponse.error(Error.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(AsapException.class)
-    protected ApiResponse handleAsapException(final AsapException e){
-        return ApiResponse.error(e.getError(), e.getMessage());
+    protected ErrorResponse handleAsapException(final AsapException e){
+        return ErrorResponse.error(e.getError(), e.getMessage());
     }
 }
