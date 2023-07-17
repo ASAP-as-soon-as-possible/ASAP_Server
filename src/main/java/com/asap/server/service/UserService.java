@@ -51,6 +51,7 @@ public class UserService {
     ) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+
         if (requestDto.getName().equals(meeting.getHost().getName())
                 && requestDto.getPassword().equals(meeting.getPassword())) {
             isHostMeetingTimeSet(meeting.getHost());
@@ -81,6 +82,7 @@ public class UserService {
         meeting.getUsers().add(newUser);
         userRepository.save(newUser);
         createMeetingTimeList(meetingId, newUser, requestDto.getAvailableTimes());
+
         return UserTimeResponseDto
                 .builder()
                 .role(newUser.getRole().getRole())
@@ -98,7 +100,11 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
         createMeetingTimeList(meetingId, host, requestDtoList);
         String accessToken = jwtService.issuedToken(host.getId().toString());
-        return new UserMeetingTimeResponseDto(url, accessToken);
+
+        return UserMeetingTimeResponseDto.builder()
+                .url(url)
+                .accessToken(accessToken)
+                .build();
     }
 
     @Transactional
