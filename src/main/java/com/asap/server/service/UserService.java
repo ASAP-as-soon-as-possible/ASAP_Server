@@ -128,10 +128,8 @@ public class UserService {
             String col = String.format("%s %s %s", requestDto.getMonth(), requestDto.getDay(), requestDto.getDayOfWeek());
             List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal());
             if (meetingTimeAvailable.containsKey(col)) {
-                if (meetingTimeAvailable.containsKey(col)) {
-                    if (meetingTimeAvailable.get(col).stream().anyMatch(timeSlots::contains)) {
-                        throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
-                    }
+                if (meetingTimeAvailable.get(col).stream().anyMatch(timeSlots::contains)) {
+                    throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
                 }
             } else {
                 meetingTimeAvailable.put(col, timeSlots);
