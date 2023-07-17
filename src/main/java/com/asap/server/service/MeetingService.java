@@ -55,21 +55,25 @@ public class MeetingService {
 
     @Transactional
     public MeetingSaveResponseDto create(MeetingSaveRequestDto meetingSaveRequestDto) {
+
         List<DateAvailability> dateAvailabilityList = meetingSaveRequestDto
                 .getAvailableDates()
                 .stream()
                 .map(s -> DateAvailability.newInstance(s))
                 .collect(Collectors.toList());
         dateAvailabilityRepository.saveAllAndFlush(dateAvailabilityList);
+
         List<PreferTime> preferTimeList = meetingSaveRequestDto
                 .getPreferTimes()
                 .stream()
                 .map(preferTimeSaveRequestDto -> PreferTime.newInstance(preferTimeSaveRequestDto.getStartTime(), preferTimeSaveRequestDto.getEndTime()))
                 .collect(Collectors.toList());
         preferTimeRepository.saveAllAndFlush(preferTimeList);
+
         User host = userService.createHost(meetingSaveRequestDto.getName());
         List<User> users = new ArrayList<>();
         users.add(host);
+
         Meeting newMeeting = Meeting.newInstance(
                 host,
                 dateAvailabilityList,
@@ -82,9 +86,14 @@ public class MeetingService {
                 meetingSaveRequestDto.getDuration(),
                 meetingSaveRequestDto.getAdditionalInfo());
         meetingRepository.save(newMeeting);
+
         String accessToken = jwtService.issuedToken(host.getId().toString());
         newMeeting.setUrl(Base64Utils.encodeToUrlSafeString(newMeeting.getId().toString().getBytes()));
-        return new MeetingSaveResponseDto(newMeeting.getUrl(), accessToken);
+
+        return MeetingSaveResponseDto.builder()
+                .url(newMeeting.getUrl())
+                .accessToken(accessToken)
+                .build();
     }
 
     @Transactional
@@ -110,6 +119,7 @@ public class MeetingService {
     public MeetingScheduleResponseDto getMeetingSchedule(Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+
         List<AvailableDateResponseDto> availableDateResponseDtoList = meeting.getDateAvailabilities()
                 .stream()
                 .map(dateAvailability -> new AvailableDateResponseDto(
@@ -117,6 +127,7 @@ public class MeetingService {
                         dateAvailability.getDay(),
                         dateAvailability.getDayOfWeek()))
                 .collect(Collectors.toList());
+
         List<PreferTimeResponseDto> preferTimeResponseDtoList = meeting.getPreferTimes()
                 .stream()
                 .map(preferTime -> new PreferTimeResponseDto(
@@ -124,12 +135,14 @@ public class MeetingService {
                         preferTime.getEndTime().getTime()
                 ))
                 .collect(Collectors.toList());
-        return new MeetingScheduleResponseDto(
-                meeting.getDuration(),
-                meeting.getPlace(),
-                meeting.getPlaceDetail(),
-                availableDateResponseDtoList,
-                preferTimeResponseDtoList);
+
+        return MeetingScheduleResponseDto.builder()
+                .duration(meeting.getDuration())
+                .place(meeting.getPlace())
+                .placeDetail(meeting.getPlaceDetail())
+                .availableDates(availableDateResponseDtoList)
+                .preferTimes(preferTimeResponseDtoList)
+                .build();
     }
 
     public FixedMeetingResponseDto getFixedMeetingInformation(Long meetingId) {
@@ -164,6 +177,7 @@ public class MeetingService {
         List<User> users = meeting.getUsers();
         List<String> userNames = new ArrayList<>();
         Map<String, Map<String, List<String>>> dateAvailable = new HashMap<>();
+
         for (User user : users) {
             List<MeetingTime> meetingTimes = meetingTimeRepository.findByUser(user);
             for (MeetingTime meetingTime : meetingTimes) {
@@ -190,6 +204,7 @@ public class MeetingService {
             }
             userNames.add(user.getName());
         }
+
         List<AvailableDatesDto> availableDatesDtos = new ArrayList<>();
         dateAvailable.forEach((key, value) -> {
                     List<TimeSlotDto> timeSlotDtos = new ArrayList<>();
@@ -206,7 +221,7 @@ public class MeetingService {
                                     colorLevel = 4;
                                 } else if (userNameList.size() > users.size() * (4 / 5) && userNameList.size() <= users.size()) {
                                     colorLevel = 5;
-                                } else{
+                                } else {
                                     colorLevel = 0;
                                 }
                                 timeSlotDtos.add(TimeSlotDto
@@ -221,15 +236,18 @@ public class MeetingService {
                     String month = Integer.valueOf(key.substring(0, 2)).toString();
                     String day = Integer.valueOf(key.substring(3, 5)).toString();
                     String dayOfWeek = key.substring(6, 7);
+
                     availableDatesDtos.add(AvailableDatesDto
                             .builder()
                             .month(month)
                             .day(day)
                             .dayOfWeek(dayOfWeek)
                             .timeSlots(timeSlotDtos)
-                            .build());
+                            .build()
+                    );
                 }
         );
+
         return TimeTableResponseDto
                 .builder()
                 .memberCount(users.size())
@@ -237,15 +255,17 @@ public class MeetingService {
                 .availableDateTimes(availableDatesDtos)
                 .build();
     }
-    public IsFixedMeetingResponseDto getIsFixedMeeting(Long meetingId) throws ConflictException{
+
+    public IsFixedMeetingResponseDto getIsFixedMeeting(Long meetingId) throws ConflictException {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-        if(meeting.getMonth() != null){
+
+        if (meeting.getMonth() != null) {
             throw new ConflictException(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
         }
-        IsFixedMeetingResponseDto isFixedMeetingResponseDto = IsFixedMeetingResponseDto.builder()
+
+        return IsFixedMeetingResponseDto.builder()
                 .isFixed(true)
                 .build();
-        return isFixedMeetingResponseDto;
     }
 }

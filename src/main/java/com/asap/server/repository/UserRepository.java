@@ -9,4 +9,5 @@ public interface UserRepository extends Repository<User, Long> {
 
     void save(User user);
     Optional<User> findById(Long id);
+
 }

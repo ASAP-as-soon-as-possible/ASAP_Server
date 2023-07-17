@@ -7,7 +7,6 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class PreferTimeResponseDto {
-    private String startTime;
-    private String endTime;
+public class HostLoginResponseDto {
+    private String accessToken;
 }
