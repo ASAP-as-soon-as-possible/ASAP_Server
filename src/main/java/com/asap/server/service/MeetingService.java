@@ -66,7 +66,13 @@ public class MeetingService {
         List<PreferTime> preferTimeList = meetingSaveRequestDto
                 .getPreferTimes()
                 .stream()
-                .map(preferTimeSaveRequestDto -> PreferTime.newInstance(preferTimeSaveRequestDto.getStartTime(), preferTimeSaveRequestDto.getEndTime()))
+                .map(
+                        preferTimeSaveRequestDto ->
+                                PreferTime.newInstance(
+                                        preferTimeSaveRequestDto.getStartTime(),
+                                        preferTimeSaveRequestDto.getEndTime()
+                                )
+                )
                 .collect(Collectors.toList());
         preferTimeRepository.saveAllAndFlush(preferTimeList);
 
