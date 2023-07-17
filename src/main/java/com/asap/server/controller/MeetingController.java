@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MeetingController {
     private final MeetingService meetingService;
 
-    @Operation(summary = "회의 생성 API")
+    @Operation(summary = "[회의 생성 뷰] 회의 생성 API")
     @PostMapping
     public SuccessResponse<MeetingSaveResponseDto> create(
             @RequestBody @Valid MeetingSaveRequestDto meetingSaveRequestDto
@@ -49,7 +49,7 @@ public class MeetingController {
         return SuccessResponse.success(Success.CONFIRM_MEETING_SUCCESS);
     }
 
-    @Operation(summary = "회의 선택 시간표 제공 API")
+    @Operation(summary = "[가능 시간 입력 뷰] 회의 선택 시간표 제공 API")
     @GetMapping("/{meetingId}/schedule")
     public SuccessResponse getMeetingSchedule(
             @PathVariable("meetingId") String _meetingId,
@@ -66,7 +66,7 @@ public class MeetingController {
         return SuccessResponse.success(Success.FIXED_MEETING_SUCCESS, meetingService.getFixedMeetingInformation(meetingId));
     }
 
-    @Operation(summary = "종합 시간표 제공 API")
+    @Operation(summary = "[방장 뷰] 종합 일정 시간표 제공 API")
     @GetMapping("/{meetingId}/timetable")
     public SuccessResponse<TimeTableResponseDto> getTimeTable(
             @PathVariable("meetingId") String _meetingId,
@@ -76,7 +76,7 @@ public class MeetingController {
         return SuccessResponse.success(Success.FIND_TIME_TABLE_SUCCESS, meetingService.getTimeTable(meetingId));
     }
 
-    @Operation(summary = "회의 유효성 체크 API")
+    @Operation(summary = "[회의 입장 뷰] 회의 유효성 체크 API")
     @GetMapping("/{meetingId}")
     public SuccessResponse getIsFixedMeeting(
             @PathVariable("meetingId") String _meetingId,

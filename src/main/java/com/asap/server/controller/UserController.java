@@ -29,7 +29,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @Operation(summary = "방장 가능 시간 입력 API")
+    @Operation(summary = "[회의 가능 시간 입력 뷰 - 방장] 방장 가능 시간 입력 API")
     @PostMapping("/host/{meetingId}/time")
     public SuccessResponse createHostTime(
             @PathVariable("meetingId") String _meetingId,
@@ -40,7 +40,7 @@ public class UserController {
         return SuccessResponse.success(Success.CREATE_HOST_TIME_SUCCESS, userService.createHostTime(meetingId, _meetingId, userId, requestDtoList));
     }
 
-    @Operation(summary = "참여자 정보 및 가능 시간 입력 API")
+    @Operation(summary = "[회의 가능 시간 입력 뷰 - 참여자] 참여자 정보 및 가능 시간 입력 API")
     @PostMapping("/{meetingId}/time")
     public SuccessResponse createMemberTime(
             @PathVariable("meetingId") String _meetingId,
@@ -50,7 +50,7 @@ public class UserController {
         return SuccessResponse.success(Success.CREATE_MEETING_TIME_SUCCESS, userService.createMemberMeetingTime(meetingId, requestDto));
     }
 
-    @Operation(summary = "방장 로그인 API")
+    @Operation(summary = "[방장 입장 뷰] 방장 로그인 API")
     @PostMapping("{meetingId}/host")
     public SuccessResponse loginByHost(
             @PathVariable("meetingId") String _meetingId,

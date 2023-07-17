@@ -23,7 +23,7 @@ public class MeetingSaveRequestDto {
     @Schema(description = "회의 주제")
     private String title;
 
-    @Schema(description = "회의 가능 날짜 [YYYY/mm/dd/ddd]")
+    @Schema(description = "회의 가능 날짜(ex. 2023/07/08/MON)")
     private List< @Pattern(regexp = "\\d\\d\\d\\d/\\d\\d/\\d\\d/[a-zA-Z][a-zA-Z][a-zA-Z]", message = "비밀번호는 4자리 이상 숫자입니다.") String> availableDates;
 
     @Schema(description = "회의 선호 시간")
