@@ -158,4 +158,26 @@ public class BestMeetingUtil {
         }
     }
 
+    private AvailableMeetingTimeDto selectBestMeetingTime() {
+        Duration firstDuration = meeting.getDuration();
+        Duration secondDuration = (firstDuration.ordinal() - 1 >= 0) ? durations[firstDuration.ordinal() - 1] : null;
+        int memberCount = 6;
+
+        while (true) {
+            if (isBestMeetingTime(firstDuration, memberCount)) {
+                return availableMeetingTimesByDuration.get(firstDuration).get(0);
+            }
+
+            if (isBestMeetingTime(secondDuration, memberCount)) {
+                return availableMeetingTimesByDuration.get(firstDuration).get(0);
+            }
+        }
+    }
+
+    private boolean isBestMeetingTime(Duration duration, int memberCount) {
+        List<AvailableMeetingTimeDto> availableMeetingTimes = availableMeetingTimesByDuration.get(duration);
+        if (!availableMeetingTimes.isEmpty()) {
+            return availableMeetingTimes.get(0).getUserNames().size() == memberCount;
+        } else return false;
+    }
 }
