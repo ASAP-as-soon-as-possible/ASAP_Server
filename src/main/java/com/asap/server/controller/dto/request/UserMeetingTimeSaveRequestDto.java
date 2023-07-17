@@ -29,9 +29,11 @@ public class UserMeetingTimeSaveRequestDto {
     private String dayOfWeek;
 
     @NotNull
+    @Pattern(regexp = "\\d\\d:\\d\\d", message = "시간은 hh:mm 형식이어야 합니다.")
     private TimeSlot startTime;
 
     @NotNull
+    @Pattern(regexp = "\\d\\d:\\d\\d", message = "시간은 hh:mm 형식이어야 합니다.")
     private TimeSlot endTime;
 
     @NotNull

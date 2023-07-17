@@ -1,11 +1,15 @@
 package com.asap.server.domain.enums;
 
+import com.asap.server.exception.Error;
+import com.asap.server.exception.model.BadRequestException;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @AllArgsConstructor
 @Getter

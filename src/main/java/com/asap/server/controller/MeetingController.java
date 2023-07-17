@@ -14,6 +14,7 @@ import com.asap.server.service.MeetingService;
 import javax.validation.Valid;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +40,7 @@ public class MeetingController {
     }
 
     @PostMapping("/{meetingId}/confirm")
+    @SecurityRequirement(name = "JWT Auth")
     public SuccessResponse confirmMeeting(
             @PathVariable("meetingId") String _meetingId,
             @RequestBody @Valid MeetingConfirmRequestDto meetingConfirmRequestDto,
@@ -68,6 +70,7 @@ public class MeetingController {
 
     @Operation(summary = "[방장 뷰] 종합 일정 시간표 제공 API")
     @GetMapping("/{meetingId}/timetable")
+    @SecurityRequirement(name = "JWT Auth")
     public SuccessResponse<TimeTableResponseDto> getTimeTable(
             @PathVariable("meetingId") String _meetingId,
             @UserId Long userId,

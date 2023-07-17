@@ -9,6 +9,7 @@ import com.asap.server.controller.dto.request.UserMeetingTimeSaveRequestDto;
 import com.asap.server.exception.Success;
 import com.asap.server.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -30,6 +31,7 @@ public class UserController {
     private final UserService userService;
 
     @Operation(summary = "[회의 가능 시간 입력 뷰 - 방장] 방장 가능 시간 입력 API")
+    @SecurityRequirement(name = "JWT Auth")
     @PostMapping("/host/{meetingId}/time")
     public SuccessResponse createHostTime(
             @PathVariable("meetingId") String _meetingId,
