@@ -3,9 +3,10 @@ package com.asap.server.common.advice;
 import com.asap.server.common.dto.ErrorResponse;
 import com.asap.server.common.utils.SlackUtil;
 import com.asap.server.exception.model.AsapException;
-import com.asap.server.exception.model.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,8 +27,19 @@ public class ControllerExceptionAdvice {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ValidationException.class)
-    protected ErrorResponse handleMethodArgumentNotValidException(final ValidationException e) {
+    protected ErrorResponse handleValidException(final ValidationException e) {
         return ErrorResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+        return ErrorResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION);
+    }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    protected ErrorResponse handleJsonParseException(final HttpMessageNotReadableException e){
+        return ErrorResponse.error(Error.INVALID_JSON_INPUT_EXCEPTION);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

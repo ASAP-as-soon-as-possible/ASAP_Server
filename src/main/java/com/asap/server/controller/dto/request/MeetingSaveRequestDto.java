@@ -2,6 +2,7 @@ package com.asap.server.controller.dto.request;
 
 import com.asap.server.domain.enums.Duration;
 import com.asap.server.domain.enums.Place;
+
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -19,12 +20,12 @@ import lombok.NoArgsConstructor;
 public class MeetingSaveRequestDto {
 
     @NotBlank(message = "회의 제목이 입력되지 않았습니다.")
-    @Size(max = 15 , message = "제목의 최대 입력 길이(15자)를 초과했습니다.")
+    @Size(max = 15, message = "제목의 최대 입력 길이(15자)를 초과했습니다.")
     @Schema(description = "회의 주제")
     private String title;
 
-    @Schema(description = "회의 가능 날짜", example = "2023/07/09/MON")
-    private List< @Pattern(regexp = "\\d\\d\\d\\d/\\d\\d/\\d\\d/[a-zA-Z][a-zA-Z][a-zA-Z]", message = "회의 가능 날짜 형식은 YYYY/mm/dd/ddd 입니다.") String> availableDates;
+    @Schema(description = "회의 가능 날짜", example = "[\"2023/07/09/MON\"]")
+    private List<@Pattern(regexp = "\\d\\d\\d\\d/\\d\\d/\\d\\d/[a-zA-Z][a-zA-Z][a-zA-Z]", message = "회의 가능 날짜 형식은 YYYY/mm/dd/ddd 입니다.") String> availableDates;
 
     @Schema(description = "회의 선호 시간")
     private List<PreferTimeSaveRequestDto> preferTimes;
@@ -42,7 +43,7 @@ public class MeetingSaveRequestDto {
 
     @Schema(description = "회의 방장 이름", example = "김아삽")
     @NotBlank(message = "방장의 이름이 입력되지 않았습니다.")
-    @Size(max = 8 , message = "방장 이름의 최대 입력 길이(8자)를 초과했습니다.")
+    @Size(max = 8, message = "방장 이름의 최대 입력 길이(8자)를 초과했습니다.")
     private String name;
 
     @Schema(description = "회의 비밀번호", example = "0808")
