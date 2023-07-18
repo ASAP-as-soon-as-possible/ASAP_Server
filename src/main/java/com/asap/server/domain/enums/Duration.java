@@ -4,10 +4,9 @@ import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.stream.Stream;
 
 @AllArgsConstructor
 @Getter
@@ -22,6 +21,7 @@ public enum Duration {
 
     @JsonValue
     private String duration;
+    private final int needBlock;
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
     public static Duration findByTime(String duration) {
@@ -30,6 +30,4 @@ public enum Duration {
                 .findFirst()
                 .orElseThrow(() -> new BadRequestException(Error.INVALID_JSON_INPUT_EXCEPTION));
     }
-    private final String duration;
-    private final int needBlock;
 }
