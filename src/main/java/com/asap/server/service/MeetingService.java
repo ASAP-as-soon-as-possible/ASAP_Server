@@ -22,6 +22,7 @@ import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.NotFoundException;
+import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.DateAvailabilityRepository;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.MeetingTimeRepository;
@@ -52,7 +53,6 @@ public class MeetingService {
     private final DateAvailabilityRepository dateAvailabilityRepository;
     private final PreferTimeRepository preferTimeRepository;
     private final JwtService jwtService;
-
     @Transactional
     public MeetingSaveResponseDto create(MeetingSaveRequestDto meetingSaveRequestDto) {
 
@@ -177,9 +177,12 @@ public class MeetingService {
                 .build();
     }
 
-    public TimeTableResponseDto getTimeTable(Long meetingId) {
+    public TimeTableResponseDto getTimeTable(Long userId, Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+        if(!meeting.getHost().getId().equals(userId)){
+           throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
+        }
         List<User> users = meeting.getUsers();
         List<String> userNames = new ArrayList<>();
         Map<String, Map<String, List<String>>> dateAvailable = new HashMap<>();
@@ -217,15 +220,15 @@ public class MeetingService {
                     value.forEach((timeSlot, userNameList) ->
                             {
                                 int colorLevel;
-                                if (userNameList.size() > 0 && userNameList.size() <= users.size() * (1 / 5)) {
+                                if (userNameList.size() > 0 && (userNameList.size() <= users.size() * (0.2))) {
                                     colorLevel = 1;
-                                } else if (userNameList.size() > users.size() * (1 / 5) && userNameList.size() <= users.size() * (2 / 5)) {
+                                } else if (userNameList.size() > users.size() * (0.2) && userNameList.size() <= users.size() * (0.4)) {
                                     colorLevel = 2;
-                                } else if (userNameList.size() > users.size() * (2 / 5) && userNameList.size() <= users.size() * (3 / 5)) {
+                                } else if (userNameList.size() > users.size() * (0.4) && userNameList.size() <= users.size() * (0.6)) {
                                     colorLevel = 3;
-                                } else if (userNameList.size() > users.size() * (3 / 5) && userNameList.size() <= users.size() * (4 / 5)) {
+                                } else if (userNameList.size() > users.size() * (0.6) && userNameList.size() <= users.size() * (0.8)) {
                                     colorLevel = 4;
-                                } else if (userNameList.size() > users.size() * (4 / 5) && userNameList.size() <= users.size()) {
+                                } else if (userNameList.size() > users.size() * (0.8) && userNameList.size() <= users.size()) {
                                     colorLevel = 5;
                                 } else {
                                     colorLevel = 0;
