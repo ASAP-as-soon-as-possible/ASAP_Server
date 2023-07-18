@@ -27,7 +27,6 @@ import com.asap.server.repository.DateAvailabilityRepository;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.MeetingTimeRepository;
 import com.asap.server.repository.PreferTimeRepository;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,7 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +51,7 @@ public class MeetingService {
     private final DateAvailabilityRepository dateAvailabilityRepository;
     private final PreferTimeRepository preferTimeRepository;
     private final JwtService jwtService;
+
     @Transactional
     public MeetingSaveResponseDto create(MeetingSaveRequestDto meetingSaveRequestDto) {
 
@@ -119,6 +118,7 @@ public class MeetingService {
         meeting.setDayOfWeek(meetingConfirmRequestDto.getDayOfWeek());
         meeting.setStartTime(meetingConfirmRequestDto.getStartTime());
         meeting.setEndTime(meetingConfirmRequestDto.getEndTime());
+        meeting.setFinalUsers(userService.getFixedUsers(meetingConfirmRequestDto.getUsers()));
     }
 
     @Transactional(readOnly = true)
@@ -180,8 +180,8 @@ public class MeetingService {
     public TimeTableResponseDto getTimeTable(Long userId, Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-        if(!meeting.getHost().getId().equals(userId)){
-           throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
+        if (!meeting.getHost().getId().equals(userId)) {
+            throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
         }
         List<User> users = meeting.getUsers();
         List<String> userNames = new ArrayList<>();
