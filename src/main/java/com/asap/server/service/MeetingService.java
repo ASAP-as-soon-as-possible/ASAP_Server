@@ -52,7 +52,6 @@ public class MeetingService {
     private final DateAvailabilityRepository dateAvailabilityRepository;
     private final PreferTimeRepository preferTimeRepository;
     private final JwtService jwtService;
-
     @Transactional
     public MeetingSaveResponseDto create(MeetingSaveRequestDto meetingSaveRequestDto) {
 
@@ -217,15 +216,15 @@ public class MeetingService {
                     value.forEach((timeSlot, userNameList) ->
                             {
                                 int colorLevel;
-                                if (userNameList.size() > 0 && userNameList.size() <= users.size() * (1 / 5)) {
+                                if (userNameList.size() > 0 && (userNameList.size() <= users.size() * (0.2))) {
                                     colorLevel = 1;
-                                } else if (userNameList.size() > users.size() * (1 / 5) && userNameList.size() <= users.size() * (2 / 5)) {
+                                } else if (userNameList.size() > users.size() * (0.2) && userNameList.size() <= users.size() * (0.4)) {
                                     colorLevel = 2;
-                                } else if (userNameList.size() > users.size() * (2 / 5) && userNameList.size() <= users.size() * (3 / 5)) {
+                                } else if (userNameList.size() > users.size() * (0.4) && userNameList.size() <= users.size() * (0.6)) {
                                     colorLevel = 3;
-                                } else if (userNameList.size() > users.size() * (3 / 5) && userNameList.size() <= users.size() * (4 / 5)) {
+                                } else if (userNameList.size() > users.size() * (0.6) && userNameList.size() <= users.size() * (0.8)) {
                                     colorLevel = 4;
-                                } else if (userNameList.size() > users.size() * (4 / 5) && userNameList.size() <= users.size()) {
+                                } else if (userNameList.size() > users.size() * (0.8) && userNameList.size() <= users.size()) {
                                     colorLevel = 5;
                                 } else {
                                     colorLevel = 0;
