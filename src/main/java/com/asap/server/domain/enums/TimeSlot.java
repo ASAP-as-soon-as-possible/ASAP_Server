@@ -1,11 +1,15 @@
 package com.asap.server.domain.enums;
 
+import com.asap.server.exception.Error;
+import com.asap.server.exception.model.BadRequestException;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @AllArgsConstructor
 @Getter
@@ -62,5 +66,13 @@ public enum TimeSlot {
             }
         }
         return result;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static TimeSlot findByTime(String timeSlot) {
+        return Stream.of(TimeSlot.values())
+                .filter(c -> c.getTime().equals(timeSlot))
+                .findFirst()
+                .orElseThrow(() -> new BadRequestException(Error.INVALID_JSON_INPUT_EXCEPTION));
     }
 }

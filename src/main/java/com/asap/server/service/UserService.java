@@ -4,6 +4,7 @@ import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.AvailableTimeRequestDto;
 import com.asap.server.controller.dto.request.HostLoginRequestDto;
 import com.asap.server.controller.dto.request.UserMeetingTimeSaveRequestDto;
+import com.asap.server.controller.dto.request.UserRequestDto;
 import com.asap.server.controller.dto.response.HostLoginResponseDto;
 import com.asap.server.controller.dto.response.UserMeetingTimeResponseDto;
 import com.asap.server.controller.dto.response.UserTimeResponseDto;
@@ -20,14 +21,13 @@ import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.MeetingTimeRepository;
 import com.asap.server.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -156,5 +156,14 @@ public class UserService {
                 throw new BadRequestException(Error.INVALID_TIME_RANGE);
             }
         }
+    }
+
+    public List<User> getFixedUsers(List<UserRequestDto> userRequestDtos) {
+        return userRequestDtos.stream()
+                .map(user ->
+                        userRepository.findById(user.getId())
+                                .orElseThrow(() -> new NotFoundException(Error.USER_NOT_FOUND_EXCEPTION))
+                )
+                .collect(Collectors.toList());
     }
 }

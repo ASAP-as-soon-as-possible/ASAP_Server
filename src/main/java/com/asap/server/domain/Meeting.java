@@ -3,7 +3,6 @@ package com.asap.server.domain;
 import com.asap.server.domain.enums.Duration;
 import com.asap.server.domain.enums.Place;
 import com.asap.server.domain.enums.TimeSlot;
-
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,6 +46,8 @@ public class Meeting extends AuditingTimeEntity {
     private String dayOfWeek;
     private TimeSlot startTime;
     private TimeSlot endTime;
+    @OneToMany
+    private List<User> fixedUsers;
 
     private Meeting(User host,
                     List<DateAvailability> dateAvailabilities,
@@ -107,5 +107,9 @@ public class Meeting extends AuditingTimeEntity {
 
     public void setEndTime(TimeSlot endTime) {
         this.endTime = endTime;
+    }
+
+    public void setFinalUsers(List<User> users) {
+        this.fixedUsers = users;
     }
 }

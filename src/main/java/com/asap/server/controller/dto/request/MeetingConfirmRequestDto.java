@@ -1,6 +1,7 @@
 package com.asap.server.controller.dto.request;
 
 import com.asap.server.domain.enums.TimeSlot;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,4 +20,6 @@ public class MeetingConfirmRequestDto {
     private TimeSlot startTime;
     @NotNull(message = "회의 종료 시간이 입력되지 않았습니다.")
     private TimeSlot endTime;
+    @NotNull
+    private List<UserRequestDto> users;
 }

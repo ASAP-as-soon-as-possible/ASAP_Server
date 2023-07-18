@@ -22,11 +22,11 @@ import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.NotFoundException;
+import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.DateAvailabilityRepository;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.MeetingTimeRepository;
 import com.asap.server.repository.PreferTimeRepository;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -34,7 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,7 +65,13 @@ public class MeetingService {
         List<PreferTime> preferTimeList = meetingSaveRequestDto
                 .getPreferTimes()
                 .stream()
-                .map(preferTimeSaveRequestDto -> PreferTime.newInstance(preferTimeSaveRequestDto.getStartTime(), preferTimeSaveRequestDto.getEndTime()))
+                .map(
+                        preferTimeSaveRequestDto ->
+                                PreferTime.newInstance(
+                                        preferTimeSaveRequestDto.getStartTime(),
+                                        preferTimeSaveRequestDto.getEndTime()
+                                )
+                )
                 .collect(Collectors.toList());
         preferTimeRepository.saveAllAndFlush(preferTimeList);
 
@@ -113,6 +118,7 @@ public class MeetingService {
         meeting.setDayOfWeek(meetingConfirmRequestDto.getDayOfWeek());
         meeting.setStartTime(meetingConfirmRequestDto.getStartTime());
         meeting.setEndTime(meetingConfirmRequestDto.getEndTime());
+        meeting.setFinalUsers(userService.getFixedUsers(meetingConfirmRequestDto.getUsers()));
     }
 
     @Transactional(readOnly = true)
@@ -171,9 +177,12 @@ public class MeetingService {
                 .build();
     }
 
-    public TimeTableResponseDto getTimeTable(Long meetingId) {
+    public TimeTableResponseDto getTimeTable(Long userId, Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+        if (!meeting.getHost().getId().equals(userId)) {
+            throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
+        }
         List<User> users = meeting.getUsers();
         List<String> userNames = new ArrayList<>();
         Map<String, Map<String, List<String>>> dateAvailable = new HashMap<>();
@@ -211,15 +220,15 @@ public class MeetingService {
                     value.forEach((timeSlot, userNameList) ->
                             {
                                 int colorLevel;
-                                if (userNameList.size() > 0 && userNameList.size() <= users.size() * (1 / 5)) {
+                                if (userNameList.size() > 0 && (userNameList.size() <= users.size() * (0.2))) {
                                     colorLevel = 1;
-                                } else if (userNameList.size() > users.size() * (1 / 5) && userNameList.size() <= users.size() * (2 / 5)) {
+                                } else if (userNameList.size() > users.size() * (0.2) && userNameList.size() <= users.size() * (0.4)) {
                                     colorLevel = 2;
-                                } else if (userNameList.size() > users.size() * (2 / 5) && userNameList.size() <= users.size() * (3 / 5)) {
+                                } else if (userNameList.size() > users.size() * (0.4) && userNameList.size() <= users.size() * (0.6)) {
                                     colorLevel = 3;
-                                } else if (userNameList.size() > users.size() * (3 / 5) && userNameList.size() <= users.size() * (4 / 5)) {
+                                } else if (userNameList.size() > users.size() * (0.6) && userNameList.size() <= users.size() * (0.8)) {
                                     colorLevel = 4;
-                                } else if (userNameList.size() > users.size() * (4 / 5) && userNameList.size() <= users.size()) {
+                                } else if (userNameList.size() > users.size() * (0.8) && userNameList.size() <= users.size()) {
                                     colorLevel = 5;
                                 } else {
                                     colorLevel = 0;
