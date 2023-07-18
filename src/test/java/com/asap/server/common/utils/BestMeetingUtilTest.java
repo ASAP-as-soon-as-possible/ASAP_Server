@@ -4,6 +4,8 @@ import com.asap.server.controller.dto.response.AvailableMeetingTimeDto;
 import com.asap.server.controller.dto.response.DateAvailabilityDto;
 import com.asap.server.controller.dto.response.MeetingDto;
 import com.asap.server.controller.dto.response.MeetingTimeDto;
+import com.asap.server.controller.dto.response.PossibleTimeCaseDto;
+import com.asap.server.controller.dto.response.UserDto;
 import com.asap.server.domain.enums.Duration;
 import com.asap.server.domain.enums.TimeSlot;
 import java.util.Arrays;
@@ -13,6 +15,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import static com.asap.server.domain.enums.Duration.HALF;
+import static com.asap.server.domain.enums.Duration.HOUR;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class BestMeetingUtilTest {
@@ -30,8 +34,12 @@ public class BestMeetingUtilTest {
         DateAvailabilityDto dateAvailability1 = new DateAvailabilityDto("7", "10", "월");
         DateAvailabilityDto dateAvailability2 = new DateAvailabilityDto("7", "11", "화");
         DateAvailabilityDto dateAvailability3 = new DateAvailabilityDto("7", "12", "수");
+        UserDto userDto = new UserDto(1L, "심은서");
+        UserDto userDto2 = new UserDto(2L, "이동헌");
+        UserDto userDto3 = new UserDto(3L, "이재훈");
+        List<UserDto> users = Arrays.asList(userDto, userDto2, userDto3);
         List<DateAvailabilityDto> dateAvailabilityDto = Arrays.asList(dateAvailability1, dateAvailability2, dateAvailability3);
-        MeetingDto meetingDto = new MeetingDto(dateAvailabilityDto, Duration.TWO_HOUR);
+        MeetingDto meetingDto = new MeetingDto(dateAvailabilityDto, Duration.TWO_HOUR, users);
 
         ReflectionTestUtils.setField(bestMeetingUtil, "meeting", meetingDto);
 
@@ -53,8 +61,12 @@ public class BestMeetingUtilTest {
         DateAvailabilityDto dateAvailability1 = new DateAvailabilityDto("7", "10", "월");
         DateAvailabilityDto dateAvailability2 = new DateAvailabilityDto("7", "11", "화");
         DateAvailabilityDto dateAvailability3 = new DateAvailabilityDto("7", "12", "수");
+        UserDto userDto = new UserDto(1L, "심은서");
+        UserDto userDto2 = new UserDto(2L, "이동헌");
+        UserDto userDto3 = new UserDto(3L, "이재훈");
+        List<UserDto> users = Arrays.asList(userDto, userDto2, userDto3);
         List<DateAvailabilityDto> dateAvailabilityDto = Arrays.asList(dateAvailability1, dateAvailability2, dateAvailability3);
-        MeetingDto meetingDto = new MeetingDto(dateAvailabilityDto, Duration.TWO_HOUR);
+        MeetingDto meetingDto = new MeetingDto(dateAvailabilityDto, Duration.TWO_HOUR, users);
 
         MeetingTimeDto meetingTimeDto = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_18_00, TimeSlot.SLOT_20_00, "원용", 0);
         MeetingTimeDto meetingTimeDto2 = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_16_00, TimeSlot.SLOT_18_00, "소현", 0);
@@ -84,7 +96,11 @@ public class BestMeetingUtilTest {
         DateAvailabilityDto dateAvailability1 = new DateAvailabilityDto("7", "10", "월");
         DateAvailabilityDto dateAvailability2 = new DateAvailabilityDto("7", "11", "화");
         List<DateAvailabilityDto> dateAvailabilityDto = Arrays.asList(dateAvailability1, dateAvailability2);
-        MeetingDto meetingDto = new MeetingDto(dateAvailabilityDto, Duration.TWO_HOUR);
+        UserDto userDto = new UserDto(1L, "심은서");
+        UserDto userDto2 = new UserDto(2L, "이동헌");
+        UserDto userDto3 = new UserDto(3L, "이재훈");
+        List<UserDto> users = Arrays.asList(userDto, userDto2, userDto3);
+        MeetingDto meetingDto = new MeetingDto(dateAvailabilityDto, Duration.TWO_HOUR, users);
 
         MeetingTimeDto meetingTimeDto = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_18_00, TimeSlot.SLOT_20_00, "원용", 0);
         MeetingTimeDto meetingTimeDto2 = new MeetingTimeDto("7", "11", "화", TimeSlot.SLOT_12_00, TimeSlot.SLOT_14_00, "원용", 0);
@@ -117,5 +133,38 @@ public class BestMeetingUtilTest {
 
         // then
         assertThat(bestMeetingUtil.getAvailableMeetingTimesByDuration().get(Duration.TWO_HOUR)).isEqualTo(Arrays.asList(result, result2));
+    }
+
+    @Test
+    @DisplayName("회의시간과 참여인원 수가 있을 때 가능한 시간대와 인원수를 모두 담는다.")
+    public void timeCasesTest2() {
+        // given
+        DateAvailabilityDto dateAvailability1 = new DateAvailabilityDto("7", "10", "월");
+        DateAvailabilityDto dateAvailability2 = new DateAvailabilityDto("7", "11", "화");
+        List<DateAvailabilityDto> dateAvailabilityDto = Arrays.asList(dateAvailability1, dateAvailability2);
+        UserDto userDto = new UserDto(1L, "심은서");
+        UserDto userDto2 = new UserDto(2L, "이동헌");
+        UserDto userDto3 = new UserDto(3L, "이재훈");
+        UserDto userDto4 = new UserDto(3L, "정찬우");
+        List<UserDto> users = Arrays.asList(userDto, userDto2, userDto3, userDto4);
+        MeetingDto meetingDto = new MeetingDto(dateAvailabilityDto, HOUR, users);
+
+        PossibleTimeCaseDto tc = new PossibleTimeCaseDto(HOUR, 4);
+        PossibleTimeCaseDto tc2 = new PossibleTimeCaseDto(HALF, 4);
+        PossibleTimeCaseDto tc3 = new PossibleTimeCaseDto(HOUR, 3);
+        PossibleTimeCaseDto tc4 = new PossibleTimeCaseDto(HALF, 3);
+        PossibleTimeCaseDto tc5 = new PossibleTimeCaseDto(HOUR, 2);
+        PossibleTimeCaseDto tc6 = new PossibleTimeCaseDto(HALF, 2);
+        PossibleTimeCaseDto tc7 = new PossibleTimeCaseDto(HOUR, 1);
+        PossibleTimeCaseDto tc8 = new PossibleTimeCaseDto(HALF, 1);
+        List<PossibleTimeCaseDto> timeCases = Arrays.asList(tc, tc2, tc3, tc4, tc5, tc6, tc7, tc8);
+
+        ReflectionTestUtils.setField(bestMeetingUtil, "meeting", meetingDto);
+
+        // when
+        ReflectionTestUtils.invokeMethod(bestMeetingUtil, "getAllPossibleMeetingTimeCases", meetingDto.getDuration());
+
+        // then
+        // assertThat(timeCases).isEqualTo(bestMeetingUtil.getTimeCases());
     }
 }

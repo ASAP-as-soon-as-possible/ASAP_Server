@@ -4,6 +4,7 @@ import com.asap.server.controller.dto.response.AvailableMeetingTimeDto;
 import com.asap.server.controller.dto.response.DateAvailabilityDto;
 import com.asap.server.controller.dto.response.MeetingDto;
 import com.asap.server.controller.dto.response.MeetingTimeDto;
+import com.asap.server.controller.dto.response.PossibleTimeCaseDto;
 import com.asap.server.controller.dto.response.TimeSlotInfoDto;
 import com.asap.server.domain.enums.Duration;
 import com.asap.server.domain.enums.TimeSlot;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +26,7 @@ public class BestMeetingUtil {
     private final TimeSlot[] timeSlots = TimeSlot.values();
     private final Duration[] durations = Duration.values();
     private final Map<Duration, List<AvailableMeetingTimeDto>> availableMeetingTimesByDuration = new HashMap<>();
+    private final List<PossibleTimeCaseDto> timeCases = new ArrayList<>();
 
     public void getBestMeetingTime(MeetingDto meeting, List<MeetingTimeDto> meetingTimes) {
         this.meeting = meeting;
@@ -179,5 +182,29 @@ public class BestMeetingUtil {
         if (!availableMeetingTimes.isEmpty()) {
             return availableMeetingTimes.get(0).getUserNames().size() == memberCount;
         } else return false;
+    }
+
+    private void getAllPossibleMeetingTimeCases(Duration duration) {
+        int memberCount = meeting.getUsers().size();
+        while (memberCount > 0) {
+            getPossibleMeetingTimeCases(duration, memberCount);
+            memberCount = memberCount / 2;
+        }
+    }
+
+    private void getPossibleMeetingTimeCases(Duration duration, int memberCount) {
+
+        for (int count = memberCount; count > memberCount / 2; count--) {
+            timeCases.add(new PossibleTimeCaseDto(durations[duration.ordinal()], count));
+            if (duration.ordinal() > 0) timeCases.add(new PossibleTimeCaseDto(durations[duration.ordinal() - 1], count));
+        }
+
+        int secondDuration = (duration.ordinal() >= 2) ? duration.ordinal() - 2 : -1;
+
+        for (int durationCount = secondDuration; durationCount > -1; durationCount--) {
+            for (int count = memberCount; count > memberCount / 2; count--) {
+                timeCases.add(new PossibleTimeCaseDto(durations[durationCount], count));
+            }
+        }
     }
 }
