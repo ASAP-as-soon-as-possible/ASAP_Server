@@ -15,6 +15,8 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 
 import com.asap.server.exception.Error;
+import org.springframework.web.servlet.NoHandlerFoundException;
+
 import java.io.IOException;
 
 @RestControllerAdvice
@@ -36,6 +38,13 @@ public class ControllerExceptionAdvice {
     protected ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         return ErrorResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION);
     }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ErrorResponse handleNotFoundException(NoHandlerFoundException exception) {
+        return ErrorResponse.error(Error.URI_NOT_FOUND_EXCEPTION);
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     protected ErrorResponse handleJsonParseException(final HttpMessageNotReadableException e){
