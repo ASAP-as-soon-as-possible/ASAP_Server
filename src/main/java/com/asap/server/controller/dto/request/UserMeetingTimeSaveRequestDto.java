@@ -12,6 +12,7 @@ import javax.validation.constraints.Pattern;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Schema(description = "회의 가능 시간 DTO")
 public class UserMeetingTimeSaveRequestDto {
 
     @NotBlank
@@ -19,12 +20,12 @@ public class UserMeetingTimeSaveRequestDto {
     private String id;
 
     @NotBlank
-    @Schema(description = "회의 가능 시간 (월)", example = "1")
+    @Schema(description = "회의 가능 시간 (월)", example = "01")
     @Pattern(regexp = "\\d{2}", message = "날짜 형식이 맞지 않습니다.")
     private String month;
 
     @NotBlank
-    @Schema(description = "회의 가능 시간 (일)", example = "1")
+    @Schema(description = "회의 가능 시간 (일)", example = "01")
     @Pattern(regexp = "\\d{2}", message = "날짜 형식이 맞지 않습니다.")
     private String day;
 
@@ -33,14 +34,10 @@ public class UserMeetingTimeSaveRequestDto {
     @Pattern(regexp = "[\\uAC00-\\uD7A3]", message = "날짜 형식이 맞지 않습니다.")
     private String dayOfWeek;
 
-    @NotNull
     @Schema(description = "회의 가능 시간 (시작 시간)", example = "09:00")
-    @Pattern(regexp = "\\d\\d:\\d\\d", message = "시간은 hh:mm 형식이어야 합니다.")
     private TimeSlot startTime;
 
-    @NotNull
     @Schema(description = "회의 가능 시간 (끝 시간)", example = "11:00")
-    @Pattern(regexp = "\\d\\d:\\d\\d", message = "시간은 hh:mm 형식이어야 합니다.")
     private TimeSlot endTime;
 
     @NotNull

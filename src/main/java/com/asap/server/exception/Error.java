@@ -16,7 +16,7 @@ public enum Error {
     VALIDATION_REQUEST_MISSING_EXCEPTION(HttpStatus.BAD_REQUEST, "요청값이 유효하지 않습니다."),
     DUPLICATED_TIME_EXCEPTION(HttpStatus.BAD_REQUEST,"중복 입력된 시간이 있습니다."),
     INVALID_TIME_RANGE(HttpStatus.BAD_REQUEST,"입력한 시간이 회의 가능 일시에 해당하지 않습니다."),
-    INVALID_TIME_SLOT_EXCEPTION(HttpStatus.BAD_REQUEST, "시간 형식이 맞지 않습니다."),
+    INVALID_JSON_INPUT_EXCEPTION(HttpStatus.BAD_REQUEST, "입력 형식이 맞지 않습니다."),
     /**
      * 401 UNAUTHORIZED
      **/
@@ -31,6 +31,7 @@ public enum Error {
     /**
      * 404 NOT FOUND
      */
+    URI_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "지원하지 않는 URL 입니다."),
     USER_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 유저는 존재하지 않습니다."),
     MEETING_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 회의는 존재하지 않습니다."),
     MEETING_TIME_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 유저의 회의 시간이 존재하지 않습니다."),

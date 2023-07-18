@@ -67,4 +67,12 @@ public enum TimeSlot {
         }
         return result;
     }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static TimeSlot findByTime(String timeSlot) {
+        return Stream.of(TimeSlot.values())
+                .filter(c -> c.getTime().equals(timeSlot))
+                .findFirst()
+                .orElseThrow(() -> new BadRequestException(Error.INVALID_JSON_INPUT_EXCEPTION));
+    }
 }
