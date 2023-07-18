@@ -22,6 +22,7 @@ import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.NotFoundException;
+import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.DateAvailabilityRepository;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.MeetingTimeRepository;
@@ -176,9 +177,12 @@ public class MeetingService {
                 .build();
     }
 
-    public TimeTableResponseDto getTimeTable(Long meetingId) {
+    public TimeTableResponseDto getTimeTable(Long userId, Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+        if(!meeting.getHost().getId().equals(userId)){
+           throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
+        }
         List<User> users = meeting.getUsers();
         List<String> userNames = new ArrayList<>();
         Map<String, Map<String, List<String>>> dateAvailable = new HashMap<>();

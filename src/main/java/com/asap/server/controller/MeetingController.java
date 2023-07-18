@@ -76,7 +76,7 @@ public class MeetingController {
             @UserId Long userId,
             @MeetingId Long meetingId
     ) {
-        return SuccessResponse.success(Success.FIND_TIME_TABLE_SUCCESS, meetingService.getTimeTable(meetingId));
+        return SuccessResponse.success(Success.FIND_TIME_TABLE_SUCCESS, meetingService.getTimeTable(userId, meetingId));
     }
 
     @Operation(summary = "[회의 입장 뷰] 회의 유효성 체크 API")
