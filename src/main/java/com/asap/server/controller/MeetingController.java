@@ -5,17 +5,16 @@ import com.asap.server.config.resolver.meeting.MeetingId;
 import com.asap.server.config.resolver.user.UserId;
 import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
+import com.asap.server.controller.dto.response.BestMeetingTimeResponseDto;
 import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.controller.dto.response.TimeTableResponseDto;
 import com.asap.server.exception.Success;
 import com.asap.server.service.MeetingService;
-
-import javax.validation.Valid;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "회의" , description = "회의 관련 API 입니다.")
+@Tag(name = "회의", description = "회의 관련 API 입니다.")
 @RestController
 @RequestMapping("/meeting")
 @RequiredArgsConstructor
@@ -86,5 +85,14 @@ public class MeetingController {
             @MeetingId Long meetingId
     ) {
         return SuccessResponse.success(Success.MEETING_VALIDATION_SUCCESS, meetingService.getIsFixedMeeting(meetingId));
+    }
+
+    @GetMapping("/{meetingId}/details")
+    public SuccessResponse<BestMeetingTimeResponseDto> getBestMeetingTime(
+            @PathVariable("meetingId") String _meetingId,
+            @MeetingId Long meetingId,
+            @UserId Long userId
+    ) {
+        return SuccessResponse.success(Success.BEST_MEETING_SUCCESS, meetingService.getBestMeetingTime(meetingId, userId));
     }
 }
