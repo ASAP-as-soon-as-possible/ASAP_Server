@@ -12,6 +12,6 @@ public class MeetingTimeDto {
     private String dayOfWeek;
     private TimeSlot startTime;
     private TimeSlot endTime;
-    private String name;
+    private UserDto user;
     private int priority;
 }

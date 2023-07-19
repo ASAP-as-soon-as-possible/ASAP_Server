@@ -16,7 +16,7 @@ public class AvailableMeetingTimeDto implements Comparable<AvailableMeetingTimeD
     private TimeSlot startTime;
     private TimeSlot endTime;
     private int weight;
-    private List<String> userNames;
+    private List<UserDto> userNames;
     private boolean isFixed;
 
     @Override

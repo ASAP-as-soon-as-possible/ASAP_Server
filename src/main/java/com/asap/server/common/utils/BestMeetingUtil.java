@@ -6,6 +6,7 @@ import com.asap.server.controller.dto.response.MeetingDto;
 import com.asap.server.controller.dto.response.MeetingTimeDto;
 import com.asap.server.controller.dto.response.PossibleTimeCaseDto;
 import com.asap.server.controller.dto.response.TimeSlotInfoDto;
+import com.asap.server.controller.dto.response.UserDto;
 import com.asap.server.domain.enums.Duration;
 import com.asap.server.domain.enums.TimeSlot;
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class BestMeetingUtil {
 
             for (TimeSlot timeSlot : timeSlots) {
                 TimeSlotInfoDto timeSlotInfo = rowTable.get(timeSlot);
-                timeSlotInfo.addUserName(meetingTime.getName());
+                timeSlotInfo.addUserName(meetingTime.getUser());
                 timeSlotInfo.addWeight(meetingTime.getPriority());
             }
         }
@@ -80,10 +81,10 @@ public class BestMeetingUtil {
             Map<TimeSlot, TimeSlotInfoDto> timeSlotInfos = timeTable.get(timeTableColumn);
 
             for (int startTimeSlotIndex = 0; startTimeSlotIndex < timeSlots.length - needBlock + 1; startTimeSlotIndex++) {
-                List<String> userNames = timeSlotInfos.get(timeSlots[startTimeSlotIndex]).getUserNames();
+                List<UserDto> userNames = timeSlotInfos.get(timeSlots[startTimeSlotIndex]).getUsers();
 
                 if (!userNames.isEmpty()) {
-                    List<String> resultUserNames = new ArrayList<>();
+                    List<UserDto> resultUserNames = new ArrayList<>();
 
                     checkAvailableMeetingTimeByDuration(
                             timeSlotInfos,
@@ -109,29 +110,29 @@ public class BestMeetingUtil {
 
     private void checkAvailableMeetingTimeByDuration(
             Map<TimeSlot, TimeSlotInfoDto> timeSlotInfos,
-            List<String> userNames,
-            List<String> resultUserNames,
+            List<UserDto> users,
+            List<UserDto> resultUsers,
             int startTimeSlotIndex,
             int needBlock
     ) {
-        for (String userName : userNames) {
+        for (UserDto userName : users) {
             int count = 1;
 
             for (int block = startTimeSlotIndex + 1; block < startTimeSlotIndex + needBlock; block++) {
-                List<String> nextUserNames = timeSlotInfos.get(timeSlots[block]).getUserNames();
+                List<UserDto> nextUserNames = timeSlotInfos.get(timeSlots[block]).getUsers();
                 if (!nextUserNames.contains(userName)) break;
                 count++;
             }
 
             if (count == needBlock) {
-                resultUserNames.add(userName);
+                resultUsers.add(userName);
             }
         }
     }
 
     private void addAvailableMeetingTimeByDuration(
             Map<TimeSlot, TimeSlotInfoDto> timeSlotInfos,
-            List<String> resultUserNames,
+            List<UserDto> resultUserNames,
             Duration duration,
             String timeTableColumn,
             int startTimeSlotIndex

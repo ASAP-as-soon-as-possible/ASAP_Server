@@ -62,19 +62,18 @@ public class BestMeetingUtilTest {
         DateAvailabilityDto dateAvailability1 = new DateAvailabilityDto("7", "10", "월");
         DateAvailabilityDto dateAvailability2 = new DateAvailabilityDto("7", "11", "화");
         DateAvailabilityDto dateAvailability3 = new DateAvailabilityDto("7", "12", "수");
-        UserDto userDto = new UserDto(1L, "심은서");
-        UserDto userDto2 = new UserDto(2L, "이동헌");
-        UserDto userDto3 = new UserDto(3L, "이재훈");
-        List<UserDto> users = Arrays.asList(userDto, userDto2, userDto3);
+        UserDto userDto = new UserDto(1L, "원용");
+        UserDto userDto2 = new UserDto(2L, "소현");
+        List<UserDto> users = Arrays.asList(userDto, userDto2);
         List<DateAvailabilityDto> dateAvailabilityDto = Arrays.asList(dateAvailability1, dateAvailability2, dateAvailability3);
         MeetingDto meetingDto = new MeetingDto(dateAvailabilityDto, Duration.TWO_HOUR, users);
 
-        MeetingTimeDto meetingTimeDto = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_18_00, TimeSlot.SLOT_20_00, "원용", 0);
-        MeetingTimeDto meetingTimeDto2 = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_16_00, TimeSlot.SLOT_18_00, "소현", 0);
-        MeetingTimeDto meetingTimeDto3 = new MeetingTimeDto("7", "11", "화", TimeSlot.SLOT_11_00, TimeSlot.SLOT_12_00, "원용", 0);
-        MeetingTimeDto meetingTimeDto4 = new MeetingTimeDto("7", "11", "화", TimeSlot.SLOT_11_00, TimeSlot.SLOT_12_00, "소현", 0);
-        MeetingTimeDto meetingTimeDto5 = new MeetingTimeDto("7", "12", "수", TimeSlot.SLOT_7_00, TimeSlot.SLOT_9_00, "원용", 2);
-        MeetingTimeDto meetingTimeDto6 = new MeetingTimeDto("7", "12", "수", TimeSlot.SLOT_7_00, TimeSlot.SLOT_9_00, "소현", 1);
+        MeetingTimeDto meetingTimeDto = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_18_00, TimeSlot.SLOT_20_00, userDto, 0);
+        MeetingTimeDto meetingTimeDto2 = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_16_00, TimeSlot.SLOT_18_00, userDto2, 0);
+        MeetingTimeDto meetingTimeDto3 = new MeetingTimeDto("7", "11", "화", TimeSlot.SLOT_11_00, TimeSlot.SLOT_12_00, userDto, 0);
+        MeetingTimeDto meetingTimeDto4 = new MeetingTimeDto("7", "11", "화", TimeSlot.SLOT_11_00, TimeSlot.SLOT_12_00, userDto2, 0);
+        MeetingTimeDto meetingTimeDto5 = new MeetingTimeDto("7", "12", "수", TimeSlot.SLOT_7_00, TimeSlot.SLOT_9_00, userDto, 2);
+        MeetingTimeDto meetingTimeDto6 = new MeetingTimeDto("7", "12", "수", TimeSlot.SLOT_7_00, TimeSlot.SLOT_9_00, userDto2, 1);
 
         List<MeetingTimeDto> meetingTimes = Arrays.asList(meetingTimeDto, meetingTimeDto2, meetingTimeDto3, meetingTimeDto4, meetingTimeDto5, meetingTimeDto6);
 
@@ -85,8 +84,8 @@ public class BestMeetingUtilTest {
         ReflectionTestUtils.invokeMethod(bestMeetingUtil, "setUserMeetingTime", meetingTimes);
 
         // then
-        assertThat(bestMeetingUtil.getTimeTable().get("7.11.화").get(TimeSlot.SLOT_11_00).getUserNames()).isEqualTo(Arrays.asList("원용", "소현"));
-        assertThat(bestMeetingUtil.getTimeTable().get("7.12.수").get(TimeSlot.SLOT_7_00).getUserNames()).isEqualTo(Arrays.asList("원용", "소현"));
+        assertThat(bestMeetingUtil.getTimeTable().get("7.11.화").get(TimeSlot.SLOT_11_00).getUsers()).isEqualTo(Arrays.asList(userDto, userDto2));
+        assertThat(bestMeetingUtil.getTimeTable().get("7.12.수").get(TimeSlot.SLOT_7_00).getUsers()).isEqualTo(Arrays.asList(userDto, userDto2));
         assertThat(bestMeetingUtil.getTimeTable().get("7.12.수").get(TimeSlot.SLOT_7_00).getWeight()).isEqualTo(3);
     }
 
@@ -97,16 +96,15 @@ public class BestMeetingUtilTest {
         DateAvailabilityDto dateAvailability1 = new DateAvailabilityDto("7", "10", "월");
         DateAvailabilityDto dateAvailability2 = new DateAvailabilityDto("7", "11", "화");
         List<DateAvailabilityDto> dateAvailabilityDto = Arrays.asList(dateAvailability1, dateAvailability2);
-        UserDto userDto = new UserDto(1L, "심은서");
-        UserDto userDto2 = new UserDto(2L, "이동헌");
-        UserDto userDto3 = new UserDto(3L, "이재훈");
-        List<UserDto> users = Arrays.asList(userDto, userDto2, userDto3);
+        UserDto userDto = new UserDto(1L, "원용");
+        UserDto userDto2 = new UserDto(2L, "소현");
+        List<UserDto> users = Arrays.asList(userDto, userDto2);
         MeetingDto meetingDto = new MeetingDto(dateAvailabilityDto, Duration.TWO_HOUR, users);
 
-        MeetingTimeDto meetingTimeDto = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_18_00, TimeSlot.SLOT_20_00, "원용", 0);
-        MeetingTimeDto meetingTimeDto2 = new MeetingTimeDto("7", "11", "화", TimeSlot.SLOT_12_00, TimeSlot.SLOT_14_00, "원용", 0);
-        MeetingTimeDto meetingTimeDto3 = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_18_00, TimeSlot.SLOT_20_00, "소현", 0);
-        MeetingTimeDto meetingTimeDto4 = new MeetingTimeDto("7", "11", "화", TimeSlot.SLOT_12_00, TimeSlot.SLOT_14_00, "소현", 0);
+        MeetingTimeDto meetingTimeDto = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_18_00, TimeSlot.SLOT_20_00, userDto, 0);
+        MeetingTimeDto meetingTimeDto2 = new MeetingTimeDto("7", "11", "화", TimeSlot.SLOT_12_00, TimeSlot.SLOT_14_00, userDto, 0);
+        MeetingTimeDto meetingTimeDto3 = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_18_00, TimeSlot.SLOT_20_00, userDto2, 0);
+        MeetingTimeDto meetingTimeDto4 = new MeetingTimeDto("7", "11", "화", TimeSlot.SLOT_12_00, TimeSlot.SLOT_14_00, userDto2, 0);
         List<MeetingTimeDto> meetingTimes = Arrays.asList(meetingTimeDto, meetingTimeDto2, meetingTimeDto3, meetingTimeDto4);
 
         ReflectionTestUtils.setField(bestMeetingUtil, "meeting", meetingDto);
@@ -118,7 +116,7 @@ public class BestMeetingUtilTest {
                 TimeSlot.SLOT_18_00,
                 TimeSlot.SLOT_20_00,
                 0,
-                Arrays.asList("원용", "소현"),
+                Arrays.asList(userDto, userDto2),
                 false
         );
 
@@ -127,7 +125,7 @@ public class BestMeetingUtilTest {
                 TimeSlot.SLOT_12_00,
                 TimeSlot.SLOT_14_00,
                 0,
-                Arrays.asList("원용", "소현"),
+                Arrays.asList(userDto, userDto2),
                 false
         );
 
@@ -185,9 +183,9 @@ public class BestMeetingUtilTest {
         MeetingDto meetingDto = new MeetingDto(dateAvailabilityDto, Duration.TWO_HOUR, users);
 
         // 14~16 , 14:00 15:30 , 14:30 16:00
-        MeetingTimeDto meetingTimeDto = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_12_00, TimeSlot.SLOT_20_00, "심은서", 0);
-        MeetingTimeDto meetingTimeDto2 = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_12_00, TimeSlot.SLOT_16_00, "이동헌", 0);
-        MeetingTimeDto meetingTimeDto3 = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_00, "이재훈", 0);
+        MeetingTimeDto meetingTimeDto = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_12_00, TimeSlot.SLOT_20_00, userDto, 0);
+        MeetingTimeDto meetingTimeDto2 = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_12_00, TimeSlot.SLOT_16_00, userDto2, 0);
+        MeetingTimeDto meetingTimeDto3 = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_00, userDto3, 0);
         List<MeetingTimeDto> meetingTimes = Arrays.asList(meetingTimeDto, meetingTimeDto2, meetingTimeDto3);
 
         AvailableMeetingTimeDto result = new AvailableMeetingTimeDto(
@@ -195,7 +193,7 @@ public class BestMeetingUtilTest {
                 TimeSlot.SLOT_14_00,
                 TimeSlot.SLOT_16_00,
                 0,
-                Arrays.asList("심은서", "이동헌", "이재훈"),
+                Arrays.asList(userDto, userDto2, userDto3),
                 true
         );
 
@@ -204,7 +202,7 @@ public class BestMeetingUtilTest {
                 TimeSlot.SLOT_14_00,
                 TimeSlot.SLOT_15_30,
                 0,
-                Arrays.asList("심은서", "이동헌", "이재훈"),
+                Arrays.asList(userDto, userDto2, userDto3),
                 true
         );
         AvailableMeetingTimeDto result3 = new AvailableMeetingTimeDto(
@@ -212,7 +210,7 @@ public class BestMeetingUtilTest {
                 TimeSlot.SLOT_14_30,
                 TimeSlot.SLOT_16_00,
                 0,
-                Arrays.asList("심은서", "이동헌", "이재훈"),
+                Arrays.asList(userDto, userDto2, userDto3),
                 true
         );
 

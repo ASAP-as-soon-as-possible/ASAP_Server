@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class TimeSlotInfoDto {
-    private final List<String> userNames = new ArrayList<>();
+    private final List<UserDto> users = new ArrayList<>();
     private int weight = 0;
 
-    public void addUserName(String name) {
-        userNames.add(name);
+    public void addUserName(UserDto user) {
+        users.add(user);
     }
 
     public void addWeight(int weight) {
