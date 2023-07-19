@@ -27,6 +27,7 @@ import com.asap.server.repository.DateAvailabilityRepository;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.MeetingTimeRepository;
 import com.asap.server.repository.PreferTimeRepository;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -34,6 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.asap.server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +49,7 @@ import static com.asap.server.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
 public class MeetingService {
 
     private final MeetingRepository meetingRepository;
+    private final UserRepository userRepository;
     private final MeetingTimeRepository meetingTimeRepository;
     private final UserService userService;
     private final DateAvailabilityRepository dateAvailabilityRepository;
@@ -265,10 +269,14 @@ public class MeetingService {
                 .build();
     }
 
-    public IsFixedMeetingResponseDto getIsFixedMeeting(Long meetingId) throws ConflictException {
+    public IsFixedMeetingResponseDto getIsFixedMeeting(Long userId, Long meetingId) throws ConflictException {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+        User host = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(Error.USER_NOT_FOUND_EXCEPTION));
 
+        if (!meeting.getHost().equals(host)) {
+            throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
+        }
         if (meeting.getMonth() != null) {
             throw new ConflictException(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
         }

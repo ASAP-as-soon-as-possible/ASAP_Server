@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "회의" , description = "회의 관련 API 입니다.")
+@Tag(name = "회의", description = "회의 관련 API 입니다.")
 @RestController
 @RequestMapping("/meeting")
 @RequiredArgsConstructor
@@ -83,8 +83,9 @@ public class MeetingController {
     @GetMapping("/{meetingId}")
     public SuccessResponse getIsFixedMeeting(
             @PathVariable("meetingId") String _meetingId,
+            @UserId Long userId,
             @MeetingId Long meetingId
     ) {
-        return SuccessResponse.success(Success.MEETING_VALIDATION_SUCCESS, meetingService.getIsFixedMeeting(meetingId));
+        return SuccessResponse.success(Success.MEETING_VALIDATION_SUCCESS, meetingService.getIsFixedMeeting(userId, meetingId));
     }
 }
