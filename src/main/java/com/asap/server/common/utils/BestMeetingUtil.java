@@ -184,7 +184,7 @@ public class BestMeetingUtil {
         }
 
         for (AvailableMeetingTimeDto availableMeetingTime : availableMeetingTimes) {
-            if (availableMeetingTime.getUserNames().size() == memberCount && !availableMeetingTime.isFixed()) {
+            if (availableMeetingTime.getUsers().size() == memberCount && !availableMeetingTime.isFixed()) {
                 availableMeetingTime.setIsFixed();
                 return availableMeetingTime;
             }

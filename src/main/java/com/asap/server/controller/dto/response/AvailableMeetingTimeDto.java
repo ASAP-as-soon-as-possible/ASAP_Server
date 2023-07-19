@@ -16,15 +16,15 @@ public class AvailableMeetingTimeDto implements Comparable<AvailableMeetingTimeD
     private TimeSlot startTime;
     private TimeSlot endTime;
     private int weight;
-    private List<UserDto> userNames;
+    private List<UserDto> users;
     private boolean isFixed;
 
     @Override
     public int compareTo(AvailableMeetingTimeDto o) {
-        if (this.userNames.size() == o.userNames.size()) {
+        if (this.users.size() == o.users.size()) {
             return Integer.compare(o.weight, this.weight);
         }
-        return Integer.compare(o.userNames.size(), this.userNames.size());
+        return Integer.compare(o.users.size(), this.users.size());
     }
 
     public void setIsFixed() {
