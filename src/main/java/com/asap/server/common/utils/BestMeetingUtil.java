@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
@@ -27,12 +26,15 @@ public class BestMeetingUtil {
     private final Duration[] durations = Duration.values();
     private final Map<Duration, List<AvailableMeetingTimeDto>> availableMeetingTimesByDuration = new HashMap<>();
     private final List<PossibleTimeCaseDto> timeCases = new ArrayList<>();
+    private final List<AvailableMeetingTimeDto> fixedMeetingTime = new ArrayList<>();
 
     public void getBestMeetingTime(MeetingDto meeting, List<MeetingTimeDto> meetingTimes) {
         this.meeting = meeting;
         initTimeTable();
         setUserMeetingTime(meetingTimes);
+        getAllPossibleMeetingTimeCases(meeting.getDuration());
         collectAvailableMeetingTime();
+        selectBestMeetingTime();
     }
 
     private void initTimeTable() {
@@ -148,7 +150,8 @@ public class BestMeetingUtil {
                 startTime,
                 endTime,
                 weight / (needBlock - 1),
-                resultUserNames
+                resultUserNames,
+                false
         );
 
         availableMeetingTimesByDuration.get(duration).add(result);
@@ -161,27 +164,31 @@ public class BestMeetingUtil {
         }
     }
 
-    private AvailableMeetingTimeDto selectBestMeetingTime() {
-        Duration firstDuration = meeting.getDuration();
-        Duration secondDuration = (firstDuration.ordinal() - 1 >= 0) ? durations[firstDuration.ordinal() - 1] : null;
-        int memberCount = 6;
-
-        while (true) {
-            if (isBestMeetingTime(firstDuration, memberCount)) {
-                return availableMeetingTimesByDuration.get(firstDuration).get(0);
-            }
-
-            if (isBestMeetingTime(secondDuration, memberCount)) {
-                return availableMeetingTimesByDuration.get(firstDuration).get(0);
+    private void selectBestMeetingTime() {
+        while (fixedMeetingTime.size() != 3) {
+            for (PossibleTimeCaseDto timeCase : timeCases) {
+                AvailableMeetingTimeDto meetingTime = getBestMeetingTime(timeCase.getDuration(), timeCase.getMemberCnt());
+                if (meetingTime != null) {
+                    fixedMeetingTime.add(meetingTime);
+                    break;
+                }
             }
         }
     }
 
-    private boolean isBestMeetingTime(Duration duration, int memberCount) {
+    private AvailableMeetingTimeDto getBestMeetingTime(Duration duration, int memberCount) {
         List<AvailableMeetingTimeDto> availableMeetingTimes = availableMeetingTimesByDuration.get(duration);
-        if (!availableMeetingTimes.isEmpty()) {
-            return availableMeetingTimes.get(0).getUserNames().size() == memberCount;
-        } else return false;
+        if (availableMeetingTimes.isEmpty()) {
+            return null;
+        }
+
+        for (AvailableMeetingTimeDto availableMeetingTime : availableMeetingTimes) {
+            if (availableMeetingTime.getUserNames().size() == memberCount && !availableMeetingTime.isFixed()) {
+                availableMeetingTime.setIsFixed();
+                return availableMeetingTime;
+            }
+        }
+        return null;
     }
 
     private void getAllPossibleMeetingTimeCases(Duration duration) {
@@ -196,7 +203,8 @@ public class BestMeetingUtil {
 
         for (int count = memberCount; count > memberCount / 2; count--) {
             timeCases.add(new PossibleTimeCaseDto(durations[duration.ordinal()], count));
-            if (duration.ordinal() > 0) timeCases.add(new PossibleTimeCaseDto(durations[duration.ordinal() - 1], count));
+            if (duration.ordinal() > 0)
+                timeCases.add(new PossibleTimeCaseDto(durations[duration.ordinal() - 1], count));
         }
 
         int secondDuration = (duration.ordinal() >= 2) ? duration.ordinal() - 2 : -1;

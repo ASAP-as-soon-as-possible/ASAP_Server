@@ -17,6 +17,7 @@ public class AvailableMeetingTimeDto implements Comparable<AvailableMeetingTimeD
     private TimeSlot endTime;
     private int weight;
     private List<String> userNames;
+    private boolean isFixed;
 
     @Override
     public int compareTo(AvailableMeetingTimeDto o) {
@@ -24,5 +25,9 @@ public class AvailableMeetingTimeDto implements Comparable<AvailableMeetingTimeD
             return Integer.compare(o.weight, this.weight);
         }
         return Integer.compare(o.userNames.size(), this.userNames.size());
+    }
+
+    public void setIsFixed() {
+        this.isFixed = !this.isFixed;
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import static com.asap.server.domain.enums.Duration.HALF;
 import static com.asap.server.domain.enums.Duration.HOUR;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class BestMeetingUtilTest {
     private BestMeetingUtil bestMeetingUtil;
@@ -117,7 +118,8 @@ public class BestMeetingUtilTest {
                 TimeSlot.SLOT_18_00,
                 TimeSlot.SLOT_20_00,
                 0,
-                Arrays.asList("원용", "소현")
+                Arrays.asList("원용", "소현"),
+                false
         );
 
         AvailableMeetingTimeDto result2 = new AvailableMeetingTimeDto(
@@ -125,7 +127,8 @@ public class BestMeetingUtilTest {
                 TimeSlot.SLOT_12_00,
                 TimeSlot.SLOT_14_00,
                 0,
-                Arrays.asList("원용", "소현")
+                Arrays.asList("원용", "소현"),
+                false
         );
 
         // when
@@ -166,5 +169,59 @@ public class BestMeetingUtilTest {
 
         // then
         // assertThat(timeCases).isEqualTo(bestMeetingUtil.getTimeCases());
+    }
+
+    @Test
+    @DisplayName("최종 회의시간 도출하기")
+    public void getBestMeetingTime() {
+        // given
+        DateAvailabilityDto dateAvailability1 = new DateAvailabilityDto("7", "10", "월");
+        DateAvailabilityDto dateAvailability2 = new DateAvailabilityDto("7", "11", "화");
+        List<DateAvailabilityDto> dateAvailabilityDto = Arrays.asList(dateAvailability1, dateAvailability2);
+        UserDto userDto = new UserDto(1L, "심은서");
+        UserDto userDto2 = new UserDto(2L, "이동헌");
+        UserDto userDto3 = new UserDto(3L, "이재훈");
+        List<UserDto> users = Arrays.asList(userDto, userDto2, userDto3);
+        MeetingDto meetingDto = new MeetingDto(dateAvailabilityDto, Duration.TWO_HOUR, users);
+
+        // 14~16 , 14:00 15:30 , 14:30 16:00
+        MeetingTimeDto meetingTimeDto = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_12_00, TimeSlot.SLOT_20_00, "심은서", 0);
+        MeetingTimeDto meetingTimeDto2 = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_12_00, TimeSlot.SLOT_16_00, "이동헌", 0);
+        MeetingTimeDto meetingTimeDto3 = new MeetingTimeDto("7", "10", "월", TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_00, "이재훈", 0);
+        List<MeetingTimeDto> meetingTimes = Arrays.asList(meetingTimeDto, meetingTimeDto2, meetingTimeDto3);
+
+        AvailableMeetingTimeDto result = new AvailableMeetingTimeDto(
+                "7.10.월",
+                TimeSlot.SLOT_14_00,
+                TimeSlot.SLOT_16_00,
+                0,
+                Arrays.asList("심은서", "이동헌", "이재훈"),
+                true
+        );
+
+        AvailableMeetingTimeDto result2 = new AvailableMeetingTimeDto(
+                "7.10.월",
+                TimeSlot.SLOT_14_00,
+                TimeSlot.SLOT_15_30,
+                0,
+                Arrays.asList("심은서", "이동헌", "이재훈"),
+                true
+        );
+        AvailableMeetingTimeDto result3 = new AvailableMeetingTimeDto(
+                "7.10.월",
+                TimeSlot.SLOT_14_30,
+                TimeSlot.SLOT_16_00,
+                0,
+                Arrays.asList("심은서", "이동헌", "이재훈"),
+                true
+        );
+
+        // when
+        bestMeetingUtil.getBestMeetingTime(meetingDto, meetingTimes);
+
+        // then
+        assertAll(
+                () -> assertThat(bestMeetingUtil.getFixedMeetingTime()).isEqualTo(Arrays.asList(result, result2, result3))
+        );
     }
 }
