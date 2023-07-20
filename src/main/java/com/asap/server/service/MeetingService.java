@@ -1,11 +1,11 @@
 package com.asap.server.service;
 
 import com.asap.server.common.utils.BestMeetingUtil;
+import com.asap.server.common.utils.TimeTableUtil;
 import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
 import com.asap.server.controller.dto.response.AvailableDateResponseDto;
-import com.asap.server.controller.dto.response.AvailableDatesDto;
 import com.asap.server.controller.dto.response.BestMeetingTimeResponseDto;
 import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.IsFixedMeetingResponseDto;
@@ -14,14 +14,12 @@ import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.controller.dto.response.MeetingScheduleResponseDto;
 import com.asap.server.controller.dto.response.MeetingTimeDto;
 import com.asap.server.controller.dto.response.PreferTimeResponseDto;
-import com.asap.server.controller.dto.response.TimeSlotDto;
 import com.asap.server.controller.dto.response.TimeTableResponseDto;
 import com.asap.server.domain.DateAvailability;
 import com.asap.server.domain.Meeting;
 import com.asap.server.domain.MeetingTime;
 import com.asap.server.domain.PreferTime;
 import com.asap.server.domain.User;
-import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
@@ -31,13 +29,14 @@ import com.asap.server.repository.DateAvailabilityRepository;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.MeetingTimeRepository;
 import com.asap.server.repository.PreferTimeRepository;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.asap.server.service.vo.MeetingTimeVo;
+import com.asap.server.service.vo.UserVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,6 +55,7 @@ public class MeetingService {
     private final PreferTimeRepository preferTimeRepository;
     private final JwtService jwtService;
     private final BestMeetingUtil bestMeetingUtil;
+    private final TimeTableUtil timeTableUtil;
 
     @Transactional
     public MeetingSaveResponseDto create(MeetingSaveRequestDto meetingSaveRequestDto) {
@@ -145,6 +145,7 @@ public class MeetingService {
                         preferTime.getStartTime().getTime(),
                         preferTime.getEndTime().getTime()
                 ))
+                .sorted(Comparator.comparing(PreferTimeResponseDto::getStartTime))
                 .collect(Collectors.toList());
 
         return MeetingScheduleResponseDto.builder()
@@ -171,8 +172,8 @@ public class MeetingService {
                 .title(meeting.getTitle())
                 .place(meeting.getPlace().toString())
                 .placeDetail(meeting.getPlaceDetail())
-                .month(meeting.getMonth())
-                .day(meeting.getDay())
+                .month(Integer.valueOf(meeting.getMonth()).toString())
+                .day(Integer.valueOf(meeting.getDay()).toString())
                 .dayOfWeek(meeting.getDayOfWeek())
                 .startTime(meeting.getStartTime().getTime())
                 .endTime(meeting.getEndTime().getTime())
@@ -189,84 +190,20 @@ public class MeetingService {
             throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
         }
         List<User> users = meeting.getUsers();
-        List<String> userNames = new ArrayList<>();
-        Map<String, Map<String, List<String>>> dateAvailable = new HashMap<>();
-
         for (User user : users) {
-            List<MeetingTime> meetingTimes = meetingTimeRepository.findByUser(user);
-            for (MeetingTime meetingTime : meetingTimes) {
-                List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(meetingTime.getStartTime().ordinal(), meetingTime.getEndTime().ordinal());
-                for (TimeSlot timeSlot : timeSlots) {
-                    String colTime = timeSlot.getTime();
-                    String col = String.format("%s %s %s", meetingTime.getMonth(), meetingTime.getDay(), meetingTime.getDayOfWeek());
-                    if (dateAvailable.containsKey(col)) {
-                        if (dateAvailable.get(col).containsKey(colTime)) {
-                            dateAvailable.get(col).get(colTime).add(user.getName());
-                        } else {
-                            List<String> name = new ArrayList<>();
-                            name.add(user.getName());
-                            dateAvailable.get(col).put(colTime, name);
-                        }
-                    } else {
-                        Map<String, List<String>> timeAvailable = new HashMap<>();
-                        List<String> name = new ArrayList<>();
-                        name.add(user.getName());
-                        timeAvailable.put(colTime, name);
-                        dateAvailable.put(col, timeAvailable);
-                    }
-                }
-            }
-            userNames.add(user.getName());
+            UserVo userVo = UserVo.of(user);
+            List<MeetingTimeVo> meetingTimes = meetingTimeRepository.findByUser(user)
+                    .stream()
+                    .map(MeetingTimeVo::of)
+                    .collect(Collectors.toList());
+            timeTableUtil.setTimeTable(userVo, meetingTimes);
         }
-
-        List<AvailableDatesDto> availableDatesDtos = new ArrayList<>();
-        dateAvailable.forEach((key, value) -> {
-                    List<TimeSlotDto> timeSlotDtos = new ArrayList<>();
-                    value.forEach((timeSlot, userNameList) ->
-                            {
-                                int colorLevel;
-                                if (userNameList.size() > 0 && (userNameList.size() <= users.size() * (0.2))) {
-                                    colorLevel = 1;
-                                } else if (userNameList.size() > users.size() * (0.2) && userNameList.size() <= users.size() * (0.4)) {
-                                    colorLevel = 2;
-                                } else if (userNameList.size() > users.size() * (0.4) && userNameList.size() <= users.size() * (0.6)) {
-                                    colorLevel = 3;
-                                } else if (userNameList.size() > users.size() * (0.6) && userNameList.size() <= users.size() * (0.8)) {
-                                    colorLevel = 4;
-                                } else if (userNameList.size() > users.size() * (0.8) && userNameList.size() <= users.size()) {
-                                    colorLevel = 5;
-                                } else {
-                                    colorLevel = 0;
-                                }
-                                timeSlotDtos.add(TimeSlotDto
-                                        .builder()
-                                        .time(timeSlot)
-                                        .userNames(userNameList)
-                                        .colorLevel(colorLevel)
-                                        .build());
-                            }
-                    );
-                    Collections.sort(timeSlotDtos, Comparator.comparing(TimeSlotDto::getTime));
-                    String month = Integer.valueOf(key.substring(0, 2)).toString();
-                    String day = Integer.valueOf(key.substring(3, 5)).toString();
-                    String dayOfWeek = key.substring(6, 7);
-
-                    availableDatesDtos.add(AvailableDatesDto
-                            .builder()
-                            .month(month)
-                            .day(day)
-                            .dayOfWeek(dayOfWeek)
-                            .timeSlots(timeSlotDtos)
-                            .build()
-                    );
-                }
-        );
 
         return TimeTableResponseDto
                 .builder()
                 .memberCount(users.size())
-                .totalUserNames(userNames)
-                .availableDateTimes(availableDatesDtos)
+                .totalUserNames(timeTableUtil.getUserNames())
+                .availableDateTimes(timeTableUtil.getAvailableDatesDtoList())
                 .build();
     }
 

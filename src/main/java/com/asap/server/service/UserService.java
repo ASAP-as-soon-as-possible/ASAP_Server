@@ -121,8 +121,8 @@ public class UserService {
                 .stream()
                 .map(userMeetingTimeSaveRequestDto -> MeetingTime.newInstance(user,
                         userMeetingTimeSaveRequestDto.getPriority(),
-                        Integer.valueOf(userMeetingTimeSaveRequestDto.getMonth()).toString(),
-                        Integer.valueOf(userMeetingTimeSaveRequestDto.getDay()).toString(),
+                        userMeetingTimeSaveRequestDto.getMonth(),
+                        userMeetingTimeSaveRequestDto.getDay(),
                         userMeetingTimeSaveRequestDto.getDayOfWeek(),
                         userMeetingTimeSaveRequestDto.getStartTime(),
                         userMeetingTimeSaveRequestDto.getEndTime()))
