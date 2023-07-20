@@ -1,14 +1,18 @@
 package com.asap.server.service;
 
+import com.asap.server.common.utils.BestMeetingUtil;
 import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
 import com.asap.server.controller.dto.response.AvailableDateResponseDto;
 import com.asap.server.controller.dto.response.AvailableDatesDto;
+import com.asap.server.controller.dto.response.BestMeetingTimeResponseDto;
 import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.IsFixedMeetingResponseDto;
+import com.asap.server.controller.dto.response.MeetingDto;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.controller.dto.response.MeetingScheduleResponseDto;
+import com.asap.server.controller.dto.response.MeetingTimeDto;
 import com.asap.server.controller.dto.response.PreferTimeResponseDto;
 import com.asap.server.controller.dto.response.TimeSlotDto;
 import com.asap.server.controller.dto.response.TimeTableResponseDto;
@@ -51,6 +55,7 @@ public class MeetingService {
     private final DateAvailabilityRepository dateAvailabilityRepository;
     private final PreferTimeRepository preferTimeRepository;
     private final JwtService jwtService;
+    private final BestMeetingUtil bestMeetingUtil;
 
     @Transactional
     public MeetingSaveResponseDto create(MeetingSaveRequestDto meetingSaveRequestDto) {
@@ -276,5 +281,25 @@ public class MeetingService {
         return IsFixedMeetingResponseDto.builder()
                 .isFixed(true)
                 .build();
+    }
+
+    public BestMeetingTimeResponseDto getBestMeetingTime(Long meetingId, Long userId) {
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+        if (!meeting.getHost().getId().equals(userId)) {
+            throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
+        }
+        List<MeetingTimeDto> meetingTimes = new ArrayList<>();
+        for (User user : meeting.getUsers()) {
+            meetingTimes.addAll(
+                    meetingTimeRepository.findByUser(user)
+                            .stream()
+                            .map(MeetingTimeDto::of)
+                            .collect(Collectors.toList())
+            );
+        }
+        MeetingDto meetingDto = MeetingDto.of(meeting);
+        bestMeetingUtil.getBestMeetingTime(meetingDto, meetingTimes);
+        return BestMeetingTimeResponseDto.of(meeting.getUsers().size(), bestMeetingUtil.getFixedMeetingTime());
     }
 }
