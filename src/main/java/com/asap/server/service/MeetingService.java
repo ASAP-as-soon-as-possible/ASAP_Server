@@ -149,6 +149,7 @@ public class MeetingService {
                         preferTime.getStartTime().getTime(),
                         preferTime.getEndTime().getTime()
                 ))
+                .sorted(Comparator.comparing(PreferTimeResponseDto::getStartTime))
                 .collect(Collectors.toList());
 
         return MeetingScheduleResponseDto.builder()
