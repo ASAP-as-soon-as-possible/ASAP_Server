@@ -190,12 +190,14 @@ public class MeetingService {
             throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
         }
         List<User> users = meeting.getUsers();
+        System.out.println(users.toString());
         for (User user : users) {
             UserVo userVo = UserVo.of(user);
             List<MeetingTimeVo> meetingTimes = meetingTimeRepository.findByUser(user)
                     .stream()
                     .map(MeetingTimeVo::of)
                     .collect(Collectors.toList());
+            System.out.println(meetingTimes.toString());
             timeTableUtil.setTimeTable(userVo, meetingTimes);
         }
 

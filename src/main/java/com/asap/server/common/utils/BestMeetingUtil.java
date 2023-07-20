@@ -21,15 +21,19 @@ import org.springframework.stereotype.Component;
 @Component
 @Getter
 public class BestMeetingUtil {
-    private final Map<String, Map<TimeSlot, TimeSlotInfoDto>> timeTable = new HashMap<>();
+    private Map<String, Map<TimeSlot, TimeSlotInfoDto>> timeTable;
     private MeetingDto meeting;
     private final TimeSlot[] timeSlots = TimeSlot.values();
     private final Duration[] durations = Duration.values();
-    private final Map<Duration, List<AvailableMeetingTimeDto>> availableMeetingTimesByDuration = new HashMap<>();
-    private final List<PossibleTimeCaseDto> timeCases = new ArrayList<>();
-    private final List<AvailableMeetingTimeDto> fixedMeetingTime = new ArrayList<>();
+    private Map<Duration, List<AvailableMeetingTimeDto>> availableMeetingTimesByDuration;
+    private List<PossibleTimeCaseDto> timeCases;
+    private List<AvailableMeetingTimeDto> fixedMeetingTime;
 
     public void getBestMeetingTime(MeetingDto meeting, List<MeetingTimeDto> meetingTimes) {
+        timeTable = new HashMap<>();
+        timeCases = new ArrayList<>();
+        availableMeetingTimesByDuration = new HashMap<>();
+        fixedMeetingTime = new ArrayList<>();
         this.meeting = meeting;
         initTimeTable();
         setUserMeetingTime(meetingTimes);
