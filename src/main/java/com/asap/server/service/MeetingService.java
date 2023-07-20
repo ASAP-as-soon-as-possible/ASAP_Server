@@ -131,8 +131,8 @@ public class MeetingService {
         List<AvailableDateResponseDto> availableDateResponseDtoList = meeting.getDateAvailabilities()
                 .stream()
                 .map(dateAvailability -> new AvailableDateResponseDto(
-                        dateAvailability.getMonth(),
-                        dateAvailability.getDay(),
+                        Integer.valueOf(dateAvailability.getMonth()).toString(),
+                        Integer.valueOf(dateAvailability.getDay()).toString(),
                         dateAvailability.getDayOfWeek()))
                 .collect(Collectors.toList());
 
