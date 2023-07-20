@@ -171,11 +171,17 @@ public class BestMeetingUtil {
 
     private void selectBestMeetingTime() {
         while (fixedMeetingTime.size() != 3) {
-            for (PossibleTimeCaseDto timeCase : timeCases) {
-                AvailableMeetingTimeDto meetingTime = getBestMeetingTime(timeCase.getDuration(), timeCase.getMemberCnt());
+            int index;
+            for (index = 0; index < timeCases.size(); index++) {
+                AvailableMeetingTimeDto meetingTime = getBestMeetingTime(timeCases.get(index).getDuration(), timeCases.get(index).getMemberCnt());
                 if (meetingTime != null) {
                     fixedMeetingTime.add(meetingTime);
                     break;
+                }
+            }
+            if (index == timeCases.size()) {
+                while (fixedMeetingTime.size() != 3) {
+                    fixedMeetingTime.add(null);
                 }
             }
         }
