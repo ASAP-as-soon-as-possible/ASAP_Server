@@ -44,6 +44,13 @@ public class MeetingController {
         return SuccessResponse.success(Success.CREATE_MEETING_SUCCESS, meetingService.create(meetingSaveRequestDto));
     }
 
+    @Operation(summary = "[큐 카드] 큐 카드 확정 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "유저 정보 조회 성공"),
+            @ApiResponse(responseCode = "401", description = "해당 유저는 해당 방의 방장이 아닙니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "해당 유저는 존재하지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PostMapping("/{meetingId}/confirm")
     @SecurityRequirement(name = "JWT Auth")
     public SuccessResponse confirmMeeting(
@@ -65,6 +72,14 @@ public class MeetingController {
         return SuccessResponse.success(Success.FIND_MEETING_SCHEDULE_SUCCESS, meetingService.getMeetingSchedule(meetingId));
     }
 
+    @Operation(summary = "[큐 카드] 큐 카드 조회 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "유저 정보 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "해당 회의는 존재하지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "해당 유저는 해당 방의 방장이 아닙니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "해당 유저는 존재하지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @GetMapping("/{meetingId}/card")
     public SuccessResponse<FixedMeetingResponseDto> getFixedMeetingInformation(
             @PathVariable("meetingId") String _meetingId,
@@ -101,6 +116,7 @@ public class MeetingController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/{meetingId}/details")
+    @SecurityRequirement(name = "JWT Auth")
     public SuccessResponse<BestMeetingTimeResponseDto> getBestMeetingTime(
             @PathVariable("meetingId") String _meetingId,
             @MeetingId Long meetingId,
