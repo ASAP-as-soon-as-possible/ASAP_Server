@@ -17,6 +17,7 @@ import com.asap.server.controller.dto.response.PreferTimeResponseDto;
 import com.asap.server.controller.dto.response.TimeTableResponseDto;
 import com.asap.server.domain.DateAvailability;
 import com.asap.server.domain.Meeting;
+import com.asap.server.domain.MeetingTime;
 import com.asap.server.domain.PreferTime;
 import com.asap.server.domain.User;
 import com.asap.server.exception.Error;
@@ -193,7 +194,7 @@ public class MeetingService {
             UserVo userVo = UserVo.of(user);
             List<MeetingTimeVo> meetingTimes = meetingTimeRepository.findByUser(user)
                     .stream()
-                    .map(meetingTime -> MeetingTimeVo.of(meetingTime))
+                    .map(MeetingTimeVo::of)
                     .collect(Collectors.toList());
             timeTableUtil.setTimeTable(userVo, meetingTimes);
         }
