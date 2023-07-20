@@ -2,9 +2,9 @@ package com.asap.server.common.utils;
 
 import com.asap.server.controller.dto.response.AvailableDatesDto;
 import com.asap.server.controller.dto.response.TimeSlotDto;
-import com.asap.server.domain.MeetingTime;
-import com.asap.server.domain.User;
 import com.asap.server.domain.enums.TimeSlot;
+import com.asap.server.service.vo.MeetingTimeVo;
+import com.asap.server.service.vo.UserVo;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
@@ -18,12 +18,12 @@ import java.util.Map;
 @Component
 @Getter
 public class TimeTableUtil {
-    private final List<User> users = new ArrayList<>();
+    private final List<UserVo> users = new ArrayList<>();
     private final List<String> userNames = new ArrayList<>();
     private final Map<String, Map<String, List<String>>> dateAvailable = new HashMap<>();
     private final List<AvailableDatesDto> availableDatesDtoList = new ArrayList<>();
-    public void setTimeTable(User user, List<MeetingTime> meetingTimes) {
-        for (MeetingTime meetingTime : meetingTimes) {
+    public void setTimeTable(UserVo user, List<MeetingTimeVo> meetingTimes) {
+        for (MeetingTimeVo meetingTime : meetingTimes) {
             List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(meetingTime.getStartTime().ordinal(), meetingTime.getEndTime().ordinal());
             for (TimeSlot timeSlot : timeSlots) {
                 String colTime = timeSlot.getTime();
@@ -49,7 +49,7 @@ public class TimeTableUtil {
         userNames.add(user.getName());
         setColorLevel();
     }
-    public void setColorLevel(){
+    private void setColorLevel(){
         dateAvailable.forEach((key, value) -> {
                     List<TimeSlotDto> timeSlotDtoList = new ArrayList<>();
                     value.forEach((timeSlot, userNameList) ->
@@ -80,7 +80,7 @@ public class TimeTableUtil {
         );
 
     }
-    public int getColorLevel(List<String> userNameList){
+    private int getColorLevel(List<String> userNameList){
         double ratio = (double) userNameList.size() / users.size();
 
         if (ratio <= 0.2) {
