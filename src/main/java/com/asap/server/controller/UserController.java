@@ -9,6 +9,7 @@ import com.asap.server.controller.dto.request.UserMeetingTimeSaveRequestDto;
 import com.asap.server.exception.Success;
 import com.asap.server.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class UserController {
     public SuccessResponse createHostTime(
             @PathVariable("meetingId") String _meetingId,
             @RequestBody List<@Valid UserMeetingTimeSaveRequestDto> requestDtoList,
-            @UserId Long userId,
+            @UserId @Parameter(hidden = true) Long userId,
             @MeetingId Long meetingId
     ) {
         return SuccessResponse.success(Success.CREATE_HOST_TIME_SUCCESS, userService.createHostTime(meetingId, _meetingId, userId, requestDtoList));

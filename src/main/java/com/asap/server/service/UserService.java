@@ -21,10 +21,12 @@ import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.MeetingTimeRepository;
 import com.asap.server.repository.UserRepository;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -119,8 +121,8 @@ public class UserService {
                 .stream()
                 .map(userMeetingTimeSaveRequestDto -> MeetingTime.newInstance(user,
                         userMeetingTimeSaveRequestDto.getPriority(),
-                        userMeetingTimeSaveRequestDto.getMonth(),
-                        userMeetingTimeSaveRequestDto.getDay(),
+                        Integer.valueOf(userMeetingTimeSaveRequestDto.getMonth()).toString(),
+                        Integer.valueOf(userMeetingTimeSaveRequestDto.getDay()).toString(),
                         userMeetingTimeSaveRequestDto.getDayOfWeek(),
                         userMeetingTimeSaveRequestDto.getStartTime(),
                         userMeetingTimeSaveRequestDto.getEndTime()))

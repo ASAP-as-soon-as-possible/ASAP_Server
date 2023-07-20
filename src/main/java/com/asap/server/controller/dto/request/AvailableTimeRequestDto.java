@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -18,5 +19,5 @@ public class AvailableTimeRequestDto {
     private String name;
 
     @Schema(description = "가능 일자")
-    private List<UserMeetingTimeSaveRequestDto> availableTimes;
+    private List<@Valid UserMeetingTimeSaveRequestDto> availableTimes;
 }
