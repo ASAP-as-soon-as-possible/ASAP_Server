@@ -104,7 +104,7 @@ public class MeetingController {
     public SuccessResponse<BestMeetingTimeResponseDto> getBestMeetingTime(
             @PathVariable("meetingId") String _meetingId,
             @MeetingId Long meetingId,
-            @UserId Long userId
+            @Parameter(hidden = true) @UserId Long userId
     ) {
         return SuccessResponse.success(Success.BEST_MEETING_SUCCESS, meetingService.getBestMeetingTime(meetingId, userId));
     }
