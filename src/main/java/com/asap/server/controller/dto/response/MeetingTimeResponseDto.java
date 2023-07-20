@@ -16,9 +16,9 @@ public class MeetingTimeResponseDto {
 
     public static MeetingTimeResponseDto of(AvailableMeetingTimeDto availableMeetingTime) {
         if (availableMeetingTime == null) return null;
-        String month = Integer.valueOf(availableMeetingTime.getDate().substring(0, 1)).toString();
-        String day = Integer.valueOf(availableMeetingTime.getDate().substring(2, 4)).toString();
-        String dayOfWeek = availableMeetingTime.getDate().substring(5, 6);
+        String month = Integer.valueOf(availableMeetingTime.getDate().substring(0, 2)).toString();
+        String day = Integer.valueOf(availableMeetingTime.getDate().substring(3, 5)).toString();
+        String dayOfWeek = availableMeetingTime.getDate().substring(6, 7);
         return new MeetingTimeResponseDto(
                 month,
                 day,
