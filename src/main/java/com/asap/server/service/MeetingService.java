@@ -106,8 +106,8 @@ public class MeetingService {
     @Transactional
     public void confirmMeeting(
             MeetingConfirmRequestDto meetingConfirmRequestDto,
-            Long userId,
-            Long meetingId
+            Long meetingId,
+            Long userId
     ) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
