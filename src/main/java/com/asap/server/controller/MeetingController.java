@@ -37,6 +37,12 @@ public class MeetingController {
     private final MeetingService meetingService;
 
     @Operation(summary = "[회의 생성 뷰] 회의 생성 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "회의가 성공적으로 생성되었습니다."),
+            @ApiResponse(responseCode = "400", description = "요청값이 유효하지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "400", description = "입력 형식이 맞지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PostMapping
     public SuccessResponse<MeetingSaveResponseDto> create(
             @RequestBody @Valid MeetingSaveRequestDto meetingSaveRequestDto
@@ -64,6 +70,11 @@ public class MeetingController {
     }
 
     @Operation(summary = "[가능 시간 입력 뷰] 회의 선택 시간표 제공 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회의 선택지가 성공적으로 조회되었습니다."),
+            @ApiResponse(responseCode = "404", description = "해당 회의는 존재하지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @GetMapping("/{meetingId}/schedule")
     public SuccessResponse getMeetingSchedule(
             @PathVariable("meetingId") String _meetingId,
@@ -91,6 +102,11 @@ public class MeetingController {
     @Operation(summary = "[방장 뷰] 종합 일정 시간표 제공 API")
     @GetMapping("/{meetingId}/timetable")
     @SecurityRequirement(name = "JWT Auth")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회의 선택지가 성공적으로 조회되었습니다."),
+            @ApiResponse(responseCode = "404", description = "해당 회의는 존재하지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "해당 유저는 해당 방의 방장이 아닙니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     public SuccessResponse<TimeTableResponseDto> getTimeTable(
             @PathVariable("meetingId") String _meetingId,
             @UserId @Parameter(hidden = true) Long userId,
@@ -100,6 +116,12 @@ public class MeetingController {
     }
 
     @Operation(summary = "[회의 입장 뷰] 회의 유효성 체크 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "유효한 회의 입니다."),
+            @ApiResponse(responseCode = "404", description = "해당 회의는 존재하지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "이미 확정된 회의입니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @GetMapping("/{meetingId}")
     public SuccessResponse getIsFixedMeeting(
             @PathVariable("meetingId") String _meetingId,
