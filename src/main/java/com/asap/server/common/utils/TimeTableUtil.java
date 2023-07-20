@@ -15,14 +15,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
 @Getter
+@Component
 public class TimeTableUtil {
-    private final List<UserVo> users = new ArrayList<>();
-    private final List<String> userNames = new ArrayList<>();
-    private final Map<String, Map<String, List<String>>> dateAvailable = new HashMap<>();
-    private final List<AvailableDatesDto> availableDatesDtoList = new ArrayList<>();
+    private List<String> userNames;
+    private Map<String, Map<String, List<String>>> dateAvailable;
+    private List<AvailableDatesDto> availableDatesDtoList;
     public void setTimeTable(UserVo user, List<MeetingTimeVo> meetingTimes) {
+        userNames = new ArrayList<>();
+        dateAvailable = new HashMap<>();
+        availableDatesDtoList = new ArrayList<>();
         for (MeetingTimeVo meetingTime : meetingTimes) {
             List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(meetingTime.getStartTime().ordinal(), meetingTime.getEndTime().ordinal());
             for (TimeSlot timeSlot : timeSlots) {
@@ -45,7 +47,6 @@ public class TimeTableUtil {
                 }
             }
         }
-        users.add(user);
         userNames.add(user.getName());
         setColorLevel();
     }
@@ -81,7 +82,7 @@ public class TimeTableUtil {
 
     }
     private int getColorLevel(List<String> userNameList){
-        double ratio = (double) userNameList.size() / users.size();
+        double ratio = (double) userNameList.size() / userNames.size();
 
         if (ratio <= 0.2) {
             return 1;

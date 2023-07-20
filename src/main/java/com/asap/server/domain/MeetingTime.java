@@ -57,11 +57,6 @@ public class MeetingTime extends AuditingTimeEntity {
                                           String dayOfWeek,
                                           TimeSlot startTime,
                                           TimeSlot endTime) {
-        if(priority == 1){
-            priority = 3;
-        }else if(priority == 3){
-            priority = 1;
-        }
         return new MeetingTime(user, priority, month, day, dayOfWeek, startTime, endTime);
     }
 }
