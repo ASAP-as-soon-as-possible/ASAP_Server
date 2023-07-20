@@ -153,7 +153,7 @@ public class UserService {
                 .map(dateAvailability -> dateAvailability.getMonth() + dateAvailability.getDay())
                 .collect(Collectors.toList());
         for (UserMeetingTimeSaveRequestDto requestDto : requestDtoList) {
-            String userMeetingDate = Integer.valueOf(requestDto.getMonth()).toString() + Integer.valueOf(requestDto.getDay()).toString();
+            String userMeetingDate = requestDto.getMonth() + requestDto.getDay();
             if (!meetingDates.contains(userMeetingDate)) {
                 throw new BadRequestException(Error.INVALID_TIME_RANGE);
             }
