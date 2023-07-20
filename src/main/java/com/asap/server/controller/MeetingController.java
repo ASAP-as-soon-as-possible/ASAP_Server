@@ -12,6 +12,7 @@ import com.asap.server.controller.dto.response.TimeTableResponseDto;
 import com.asap.server.exception.Success;
 import com.asap.server.service.MeetingService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
@@ -44,7 +45,7 @@ public class MeetingController {
             @PathVariable("meetingId") String _meetingId,
             @RequestBody @Valid MeetingConfirmRequestDto meetingConfirmRequestDto,
             @MeetingId Long meetingId,
-            @UserId Long userId
+            @UserId @Parameter(hidden = true) Long userId
     ) {
         meetingService.confirmMeeting(meetingConfirmRequestDto, meetingId, userId);
         return SuccessResponse.success(Success.CONFIRM_MEETING_SUCCESS);
@@ -72,7 +73,7 @@ public class MeetingController {
     @SecurityRequirement(name = "JWT Auth")
     public SuccessResponse<TimeTableResponseDto> getTimeTable(
             @PathVariable("meetingId") String _meetingId,
-            @UserId Long userId,
+            @UserId @Parameter(hidden = true) Long userId,
             @MeetingId Long meetingId
     ) {
         return SuccessResponse.success(Success.FIND_TIME_TABLE_SUCCESS, meetingService.getTimeTable(userId, meetingId));
