@@ -1,5 +1,6 @@
 package com.asap.server.controller;
 
+import com.asap.server.common.dto.ErrorResponse;
 import com.asap.server.common.dto.SuccessResponse;
 import com.asap.server.config.resolver.meeting.MeetingId;
 import com.asap.server.config.resolver.user.UserId;
@@ -13,6 +14,10 @@ import com.asap.server.exception.Success;
 import com.asap.server.service.MeetingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
@@ -88,11 +93,18 @@ public class MeetingController {
         return SuccessResponse.success(Success.MEETING_VALIDATION_SUCCESS, meetingService.getIsFixedMeeting(meetingId));
     }
 
+    @Operation(summary = "[회의 일정 확정 뷰] 회의 일정 확정 뷰")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "유저 정보 조회 성공"),
+            @ApiResponse(responseCode = "401", description = "해당 유저는 해당 방의 방장이 아닙니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "해당 회의는 존재하지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @GetMapping("/{meetingId}/details")
     public SuccessResponse<BestMeetingTimeResponseDto> getBestMeetingTime(
             @PathVariable("meetingId") String _meetingId,
             @MeetingId Long meetingId,
-            @UserId Long userId
+            @Parameter(hidden = true) @UserId Long userId
     ) {
         return SuccessResponse.success(Success.BEST_MEETING_SUCCESS, meetingService.getBestMeetingTime(meetingId, userId));
     }

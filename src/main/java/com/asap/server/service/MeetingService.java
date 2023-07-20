@@ -17,7 +17,6 @@ import com.asap.server.controller.dto.response.PreferTimeResponseDto;
 import com.asap.server.controller.dto.response.TimeTableResponseDto;
 import com.asap.server.domain.DateAvailability;
 import com.asap.server.domain.Meeting;
-import com.asap.server.domain.MeetingTime;
 import com.asap.server.domain.PreferTime;
 import com.asap.server.domain.User;
 import com.asap.server.exception.Error;
@@ -29,14 +28,12 @@ import com.asap.server.repository.DateAvailabilityRepository;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.MeetingTimeRepository;
 import com.asap.server.repository.PreferTimeRepository;
-
+import com.asap.server.service.vo.MeetingTimeVo;
+import com.asap.server.service.vo.UserVo;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.asap.server.service.vo.MeetingTimeVo;
-import com.asap.server.service.vo.UserVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

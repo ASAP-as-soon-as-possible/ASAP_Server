@@ -8,7 +8,9 @@ import com.asap.server.controller.dto.response.PossibleTimeCaseDto;
 import com.asap.server.controller.dto.response.UserDto;
 import com.asap.server.domain.enums.Duration;
 import com.asap.server.domain.enums.TimeSlot;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,6 +34,10 @@ public class BestMeetingUtilTest {
     @DisplayName("initTimeTable 테스트")
     public void initTimeTableTest() {
         // given
+        ReflectionTestUtils.setField(bestMeetingUtil, "timeTable", new HashMap<>());
+        ReflectionTestUtils.setField(bestMeetingUtil, "availableMeetingTimesByDuration", new HashMap<>());
+        ReflectionTestUtils.setField(bestMeetingUtil, "timeCases", new ArrayList<>());
+        ReflectionTestUtils.setField(bestMeetingUtil, "fixedMeetingTime", new ArrayList<>());
         DateAvailabilityDto dateAvailability1 = new DateAvailabilityDto("7", "10", "월");
         DateAvailabilityDto dateAvailability2 = new DateAvailabilityDto("7", "11", "화");
         DateAvailabilityDto dateAvailability3 = new DateAvailabilityDto("7", "12", "수");
@@ -59,6 +65,10 @@ public class BestMeetingUtilTest {
     @DisplayName("해당 회의의 meeting time 들을 time table 안에 넣는다.")
     public void setUserMeetingTimeTest() {
         // given
+        ReflectionTestUtils.setField(bestMeetingUtil, "timeTable", new HashMap<>());
+        ReflectionTestUtils.setField(bestMeetingUtil, "availableMeetingTimesByDuration", new HashMap<>());
+        ReflectionTestUtils.setField(bestMeetingUtil, "timeCases", new ArrayList<>());
+        ReflectionTestUtils.setField(bestMeetingUtil, "fixedMeetingTime", new ArrayList<>());
         DateAvailabilityDto dateAvailability1 = new DateAvailabilityDto("7", "10", "월");
         DateAvailabilityDto dateAvailability2 = new DateAvailabilityDto("7", "11", "화");
         DateAvailabilityDto dateAvailability3 = new DateAvailabilityDto("7", "12", "수");
@@ -93,6 +103,10 @@ public class BestMeetingUtilTest {
     @DisplayName("특정 회의 시간 동안 가능한 회의 시간들을 모두 구한다.")
     public void collectAvailableMeetingTimeByDurationTest() {
         // given
+        ReflectionTestUtils.setField(bestMeetingUtil, "timeTable", new HashMap<>());
+        ReflectionTestUtils.setField(bestMeetingUtil, "availableMeetingTimesByDuration", new HashMap<>());
+        ReflectionTestUtils.setField(bestMeetingUtil, "timeCases", new ArrayList<>());
+        ReflectionTestUtils.setField(bestMeetingUtil, "fixedMeetingTime", new ArrayList<>());
         DateAvailabilityDto dateAvailability1 = new DateAvailabilityDto("7", "10", "월");
         DateAvailabilityDto dateAvailability2 = new DateAvailabilityDto("7", "11", "화");
         List<DateAvailabilityDto> dateAvailabilityDto = Arrays.asList(dateAvailability1, dateAvailability2);
@@ -140,6 +154,10 @@ public class BestMeetingUtilTest {
     @DisplayName("회의시간과 참여인원 수가 있을 때 가능한 시간대와 인원수를 모두 담는다.")
     public void timeCasesTest2() {
         // given
+        ReflectionTestUtils.setField(bestMeetingUtil, "timeTable", new HashMap<>());
+        ReflectionTestUtils.setField(bestMeetingUtil, "availableMeetingTimesByDuration", new HashMap<>());
+        ReflectionTestUtils.setField(bestMeetingUtil, "timeCases", new ArrayList<>());
+        ReflectionTestUtils.setField(bestMeetingUtil, "fixedMeetingTime", new ArrayList<>());
         DateAvailabilityDto dateAvailability1 = new DateAvailabilityDto("7", "10", "월");
         DateAvailabilityDto dateAvailability2 = new DateAvailabilityDto("7", "11", "화");
         List<DateAvailabilityDto> dateAvailabilityDto = Arrays.asList(dateAvailability1, dateAvailability2);
