@@ -12,15 +12,17 @@ public enum Error {
     /**
      * 400 BAD REQUEST
      **/
-    INVALID_MEETING_URL_EXCEPTION(HttpStatus.BAD_REQUEST, "해당 URL : %s 은 유효하지 않는 URL 입니다."),
+    INVALID_MEETING_URL_EXCEPTION(HttpStatus.BAD_REQUEST, "유효하지 않는 URL 입니다."),
     VALIDATION_REQUEST_MISSING_EXCEPTION(HttpStatus.BAD_REQUEST, "요청값이 유효하지 않습니다."),
     DUPLICATED_TIME_EXCEPTION(HttpStatus.BAD_REQUEST, "중복 입력된 시간이 있습니다."),
     INVALID_TIME_RANGE(HttpStatus.BAD_REQUEST, "입력한 시간이 회의 가능 일시에 해당하지 않습니다."),
     INVALID_JSON_INPUT_EXCEPTION(HttpStatus.BAD_REQUEST, "입력 형식이 맞지 않습니다."),
+    INVALID_TOKEN_EXCEPTION(HttpStatus.BAD_REQUEST, "유효하지 않은 토큰을 입력했습니다."),
     /**
      * 401 UNAUTHORIZED
      **/
     TOKEN_NOT_CONTAINED_EXCEPTION(HttpStatus.UNAUTHORIZED, "방장의 토큰이 필요합니다."),
+    EXPIRE_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인 해주세요."),
     TOKEN_TIME_EXPIRED_EXCEPTION(HttpStatus.UNAUTHORIZED, "토큰이 유효하지 않습니다."),
     INVALID_MEETING_HOST_EXCEPTION(HttpStatus.UNAUTHORIZED, "해당 유저는 해당 방의 방장이 아닙니다."),
     INVALID_HOST_ID_PASSWORD_EXCEPTION(HttpStatus.UNAUTHORIZED, "유효하지 않은 사용자 이름 또는 비밀번호입니다."),
