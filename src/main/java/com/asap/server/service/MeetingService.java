@@ -106,8 +106,8 @@ public class MeetingService {
     @Transactional
     public void confirmMeeting(
             MeetingConfirmRequestDto meetingConfirmRequestDto,
-            Long userId,
-            Long meetingId
+            Long meetingId,
+            Long userId
     ) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
@@ -131,8 +131,8 @@ public class MeetingService {
         List<AvailableDateResponseDto> availableDateResponseDtoList = meeting.getDateAvailabilities()
                 .stream()
                 .map(dateAvailability -> new AvailableDateResponseDto(
-                        dateAvailability.getMonth(),
-                        dateAvailability.getDay(),
+                        Integer.valueOf(dateAvailability.getMonth()).toString(),
+                        Integer.valueOf(dateAvailability.getDay()).toString(),
                         dateAvailability.getDayOfWeek()))
                 .collect(Collectors.toList());
 
