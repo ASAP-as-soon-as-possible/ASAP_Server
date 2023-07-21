@@ -5,10 +5,12 @@ import com.asap.server.common.utils.TimeTableUtil;
 import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
+import com.asap.server.controller.dto.request.PreferTimeSaveRequestDto;
 import com.asap.server.controller.dto.response.AvailableDateResponseDto;
 import com.asap.server.controller.dto.response.BestMeetingTimeResponseDto;
 import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.IsFixedMeetingResponseDto;
+import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.service.vo.MeetingTimeVo;
 import com.asap.server.service.vo.MeetingVo;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
@@ -63,7 +65,7 @@ public class MeetingService {
                 .map(s -> DateAvailability.newInstance(s))
                 .collect(Collectors.toList());
         dateAvailabilityRepository.saveAllAndFlush(dateAvailabilityList);
-
+        isDuplicatedTime(meetingSaveRequestDto.getPreferTimes());
         List<PreferTime> preferTimeList = meetingSaveRequestDto
                 .getPreferTimes()
                 .stream()
@@ -135,7 +137,6 @@ public class MeetingService {
                         Integer.valueOf(dateAvailability.getDay()).toString(),
                         dateAvailability.getDayOfWeek()))
                 .collect(Collectors.toList());
-
         List<PreferTimeResponseDto> preferTimeResponseDtoList = meeting.getPreferTimes()
                 .stream()
                 .map(preferTime -> new PreferTimeResponseDto(
@@ -236,5 +237,16 @@ public class MeetingService {
         MeetingVo meetingVo = MeetingVo.of(meeting);
         bestMeetingUtil.getBestMeetingTime(meetingVo, meetingTimes);
         return BestMeetingTimeResponseDto.of(meeting.getUsers().size(), bestMeetingUtil.getFixedMeetingTime());
+    }
+
+    private void isDuplicatedTime(List<PreferTimeSaveRequestDto> requestDtoList) {
+        List<TimeSlot> timeSlots = new ArrayList<>();
+        for (PreferTimeSaveRequestDto requestDto : requestDtoList) {
+            List<TimeSlot> timeSlotList = TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal());
+            if (timeSlots.stream().anyMatch(timeSlotList::contains)) {
+                throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
+            }
+            timeSlots.addAll(timeSlotList);
+        }
     }
 }
