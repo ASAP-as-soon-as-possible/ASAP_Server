@@ -1,11 +1,11 @@
 package com.asap.server.common.utils;
 
-import com.asap.server.controller.dto.response.AvailableMeetingTimeDto;
-import com.asap.server.controller.dto.response.DateAvailabilityDto;
-import com.asap.server.controller.dto.response.MeetingDto;
-import com.asap.server.controller.dto.response.MeetingTimeDto;
-import com.asap.server.controller.dto.response.UserDto;
+import com.asap.server.service.vo.AvailableMeetingTimeVo;
+import com.asap.server.service.vo.DateAvailabilityVo;
+import com.asap.server.service.vo.MeetingTimeVo;
+import com.asap.server.service.vo.MeetingVo;
 import com.asap.server.domain.enums.Duration;
+import com.asap.server.service.vo.UserVo;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,22 +33,22 @@ public class GetBestMeetingTimeTest {
     @DisplayName("최적의 회의시간이 하나만 있는 경우")
     public void getBestMeetingTime() {
         // given
-        DateAvailabilityDto dateAvailability1 = new DateAvailabilityDto("7", "10", "월");
-        DateAvailabilityDto dateAvailability2 = new DateAvailabilityDto("7", "11", "화");
-        List<DateAvailabilityDto> dateAvailabilityDto = Arrays.asList(dateAvailability1, dateAvailability2);
+        DateAvailabilityVo dateAvailability1 = new DateAvailabilityVo("7", "10", "월");
+        DateAvailabilityVo dateAvailability2 = new DateAvailabilityVo("7", "11", "화");
+        List<DateAvailabilityVo> dateAvailabilityVo = Arrays.asList(dateAvailability1, dateAvailability2);
 
-        UserDto userDto = new UserDto(1L, "강원용");
-        List<UserDto> users = List.of(userDto);
+        UserVo userVo = new UserVo(1L, "강원용");
+        List<UserVo> users = List.of(userVo);
 
-        MeetingDto meetingDto = new MeetingDto(dateAvailabilityDto, Duration.TWO_HOUR, users);
+        MeetingVo meetingVo = new MeetingVo(dateAvailabilityVo, Duration.TWO_HOUR, users);
 
-        MeetingTimeDto meetingTimeDto = new MeetingTimeDto("7", "10", "월", SLOT_12_00, SLOT_12_30, userDto, 0);
-        List<MeetingTimeDto> meetingTimes = List.of(meetingTimeDto);
+        MeetingTimeVo meetingTimeVo = new MeetingTimeVo("7", "10", "월", SLOT_12_00, SLOT_12_30, userVo, 0);
+        List<MeetingTimeVo> meetingTimes = List.of(meetingTimeVo);
 
-        AvailableMeetingTimeDto result = new AvailableMeetingTimeDto("7.10.월", SLOT_12_00, SLOT_12_30, 0, List.of(userDto), true);
+        AvailableMeetingTimeVo result = new AvailableMeetingTimeVo("7.10.월", SLOT_12_00, SLOT_12_30, 0, List.of(userVo), true);
 
         // when
-        bestMeetingUtil.getBestMeetingTime(meetingDto, meetingTimes);
+        bestMeetingUtil.getBestMeetingTime(meetingVo, meetingTimes);
 
         // then
         assertThat(bestMeetingUtil.getFixedMeetingTime()).isEqualTo(Arrays.asList(result, null, null));
@@ -58,23 +58,23 @@ public class GetBestMeetingTimeTest {
     @DisplayName("최적의 회의시간이 2개만 있는 경우")
     public void getBestMeetingTime2() {
         // given
-        DateAvailabilityDto dateAvailability1 = new DateAvailabilityDto("7", "10", "월");
-        DateAvailabilityDto dateAvailability2 = new DateAvailabilityDto("7", "11", "화");
-        List<DateAvailabilityDto> dateAvailabilityDto = Arrays.asList(dateAvailability1, dateAvailability2);
+        DateAvailabilityVo dateAvailability1 = new DateAvailabilityVo("7", "10", "월");
+        DateAvailabilityVo dateAvailability2 = new DateAvailabilityVo("7", "11", "화");
+        List<DateAvailabilityVo> dateAvailabilityVo = Arrays.asList(dateAvailability1, dateAvailability2);
 
-        UserDto userDto = new UserDto(1L, "강원용");
-        List<UserDto> users = List.of(userDto);
+        UserVo userVo = new UserVo(1L, "강원용");
+        List<UserVo> users = List.of(userVo);
 
-        MeetingDto meetingDto = new MeetingDto(dateAvailabilityDto, Duration.HALF, users);
+        MeetingVo meetingVo = new MeetingVo(dateAvailabilityVo, Duration.HALF, users);
 
-        MeetingTimeDto meetingTimeDto = new MeetingTimeDto("7", "10", "월", SLOT_12_00, SLOT_13_00, userDto, 0);
-        List<MeetingTimeDto> meetingTimes = List.of(meetingTimeDto);
+        MeetingTimeVo meetingTimeVo = new MeetingTimeVo("7", "10", "월", SLOT_12_00, SLOT_13_00, userVo, 0);
+        List<MeetingTimeVo> meetingTimes = List.of(meetingTimeVo);
 
-        AvailableMeetingTimeDto result = new AvailableMeetingTimeDto("7.10.월", SLOT_12_00, SLOT_12_30, 0, List.of(userDto), true);
-        AvailableMeetingTimeDto result2 = new AvailableMeetingTimeDto("7.10.월", SLOT_12_30, SLOT_13_00, 0, List.of(userDto), true);
+        AvailableMeetingTimeVo result = new AvailableMeetingTimeVo("7.10.월", SLOT_12_00, SLOT_12_30, 0, List.of(userVo), true);
+        AvailableMeetingTimeVo result2 = new AvailableMeetingTimeVo("7.10.월", SLOT_12_30, SLOT_13_00, 0, List.of(userVo), true);
 
         // when
-        bestMeetingUtil.getBestMeetingTime(meetingDto, meetingTimes);
+        bestMeetingUtil.getBestMeetingTime(meetingVo, meetingTimes);
 
         // then
         assertThat(bestMeetingUtil.getFixedMeetingTime()).isEqualTo(Arrays.asList(result, result2, null));
@@ -84,26 +84,26 @@ public class GetBestMeetingTimeTest {
     @DisplayName("최적의 회의시간이 3개만 있는 경우")
     public void getBestMeetingTime3() {
         // given
-        DateAvailabilityDto dateAvailability1 = new DateAvailabilityDto("7", "10", "월");
-        DateAvailabilityDto dateAvailability2 = new DateAvailabilityDto("7", "11", "화");
-        List<DateAvailabilityDto> dateAvailabilityDto = Arrays.asList(dateAvailability1, dateAvailability2);
+        DateAvailabilityVo dateAvailability1 = new DateAvailabilityVo("7", "10", "월");
+        DateAvailabilityVo dateAvailability2 = new DateAvailabilityVo("7", "11", "화");
+        List<DateAvailabilityVo> dateAvailabilityVo = Arrays.asList(dateAvailability1, dateAvailability2);
 
-        UserDto userDto = new UserDto(1L, "강원용");
-        UserDto userDto2 = new UserDto(2L, "도소현");
-        List<UserDto> users = Arrays.asList(userDto, userDto2);
+        UserVo userVo = new UserVo(1L, "강원용");
+        UserVo userVo2 = new UserVo(2L, "도소현");
+        List<UserVo> users = Arrays.asList(userVo, userVo2);
 
-        MeetingDto meetingDto = new MeetingDto(dateAvailabilityDto, Duration.TWO_HOUR, users);
+        MeetingVo meetingVo = new MeetingVo(dateAvailabilityVo, Duration.TWO_HOUR, users);
 
-        MeetingTimeDto meetingTimeDto = new MeetingTimeDto("7", "10", "월", SLOT_12_00, SLOT_18_00, userDto, 0);
-        MeetingTimeDto meetingTimeDto2 = new MeetingTimeDto("7", "11", "화", SLOT_12_00, SLOT_18_00, userDto2, 0);
-        List<MeetingTimeDto> meetingTimes = Arrays.asList(meetingTimeDto, meetingTimeDto2);
+        MeetingTimeVo meetingTimeVo = new MeetingTimeVo("7", "10", "월", SLOT_12_00, SLOT_18_00, userVo, 0);
+        MeetingTimeVo meetingTimeVo2 = new MeetingTimeVo("7", "11", "화", SLOT_12_00, SLOT_18_00, userVo2, 0);
+        List<MeetingTimeVo> meetingTimes = Arrays.asList(meetingTimeVo, meetingTimeVo2);
 
-        AvailableMeetingTimeDto result = new AvailableMeetingTimeDto("7.10.월", SLOT_12_00, SLOT_14_00, 0, List.of(userDto), true);
-        AvailableMeetingTimeDto result2 = new AvailableMeetingTimeDto("7.10.월", SLOT_12_30, SLOT_14_30, 0, List.of(userDto), true);
-        AvailableMeetingTimeDto result3 = new AvailableMeetingTimeDto("7.10.월", SLOT_13_00, SLOT_15_00, 0, List.of(userDto), true);
+        AvailableMeetingTimeVo result = new AvailableMeetingTimeVo("7.10.월", SLOT_12_00, SLOT_14_00, 0, List.of(userVo), true);
+        AvailableMeetingTimeVo result2 = new AvailableMeetingTimeVo("7.10.월", SLOT_12_30, SLOT_14_30, 0, List.of(userVo), true);
+        AvailableMeetingTimeVo result3 = new AvailableMeetingTimeVo("7.10.월", SLOT_13_00, SLOT_15_00, 0, List.of(userVo), true);
 
         // when
-        bestMeetingUtil.getBestMeetingTime(meetingDto, meetingTimes);
+        bestMeetingUtil.getBestMeetingTime(meetingVo, meetingTimes);
 
         // then
         assertThat(bestMeetingUtil.getFixedMeetingTime()).isEqualTo(Arrays.asList(result, result2, result3));

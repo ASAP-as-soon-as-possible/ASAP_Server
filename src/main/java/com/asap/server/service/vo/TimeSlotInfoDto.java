@@ -1,4 +1,4 @@
-package com.asap.server.controller.dto.response;
+package com.asap.server.service.vo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class TimeSlotInfoDto {
-    private final List<UserDto> users = new ArrayList<>();
+    private final List<UserVo> users = new ArrayList<>();
     private int weight = 0;
 
-    public void addUserName(UserDto user) {
+    public void addUserName(UserVo user) {
         users.add(user);
     }
 
