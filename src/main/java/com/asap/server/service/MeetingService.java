@@ -9,10 +9,10 @@ import com.asap.server.controller.dto.response.AvailableDateResponseDto;
 import com.asap.server.controller.dto.response.BestMeetingTimeResponseDto;
 import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.IsFixedMeetingResponseDto;
-import com.asap.server.controller.dto.response.MeetingDto;
+import com.asap.server.service.vo.MeetingTimeVo;
+import com.asap.server.service.vo.MeetingVo;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.controller.dto.response.MeetingScheduleResponseDto;
-import com.asap.server.controller.dto.response.MeetingTimeDto;
 import com.asap.server.controller.dto.response.PreferTimeResponseDto;
 import com.asap.server.controller.dto.response.TimeTableResponseDto;
 import com.asap.server.domain.DateAvailability;
@@ -28,7 +28,6 @@ import com.asap.server.repository.DateAvailabilityRepository;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.MeetingTimeRepository;
 import com.asap.server.repository.PreferTimeRepository;
-import com.asap.server.service.vo.MeetingTimeVo;
 import com.asap.server.service.vo.UserVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -191,9 +190,9 @@ public class MeetingService {
         timeTableUtil.init();
         for (User user : users) {
             UserVo userVo = UserVo.of(user);
-            List<MeetingTimeVo> meetingTimes = meetingTimeRepository.findByUser(user)
+            List<com.asap.server.service.vo.MeetingTimeVo> meetingTimes = meetingTimeRepository.findByUser(user)
                     .stream()
-                    .map(MeetingTimeVo::of)
+                    .map(com.asap.server.service.vo.MeetingTimeVo::of)
                     .collect(Collectors.toList());
             timeTableUtil.setTimeTable(userVo, meetingTimes);
         }
@@ -225,17 +224,17 @@ public class MeetingService {
         if (!meeting.getHost().getId().equals(userId)) {
             throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
         }
-        List<MeetingTimeDto> meetingTimes = new ArrayList<>();
+        List<MeetingTimeVo> meetingTimes = new ArrayList<>();
         for (User user : meeting.getUsers()) {
             meetingTimes.addAll(
                     meetingTimeRepository.findByUser(user)
                             .stream()
-                            .map(MeetingTimeDto::of)
+                            .map(MeetingTimeVo::of)
                             .collect(Collectors.toList())
             );
         }
-        MeetingDto meetingDto = MeetingDto.of(meeting);
-        bestMeetingUtil.getBestMeetingTime(meetingDto, meetingTimes);
+        MeetingVo meetingVo = MeetingVo.of(meeting);
+        bestMeetingUtil.getBestMeetingTime(meetingVo, meetingTimes);
         return BestMeetingTimeResponseDto.of(meeting.getUsers().size(), bestMeetingUtil.getFixedMeetingTime());
     }
 }
