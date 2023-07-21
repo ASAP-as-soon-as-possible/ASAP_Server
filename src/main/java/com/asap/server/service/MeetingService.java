@@ -183,11 +183,11 @@ public class MeetingService {
     public TimeTableResponseDto getTimeTable(Long userId, Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-        timeTableUtil.init();
         if (!meeting.getHost().getId().equals(userId)) {
             throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
         }
         List<User> users = meeting.getUsers();
+        timeTableUtil.init();
         for (User user : users) {
             UserVo userVo = UserVo.of(user);
             List<MeetingTimeVo> meetingTimes = meetingTimeRepository.findByUser(user)
@@ -197,7 +197,7 @@ public class MeetingService {
             System.out.println(meetingTimes.toString());
             timeTableUtil.setTimeTable(userVo, meetingTimes);
         }
-
+        timeTableUtil.setColorLevel();
         return TimeTableResponseDto
                 .builder()
                 .memberCount(users.size())

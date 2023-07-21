@@ -24,7 +24,7 @@ public class TimeTableUtil {
     private Map<String, Map<String, List<String>>> dateAvailable;
     private List<AvailableDatesDto> availableDatesDtoList;
 
-    public void init(){
+    public void init() {
         userNames = new ArrayList<>();
         dateAvailable = new HashMap<>();
         availableDatesDtoList = new ArrayList<>();
@@ -54,40 +54,26 @@ public class TimeTableUtil {
             }
         }
         userNames.add(user.getName());
-        setColorLevel();
     }
-    private void setColorLevel(){
+
+    public void setColorLevel() {
         dateAvailable.forEach((key, value) -> {
-                    List<TimeSlotDto> timeSlotDtoList = new ArrayList<>();
-                    value.forEach((timeSlot, userNameList) ->
-                            {
-                                int colorLevel = getColorLevel(userNameList);
-                                timeSlotDtoList.add(TimeSlotDto
-                                        .builder()
-                                        .time(timeSlot)
-                                        .userNames(userNameList)
-                                        .colorLevel(colorLevel)
-                                        .build());
-                            }
-                    );
-                    Collections.sort(timeSlotDtoList, Comparator.comparing(TimeSlotDto::getTime));
-                    String month = key.substring(0, 2);
-                    String day = key.substring(3, 5);
-                    String dayOfWeek = key.substring(6, 7);
+            List<TimeSlotDto> timeSlotDtoList = new ArrayList<>();
+            value.forEach((timeSlot, userNameList) -> {
+                int colorLevel = getColorLevel(userNameList);
+                timeSlotDtoList.add(TimeSlotDto.builder().time(timeSlot).userNames(userNameList).colorLevel(colorLevel).build());
+            });
+            Collections.sort(timeSlotDtoList, Comparator.comparing(TimeSlotDto::getTime));
+            String month = key.substring(0, 2);
+            String day = key.substring(3, 5);
+            String dayOfWeek = key.substring(6, 7);
 
-                    availableDatesDtoList.add(AvailableDatesDto
-                            .builder()
-                            .month(Integer.valueOf(month).toString())
-                            .day(Integer.valueOf(day).toString())
-                            .dayOfWeek(dayOfWeek)
-                            .timeSlots(timeSlotDtoList)
-                            .build()
-                    );
-                }
-        );
+            availableDatesDtoList.add(AvailableDatesDto.builder().month(Integer.valueOf(month).toString()).day(Integer.valueOf(day).toString()).dayOfWeek(dayOfWeek).timeSlots(timeSlotDtoList).build());
+        });
 
     }
-    private int getColorLevel(List<String> userNameList){
+
+    private int getColorLevel(List<String> userNameList) {
         double ratio = (double) userNameList.size() / userNames.size();
 
         if (ratio <= 0.2) {
