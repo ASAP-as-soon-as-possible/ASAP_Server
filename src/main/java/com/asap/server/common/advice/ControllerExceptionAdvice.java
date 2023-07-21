@@ -2,6 +2,7 @@ package com.asap.server.common.advice;
 
 import com.asap.server.common.dto.ErrorResponse;
 import com.asap.server.common.utils.SlackUtil;
+import com.asap.server.exception.Error;
 import com.asap.server.exception.model.AsapException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,14 +12,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
-
-import com.asap.server.exception.Error;
-import org.springframework.web.servlet.NoHandlerFoundException;
-
 import java.io.IOException;
 
 @RestControllerAdvice
