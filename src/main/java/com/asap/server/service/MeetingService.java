@@ -30,14 +30,15 @@ import com.asap.server.repository.MeetingTimeRepository;
 import com.asap.server.repository.PreferTimeRepository;
 import com.asap.server.service.vo.MeetingTimeVo;
 import com.asap.server.service.vo.UserVo;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.asap.server.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
 
@@ -194,7 +195,6 @@ public class MeetingService {
                     .stream()
                     .map(MeetingTimeVo::of)
                     .collect(Collectors.toList());
-            System.out.println(meetingTimes.toString());
             timeTableUtil.setTimeTable(userVo, meetingTimes);
         }
         timeTableUtil.setColorLevel();
