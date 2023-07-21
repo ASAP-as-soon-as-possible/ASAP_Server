@@ -2,6 +2,7 @@ package com.asap.server.common.utils;
 
 import com.asap.server.controller.dto.response.AvailableDatesDto;
 import com.asap.server.controller.dto.response.TimeSlotDto;
+import com.asap.server.domain.User;
 import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.service.vo.MeetingTimeVo;
 import com.asap.server.service.vo.UserVo;
@@ -14,6 +15,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 @Component
@@ -21,10 +23,14 @@ public class TimeTableUtil {
     private List<String> userNames;
     private Map<String, Map<String, List<String>>> dateAvailable;
     private List<AvailableDatesDto> availableDatesDtoList;
-    public void setTimeTable(UserVo user, List<MeetingTimeVo> meetingTimes) {
+
+    public void init(){
         userNames = new ArrayList<>();
         dateAvailable = new HashMap<>();
         availableDatesDtoList = new ArrayList<>();
+    }
+
+    public void setTimeTable(UserVo user, List<MeetingTimeVo> meetingTimes) {
         for (MeetingTimeVo meetingTime : meetingTimes) {
             List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(meetingTime.getStartTime().ordinal(), meetingTime.getEndTime().ordinal());
             for (TimeSlot timeSlot : timeSlots) {
