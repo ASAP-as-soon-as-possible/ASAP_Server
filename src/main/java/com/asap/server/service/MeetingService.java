@@ -106,8 +106,8 @@ public class MeetingService {
     @Transactional
     public void confirmMeeting(
             MeetingConfirmRequestDto meetingConfirmRequestDto,
-            Long userId,
-            Long meetingId
+            Long meetingId,
+            Long userId
     ) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
@@ -131,8 +131,8 @@ public class MeetingService {
         List<AvailableDateResponseDto> availableDateResponseDtoList = meeting.getDateAvailabilities()
                 .stream()
                 .map(dateAvailability -> new AvailableDateResponseDto(
-                        dateAvailability.getMonth(),
-                        dateAvailability.getDay(),
+                        Integer.valueOf(dateAvailability.getMonth()).toString(),
+                        Integer.valueOf(dateAvailability.getDay()).toString(),
                         dateAvailability.getDayOfWeek()))
                 .collect(Collectors.toList());
 
@@ -187,7 +187,7 @@ public class MeetingService {
             throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
         }
         List<User> users = meeting.getUsers();
-        System.out.println(users.toString());
+        timeTableUtil.init();
         for (User user : users) {
             UserVo userVo = UserVo.of(user);
             List<MeetingTimeVo> meetingTimes = meetingTimeRepository.findByUser(user)
@@ -197,7 +197,7 @@ public class MeetingService {
             System.out.println(meetingTimes.toString());
             timeTableUtil.setTimeTable(userVo, meetingTimes);
         }
-
+        timeTableUtil.setColorLevel();
         return TimeTableResponseDto
                 .builder()
                 .memberCount(users.size())

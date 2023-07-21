@@ -33,8 +33,8 @@ public class DateAvailability extends AuditingTimeEntity {
     private DateAvailability(String month,
                              String day,
                              String dayOfWeek) {
-        this.month = Integer.valueOf(month).toString();
-        this.day = Integer.valueOf(day).toString();
+        this.month = month;
+        this.day = day;
         this.dayOfWeek = dayOfWeek;
     }
 
