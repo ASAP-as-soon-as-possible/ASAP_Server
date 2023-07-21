@@ -10,9 +10,6 @@ import com.asap.server.controller.dto.response.AvailableDateResponseDto;
 import com.asap.server.controller.dto.response.BestMeetingTimeResponseDto;
 import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.IsFixedMeetingResponseDto;
-import com.asap.server.domain.enums.TimeSlot;
-import com.asap.server.service.vo.MeetingTimeVo;
-import com.asap.server.service.vo.MeetingVo;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.controller.dto.response.MeetingScheduleResponseDto;
 import com.asap.server.controller.dto.response.PreferTimeResponseDto;
@@ -21,6 +18,7 @@ import com.asap.server.domain.DateAvailability;
 import com.asap.server.domain.Meeting;
 import com.asap.server.domain.PreferTime;
 import com.asap.server.domain.User;
+import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
@@ -30,6 +28,8 @@ import com.asap.server.repository.DateAvailabilityRepository;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.MeetingTimeRepository;
 import com.asap.server.repository.PreferTimeRepository;
+import com.asap.server.service.vo.MeetingTimeVo;
+import com.asap.server.service.vo.MeetingVo;
 import com.asap.server.service.vo.UserVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -242,7 +242,7 @@ public class MeetingService {
     private void isDuplicatedTime(List<PreferTimeSaveRequestDto> requestDtoList) {
         List<TimeSlot> timeSlots = new ArrayList<>();
         for (PreferTimeSaveRequestDto requestDto : requestDtoList) {
-            List<TimeSlot> timeSlotList = TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal());
+            List<TimeSlot> timeSlotList = TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal() - 1);
             if (timeSlots.stream().anyMatch(timeSlotList::contains)) {
                 throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
             }
