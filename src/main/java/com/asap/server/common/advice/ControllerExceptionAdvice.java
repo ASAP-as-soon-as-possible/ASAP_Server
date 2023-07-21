@@ -64,32 +64,32 @@ public class ControllerExceptionAdvice {
         return ErrorResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION);
     }
 
-    /**
-     * 401 UnAuthorization
-     */
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(UnauthorizedException.class)
-    protected ErrorResponse handleUnAuthorizedException(final UnauthorizedException e) {
-        return ErrorResponse.error(e.getError());
-    }
+//    /**
+//     * 401 UnAuthorization
+//     */
+//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+//    @ExceptionHandler(UnauthorizedException.class)
+//    protected ErrorResponse handleUnAuthorizedException(final UnauthorizedException e) {
+//        return ErrorResponse.error(e.getError());
+//    }
+//
+//    /**
+//     * 403 Forbidden
+//     */
+//    @ResponseStatus(HttpStatus.FORBIDDEN)
+//    @ExceptionHandler(ForbiddenException.class)
+//    protected ErrorResponse handleForbiddenException(final ForbiddenException e) {
+//        return ErrorResponse.error(e.getError());
+//    }
 
-    /**
-     * 403 Forbidden
-     */
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler(ForbiddenException.class)
-    protected ErrorResponse handleForbiddenException(final ForbiddenException e) {
-        return ErrorResponse.error(e.getError());
-    }
-
-    /**
-     * 404 Not Found
-     */
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NotFoundException.class)
-    protected ErrorResponse handleNotFoundException(final NotFoundException e) {
-        return ErrorResponse.error(e.getError());
-    }
+//    /**
+//     * 404 Not Found
+//     */
+//    @ResponseStatus(HttpStatus.NOT_FOUND)
+//    @ExceptionHandler(NotFoundException.class)
+//    protected ErrorResponse handleNotFoundException(final NotFoundException e) {
+//        return ErrorResponse.error(e.getError());
+//    }
 
     /**
      * 409 Conflict
