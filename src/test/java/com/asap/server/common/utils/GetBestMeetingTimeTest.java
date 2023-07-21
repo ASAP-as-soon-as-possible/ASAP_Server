@@ -2,6 +2,7 @@ package com.asap.server.common.utils;
 
 import com.asap.server.service.vo.AvailableMeetingTimeVo;
 import com.asap.server.service.vo.DateAvailabilityVo;
+import com.asap.server.service.vo.MeetingTimeVo;
 import com.asap.server.service.vo.MeetingVo;
 import com.asap.server.domain.enums.Duration;
 import com.asap.server.service.vo.UserVo;
