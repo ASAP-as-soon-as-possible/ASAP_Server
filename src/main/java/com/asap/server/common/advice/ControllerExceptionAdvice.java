@@ -4,6 +4,7 @@ import com.asap.server.common.dto.ErrorResponse;
 import com.asap.server.common.utils.SlackUtil;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.AsapException;
+import com.asap.server.exception.model.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -58,6 +59,15 @@ public class ControllerExceptionAdvice {
     @ExceptionHandler(ConstraintViolationException.class)
     protected ErrorResponse handleValidationException(final ConstraintViolationException e) {
         return ErrorResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION);
+    }
+
+    /**
+     * 401 UnAuthorization
+     */
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UnauthorizedException.class)
+    protected ErrorResponse handleUnAuthorizedException(final UnauthorizedException e) {
+        return ErrorResponse.error(e.getError());
     }
 
     /**
