@@ -76,6 +76,8 @@ public class ControllerExceptionAdvice {
     /**
      * 403 Forbidden
      */
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(ForbiddenException.class)
     protected ErrorResponse handleForbiddenException(final ForbiddenException e) {
         return ErrorResponse.error(e.getError());
     }
@@ -83,6 +85,8 @@ public class ControllerExceptionAdvice {
     /**
      * 404 Not Found
      */
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
     protected ErrorResponse handleNotFoundException(final NotFoundException e) {
         return ErrorResponse.error(e.getError());
     }
