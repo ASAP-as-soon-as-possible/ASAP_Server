@@ -94,11 +94,11 @@ public class ControllerExceptionAdvice {
     /**
      * 409 Conflict
      */
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(ConflictException.class)
-    protected ErrorResponse handleConflictException(final ConflictException e) {
-        return ErrorResponse.error(e.getError());
-    }
+//    @ResponseStatus(HttpStatus.CONFLICT)
+//    @ExceptionHandler(ConflictException.class)
+//    protected ErrorResponse handleConflictException(final ConflictException e) {
+//        return ErrorResponse.error(e.getError());
+//    }
 
     /**
      * 500 Internal Server
