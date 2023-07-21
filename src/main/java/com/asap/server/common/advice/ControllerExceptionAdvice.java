@@ -4,6 +4,9 @@ import com.asap.server.common.dto.ErrorResponse;
 import com.asap.server.common.utils.SlackUtil;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.AsapException;
+import com.asap.server.exception.model.ConflictException;
+import com.asap.server.exception.model.ForbiddenException;
+import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -67,6 +70,29 @@ public class ControllerExceptionAdvice {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UnauthorizedException.class)
     protected ErrorResponse handleUnAuthorizedException(final UnauthorizedException e) {
+        return ErrorResponse.error(e.getError());
+    }
+
+    /**
+     * 403 Forbidden
+     */
+    protected ErrorResponse handleForbiddenException(final ForbiddenException e) {
+        return ErrorResponse.error(e.getError());
+    }
+
+    /**
+     * 404 Not Found
+     */
+    protected ErrorResponse handleNotFoundException(final NotFoundException e) {
+        return ErrorResponse.error(e.getError());
+    }
+
+    /**
+     * 409 Conflict
+     */
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(ConflictException.class)
+    protected ErrorResponse handleConflictException(final ConflictException e) {
         return ErrorResponse.error(e.getError());
     }
 
