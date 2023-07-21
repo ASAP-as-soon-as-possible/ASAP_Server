@@ -1,4 +1,4 @@
-package com.asap.server.controller.dto.response;
+package com.asap.server.service.vo;
 
 import com.asap.server.domain.enums.TimeSlot;
 import java.util.List;
@@ -11,16 +11,16 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class AvailableMeetingTimeDto implements Comparable<AvailableMeetingTimeDto> {
+public class AvailableMeetingTimeVo implements Comparable<AvailableMeetingTimeVo> {
     private String date;
     private TimeSlot startTime;
     private TimeSlot endTime;
     private int weight;
-    private List<UserDto> users;
+    private List<UserVo> users;
     private boolean isFixed;
 
     @Override
-    public int compareTo(AvailableMeetingTimeDto o) {
+    public int compareTo(AvailableMeetingTimeVo o) {
         if (this.users.size() == o.users.size()) {
             return Integer.compare(o.weight, this.weight);
         }

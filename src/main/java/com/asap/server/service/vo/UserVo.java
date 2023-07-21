@@ -7,9 +7,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class UserVo {
+    private Long id;
     private String name;
 
     public static UserVo of(User user) {
-        return new UserVo(user.getName());
+        return new UserVo(user.getId(), user.getName());
     }
 }

@@ -15,6 +15,8 @@ public class MeetingTimeVo {
     private String dayOfWeek;
     private TimeSlot startTime;
     private TimeSlot endTime;
+    private UserVo user;
+    private int priority;
 
     public static MeetingTimeVo of(MeetingTime meetingTime) {
         return new MeetingTimeVo(
@@ -22,6 +24,9 @@ public class MeetingTimeVo {
                 meetingTime.getDay(),
                 meetingTime.getDayOfWeek(),
                 meetingTime.getStartTime(),
-                meetingTime.getEndTime());
+                meetingTime.getEndTime(),
+                UserVo.of(meetingTime.getUser()),
+                meetingTime.getPriority()
+        );
     }
 }

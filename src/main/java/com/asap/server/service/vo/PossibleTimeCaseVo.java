@@ -1,4 +1,4 @@
-package com.asap.server.controller.dto.response;
+package com.asap.server.service.vo;
 
 import com.asap.server.domain.enums.Duration;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Getter
-public class PossibleTimeCaseDto {
+public class PossibleTimeCaseVo {
     Duration duration;
     int memberCnt;
 }
