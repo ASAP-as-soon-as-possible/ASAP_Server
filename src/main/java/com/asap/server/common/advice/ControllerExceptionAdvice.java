@@ -6,10 +6,12 @@ import com.asap.server.exception.model.AsapException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
@@ -24,6 +26,7 @@ import java.io.IOException;
 public class ControllerExceptionAdvice {
 
     private final SlackUtil slackUtil;
+
     /**
      * 400 Bad Request
      */
@@ -36,7 +39,14 @@ public class ControllerExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
-        return ErrorResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION);
+        FieldError fieldError = e.getBindingResult().getFieldError();
+        String errorMessage;
+        if (fieldError == null) {
+            errorMessage = Error.VALIDATION_REQUEST_MISSING_EXCEPTION.getMessage();
+        } else {
+            errorMessage = fieldError.getDefaultMessage();
+        }
+        return ErrorResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION, errorMessage);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -47,27 +57,28 @@ public class ControllerExceptionAdvice {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    protected ErrorResponse handleJsonParseException(final HttpMessageNotReadableException e){
+    protected ErrorResponse handleJsonParseException(final HttpMessageNotReadableException e) {
         return ErrorResponse.error(Error.INVALID_JSON_INPUT_EXCEPTION);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
-    protected ErrorResponse handleValidationException(final ConstraintViolationException e){
+    protected ErrorResponse handleValidationException(final ConstraintViolationException e) {
         return ErrorResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION);
     }
+
     /**
      * 500 Internal Server
      */
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     protected ErrorResponse handleException(final Exception error, final HttpServletRequest request) throws IOException {
-        slackUtil.sendAlert(error,request);
+        slackUtil.sendAlert(error, request);
         return ErrorResponse.error(Error.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(AsapException.class)
-    protected ErrorResponse handleAsapException(final AsapException e){
+    protected ErrorResponse handleAsapException(final AsapException e) {
         return ErrorResponse.error(e.getError());
     }
 }
