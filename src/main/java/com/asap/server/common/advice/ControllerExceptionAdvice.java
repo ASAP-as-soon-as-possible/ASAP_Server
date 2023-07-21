@@ -38,13 +38,8 @@ public class ControllerExceptionAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         FieldError fieldError = e.getBindingResult().getFieldError();
-        String errorMessage;
-        if (fieldError == null) {
-            errorMessage = Error.VALIDATION_REQUEST_MISSING_EXCEPTION.getMessage();
-        } else {
-            errorMessage = fieldError.getDefaultMessage();
-        }
-        return ErrorResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION, errorMessage);
+        if (fieldError == null) return ErrorResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION);
+        else return ErrorResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION, fieldError.getDefaultMessage());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
