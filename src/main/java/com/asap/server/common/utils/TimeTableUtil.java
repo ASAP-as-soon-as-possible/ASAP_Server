@@ -18,40 +18,45 @@ import java.util.Map;
 @Getter
 @Component
 public class TimeTableUtil {
-    private List<String> userNames;
-    private Map<String, Map<String, List<String>>> dateAvailable;
-    private List<AvailableDatesDto> availableDatesDtoList;
+    private List<String> userNames = new ArrayList<>();
+    private Map<String, Map<String, List<String>>> dateAvailable = new HashMap<>();
+    private List<AvailableDatesDto> availableDatesDtoList = new ArrayList<>();
+    private List<Long> userIds = new ArrayList<>();
 
     public void init() {
-        userNames = new ArrayList<>();
-        dateAvailable = new HashMap<>();
-        availableDatesDtoList = new ArrayList<>();
+        userNames.clear();
+        dateAvailable.clear();
+        availableDatesDtoList.clear();
+        userIds.clear();
     }
 
     public void setTimeTable(UserVo user, List<MeetingTimeVo> meetingTimes) {
-        for (MeetingTimeVo meetingTime : meetingTimes) {
-            List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(meetingTime.getStartTime().ordinal(), meetingTime.getEndTime().ordinal() - 1);
-            for (TimeSlot timeSlot : timeSlots) {
-                String colTime = timeSlot.getTime();
-                String col = String.format("%s %s %s", meetingTime.getMonth(), meetingTime.getDay(), meetingTime.getDayOfWeek());
-                if (dateAvailable.containsKey(col)) {
-                    if (dateAvailable.get(col).containsKey(colTime)) {
-                        dateAvailable.get(col).get(colTime).add(user.getName());
+        if (!userIds.contains(user.getId())) {
+            for (MeetingTimeVo meetingTime : meetingTimes) {
+                List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(meetingTime.getStartTime().ordinal(), meetingTime.getEndTime().ordinal() - 1);
+                for (TimeSlot timeSlot : timeSlots) {
+                    String colTime = timeSlot.getTime();
+                    String col = String.format("%s %s %s", meetingTime.getMonth(), meetingTime.getDay(), meetingTime.getDayOfWeek());
+                    if (dateAvailable.containsKey(col)) {
+                        if (dateAvailable.get(col).containsKey(colTime)) {
+                            dateAvailable.get(col).get(colTime).add(user.getName());
+                        } else {
+                            List<String> name = new ArrayList<>();
+                            name.add(user.getName());
+                            dateAvailable.get(col).put(colTime, name);
+                        }
                     } else {
+                        Map<String, List<String>> timeAvailable = new HashMap<>();
                         List<String> name = new ArrayList<>();
                         name.add(user.getName());
-                        dateAvailable.get(col).put(colTime, name);
+                        timeAvailable.put(colTime, name);
+                        dateAvailable.put(col, timeAvailable);
                     }
-                } else {
-                    Map<String, List<String>> timeAvailable = new HashMap<>();
-                    List<String> name = new ArrayList<>();
-                    name.add(user.getName());
-                    timeAvailable.put(colTime, name);
-                    dateAvailable.put(col, timeAvailable);
                 }
             }
+            userNames.add(user.getName());
+            userIds.add(user.getId());
         }
-        userNames.add(user.getName());
     }
 
     public void setColorLevel() {
