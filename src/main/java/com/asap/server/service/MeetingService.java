@@ -59,13 +59,14 @@ public class MeetingService {
     @Transactional
     public MeetingSaveResponseDto create(MeetingSaveRequestDto meetingSaveRequestDto) {
 
-        List<DateAvailability> dateAvailabilityList = meetingSaveRequestDto
-                .getAvailableDates()
+        List<DateAvailability> dateAvailabilityList = meetingSaveRequestDto.getAvailableDates()
                 .stream()
-                .map(s -> DateAvailability.newInstance(s))
+                .sorted(Comparator.comparing(s -> s.substring(0, 10)))
+                .map(DateAvailability::newInstance)
                 .collect(Collectors.toList());
         dateAvailabilityRepository.saveAllAndFlush(dateAvailabilityList);
         isDuplicatedTime(meetingSaveRequestDto.getPreferTimes());
+
         List<PreferTime> preferTimeList = meetingSaveRequestDto
                 .getPreferTimes()
                 .stream()
