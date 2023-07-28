@@ -161,7 +161,7 @@ public class MeetingService {
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
         List<String> userNames = meeting
-                .getUsers()
+                .getFixedUsers()
                 .stream()
                 .map(User::getName)
                 .collect(Collectors.toList());
