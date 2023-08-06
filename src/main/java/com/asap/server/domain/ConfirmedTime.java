@@ -1,18 +1,15 @@
 package com.asap.server.domain;
 
+import java.time.LocalDateTime;
+import javax.persistence.Embeddable;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Embeddable;
-import java.time.LocalDateTime;
-
 @Embeddable
-@NoArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ConfirmedTime {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-
-    public ConfirmedTime(LocalDateTime startTime, LocalDateTime endTime) {
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
 }

@@ -28,26 +28,25 @@ public class Meeting extends AuditingTimeEntity {
     @OneToMany
     private List<User> users;
     @OneToMany
-    private List<DateAvailability> dateAvailabilities;
-    @OneToMany
     private List<PreferTime> preferTimes;
+    @OneToMany
+    private List<AvailableDate> availableDates;
+    @OneToMany
+    private List<User> fixedUsers;
     @Column(nullable = false)
     private String password;
     @Column(nullable = false)
     private String title;
-    @Embedded
-    private Place place;
     @Column(nullable = false)
     private Duration duration;
     private String additionalInfo;
     private String url;
     @Embedded
+    private Place place;
+    @Embedded
     private ConfirmedTime confirmedTime;
-    @OneToMany
-    private List<User> fixedUsers;
 
     private Meeting(User host,
-                    List<DateAvailability> dateAvailabilities,
                     List<PreferTime> preferTimes,
                     List<User> users,
                     String password,
@@ -57,7 +56,6 @@ public class Meeting extends AuditingTimeEntity {
                     String additionalInfo
     ) {
         this.host = host;
-        this.dateAvailabilities = dateAvailabilities;
         this.preferTimes = preferTimes;
         this.users = users;
         this.password = password;
@@ -68,7 +66,6 @@ public class Meeting extends AuditingTimeEntity {
     }
 
     public static Meeting newInstance(User host,
-                                      List<DateAvailability> dateAvailabilities,
                                       List<PreferTime> preferTimes,
                                       List<User> users,
                                       String password,
@@ -76,7 +73,7 @@ public class Meeting extends AuditingTimeEntity {
                                       Place place,
                                       Duration duration,
                                       String additionalInfo) {
-        return new Meeting(host, dateAvailabilities, preferTimes, users, password, title, place, duration, additionalInfo);
+        return new Meeting(host, preferTimes, users, password, title, place, duration, additionalInfo);
     }
 
     public void setUrl(String url) {

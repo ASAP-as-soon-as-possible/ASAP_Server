@@ -14,7 +14,6 @@ import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.controller.dto.response.MeetingScheduleResponseDto;
 import com.asap.server.controller.dto.response.PreferTimeResponseDto;
 import com.asap.server.controller.dto.response.TimeTableResponseDto;
-import com.asap.server.domain.DateAvailability;
 import com.asap.server.domain.Meeting;
 import com.asap.server.domain.PreferTime;
 import com.asap.server.domain.User;

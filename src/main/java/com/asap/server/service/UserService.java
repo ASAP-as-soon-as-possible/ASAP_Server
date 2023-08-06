@@ -9,7 +9,6 @@ import com.asap.server.controller.dto.response.HostLoginResponseDto;
 import com.asap.server.controller.dto.response.UserMeetingTimeResponseDto;
 import com.asap.server.controller.dto.response.UserTimeResponseDto;
 import com.asap.server.domain.Meeting;
-import com.asap.server.domain.MeetingTime;
 import com.asap.server.domain.User;
 import com.asap.server.domain.enums.Role;
 import com.asap.server.domain.enums.TimeSlot;
