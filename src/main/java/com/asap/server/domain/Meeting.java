@@ -1,16 +1,17 @@
 package com.asap.server.domain;
 
 import com.asap.server.domain.enums.Duration;
-import com.asap.server.domain.enums.Place;
-import com.asap.server.domain.enums.TimeSlot;
+
 import java.util.List;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,18 +35,14 @@ public class Meeting extends AuditingTimeEntity {
     private String password;
     @Column(nullable = false)
     private String title;
-    @Column(nullable = false)
+    @Embedded
     private Place place;
-    private String placeDetail;
     @Column(nullable = false)
     private Duration duration;
     private String additionalInfo;
     private String url;
-    private String month;
-    private String day;
-    private String dayOfWeek;
-    private TimeSlot startTime;
-    private TimeSlot endTime;
+    @Embedded
+    private ConfirmedTime confirmedTime;
     @OneToMany
     private List<User> fixedUsers;
 
@@ -56,7 +53,6 @@ public class Meeting extends AuditingTimeEntity {
                     String password,
                     String title,
                     Place place,
-                    String placeDetail,
                     Duration duration,
                     String additionalInfo
     ) {
@@ -67,7 +63,6 @@ public class Meeting extends AuditingTimeEntity {
         this.password = password;
         this.title = title;
         this.place = place;
-        this.placeDetail = placeDetail;
         this.duration = duration;
         this.additionalInfo = additionalInfo;
     }
@@ -79,37 +74,20 @@ public class Meeting extends AuditingTimeEntity {
                                       String password,
                                       String title,
                                       Place place,
-                                      String placeDetail,
                                       Duration duration,
                                       String additionalInfo) {
-        return new Meeting(host, dateAvailabilities, preferTimes, users, password, title, place, placeDetail, duration, additionalInfo);
+        return new Meeting(host, dateAvailabilities, preferTimes, users, password, title, place, duration, additionalInfo);
     }
 
     public void setUrl(String url) {
         this.url = url;
     }
 
-    public void setMonth(String month) {
-        this.month = month;
-    }
-
-    public void setDay(String day) {
-        this.day = day;
-    }
-
-    public void setDayOfWeek(String dayOfWeek) {
-        this.dayOfWeek = dayOfWeek;
-    }
-
-    public void setStartTime(TimeSlot startTime) {
-        this.startTime = startTime;
-    }
-
-    public void setEndTime(TimeSlot endTime) {
-        this.endTime = endTime;
-    }
-
     public void setFinalUsers(List<User> users) {
         this.fixedUsers = users;
+    }
+
+    public void setConfirmedTime(ConfirmedTime confirmedTime) {
+        this.confirmedTime = confirmedTime;
     }
 }
