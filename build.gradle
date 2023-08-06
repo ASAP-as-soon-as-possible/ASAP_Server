@@ -28,9 +28,31 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+	// VALIDATION
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 	// JPA & Database
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'mysql:mysql-connector-java:8.0.32'
+
+	// SWAGGER
+	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+
+	// Jwt Token
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
+
+	// Slack Webhook
+	implementation 'com.slack.api:slack-api-client:1.28.0'
+	implementation 'com.google.code.gson:gson:2.10.1'
+	implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+	implementation 'com.slack.api:slack-app-backend:1.28.0'
+	implementation 'com.slack.api:slack-api-model:1.28.0'
+
+	//Aws S3
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
+
 }
 
 tasks.named('test') {

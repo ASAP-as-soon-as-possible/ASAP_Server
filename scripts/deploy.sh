@@ -1,6 +1,5 @@
 #!/bin/bash
-BASE_PATH=/var/www
-BUILD_PATH=$(ls $BASE_PATH/ASAP_Server/build/libs/server-0.0.1-SNAPSHOT.jar)
+BUILD_PATH=$(ls /home/ubuntu/app/server-0.0.1-SNAPSHOT.jar)
 JAR_NAME=$(basename $BUILD_PATH)
 echo "> build 파일명: $JAR_NAME"
 
@@ -43,11 +42,11 @@ then
 else
   echo "> kill -15 $IDLE_PID"
   kill -15 $IDLE_PID
-  sleep 5
+  sleep 20
 fi
 
 echo "> $IDLE_PROFILE 배포"
-nohup java -jar -Dspring.profiles.active=$IDLE_PROFILE $IDLE_APPLICATION_PATH &
+nohup java -jar -Duser.timezone=Asia/Seoul -Dspring.profiles.active=$IDLE_PROFILE $IDLE_APPLICATION_PATH >> /home/ubuntu/app/nohup.out 2>&1 &
 
 echo "> $IDLE_PROFILE 10초 후 Health check 시작"
 echo "> curl -s http://localhost:$IDLE_PORT/health "
