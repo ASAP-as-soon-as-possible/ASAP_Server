@@ -3,11 +3,13 @@ package com.asap.server.controller.dto.request;
 import com.asap.server.domain.enums.TimeSlot;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PreferTimeSaveRequestDto {
 

@@ -3,18 +3,13 @@ package com.asap.server.service;
 import com.asap.server.common.utils.BestMeetingUtil;
 import com.asap.server.common.utils.TimeTableUtil;
 import com.asap.server.config.jwt.JwtService;
-import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
 import com.asap.server.controller.dto.request.PreferTimeSaveRequestDto;
-import com.asap.server.controller.dto.response.AvailableDateResponseDto;
-import com.asap.server.controller.dto.response.BestMeetingTimeResponseDto;
-import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.IsFixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
-import com.asap.server.controller.dto.response.MeetingScheduleResponseDto;
-import com.asap.server.controller.dto.response.PreferTimeResponseDto;
-import com.asap.server.controller.dto.response.TimeTableResponseDto;
+import com.asap.server.domain.AvailableDate;
 import com.asap.server.domain.Meeting;
+import com.asap.server.domain.Place;
 import com.asap.server.domain.PreferTime;
 import com.asap.server.domain.User;
 import com.asap.server.domain.enums.TimeSlot;
@@ -22,51 +17,49 @@ import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.NotFoundException;
-import com.asap.server.exception.model.UnauthorizedException;
-import com.asap.server.repository.DateAvailabilityRepository;
+import com.asap.server.repository.AvailableDateRepository;
 import com.asap.server.repository.MeetingRepository;
-import com.asap.server.repository.MeetingTimeRepository;
 import com.asap.server.repository.PreferTimeRepository;
-import com.asap.server.service.vo.MeetingTimeVo;
-import com.asap.server.service.vo.MeetingVo;
-import com.asap.server.service.vo.UserVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.asap.server.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
 
 @Service
 @RequiredArgsConstructor
 public class MeetingService {
 
     private final MeetingRepository meetingRepository;
-    private final MeetingTimeRepository meetingTimeRepository;
     private final UserService userService;
-    private final DateAvailabilityRepository dateAvailabilityRepository;
+    private final AvailableDateRepository availableDateRepository;
     private final PreferTimeRepository preferTimeRepository;
     private final JwtService jwtService;
     private final BestMeetingUtil bestMeetingUtil;
     private final TimeTableUtil timeTableUtil;
 
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+
     @Transactional
     public MeetingSaveResponseDto create(MeetingSaveRequestDto meetingSaveRequestDto) {
 
-        List<DateAvailability> dateAvailabilityList = meetingSaveRequestDto.getAvailableDates()
+        List<AvailableDate> availableDates = meetingSaveRequestDto.getAvailableDates()
                 .stream()
-                .sorted(Comparator.comparing(s -> s.substring(0, 10)))
-                .map(DateAvailability::newInstance)
+                .map(s -> new AvailableDate(LocalDate.parse(s.substring(0, 10), formatter)))
+                .sorted(Comparator.comparing(s -> s.getDate()))
                 .collect(Collectors.toList());
-        dateAvailabilityRepository.saveAllAndFlush(dateAvailabilityList);
+        availableDateRepository.saveAll(availableDates);
+
         isDuplicatedTime(meetingSaveRequestDto.getPreferTimes());
 
-        List<PreferTime> preferTimeList = meetingSaveRequestDto
+        List<PreferTime> preferTimes = meetingSaveRequestDto
                 .getPreferTimes()
                 .stream()
                 .map(
@@ -77,7 +70,7 @@ public class MeetingService {
                                 )
                 )
                 .collect(Collectors.toList());
-        preferTimeRepository.saveAllAndFlush(preferTimeList);
+        preferTimeRepository.saveAll(preferTimes);
 
         User host = userService.createHost(meetingSaveRequestDto.getName());
         List<User> users = new ArrayList<>();
@@ -85,13 +78,12 @@ public class MeetingService {
 
         Meeting newMeeting = Meeting.newInstance(
                 host,
-                dateAvailabilityList,
-                preferTimeList,
+                availableDates,
+                preferTimes,
                 users,
                 meetingSaveRequestDto.getPassword(),
                 meetingSaveRequestDto.getTitle(),
-                meetingSaveRequestDto.getPlace(),
-                meetingSaveRequestDto.getPlaceDetail(),
+                new Place(meetingSaveRequestDto.getPlaceType(), meetingSaveRequestDto.getPlaceDetail()),
                 meetingSaveRequestDto.getDuration(),
                 meetingSaveRequestDto.getAdditionalInfo());
         meetingRepository.save(newMeeting);
@@ -210,7 +202,7 @@ public class MeetingService {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        if (meeting.getMonth() != null) {
+        if (meeting.getConfirmedTime() != null) {
             throw new ConflictException(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
         }
 
