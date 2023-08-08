@@ -14,7 +14,6 @@ import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.controller.dto.response.MeetingScheduleResponseDto;
 import com.asap.server.controller.dto.response.PreferTimeResponseDto;
 import com.asap.server.controller.dto.response.TimeTableResponseDto;
-import com.asap.server.domain.ConfirmedDateTime;
 import com.asap.server.domain.Meeting;
 import com.asap.server.domain.PreferTime;
 import com.asap.server.domain.User;
@@ -31,7 +30,6 @@ import com.asap.server.repository.PreferTimeRepository;
 import com.asap.server.service.vo.MeetingTimeVo;
 import com.asap.server.service.vo.MeetingVo;
 import com.asap.server.service.vo.UserVo;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -159,34 +157,7 @@ public class MeetingService {
     public FixedMeetingResponseDto getFixedMeetingInformation(Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-
-        List<String> userNames = meeting
-                .getFixedUsers()
-                .stream()
-                .map(User::getName)
-                .collect(Collectors.toList());
-
-        ConfirmedDateTime confirmedDateTime = meeting.getConfirmedDateTime();
-        String month = String.valueOf(confirmedDateTime.getStartDateTime().getMonthValue());
-        String day = String.valueOf(confirmedDateTime.getStartDateTime().getDayOfMonth());
-        String dayOfWeek = confirmedDateTime.getStartDateTime().getDayOfWeek().toString();
-        String startTime = confirmedDateTime.getStartDateTime().toLocalTime().toString();
-        String endTime = confirmedDateTime.getEndDateTime().toLocalTime().toString();
-
-        return FixedMeetingResponseDto
-                .builder()
-                .title(meeting.getTitle())
-                .place(meeting.getPlace().toString())
-                .placeDetail(meeting.getPlace().getPlaceDetail())
-                .month(month)
-                .day(day)
-                .dayOfWeek(dayOfWeek)
-                .startTime(startTime)
-                .endTime(endTime)
-                .hostName(meeting.getHost().getName())
-                .userNames(userNames)
-                .additionalInfo(meeting.getAdditionalInfo())
-                .build();
+        return FixedMeetingResponseDto.of(meeting);
     }
 
     public TimeTableResponseDto getTimeTable(Long userId, Long meetingId) {
