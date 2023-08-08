@@ -61,8 +61,7 @@ public class MeetingService {
                 .build();
     }
 
-    @Transactional
-    public Meeting createMeeting(
+    private Meeting createMeeting(
             User host,
             List<AvailableDate> availableDates,
             List<PreferTime> preferTimes,
