@@ -6,4 +6,8 @@ public class BadRequestException extends AsapException {
     public BadRequestException(Error error) {
         super(error);
     }
+
+    public BadRequestException(String msg) {
+        super(msg);
+    }
 }

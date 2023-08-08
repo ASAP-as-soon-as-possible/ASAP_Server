@@ -5,13 +5,18 @@ import lombok.Getter;
 
 @Getter
 public class AsapException extends RuntimeException {
-    private final Error error;
+    private Error error;
 
-    public AsapException(Error error){
+    public AsapException(Error error) {
         super(error.getMessage());
         this.error = error;
     }
-    public int getHttpStatus(){
+
+    public AsapException(String msg) {
+        super(msg);
+    }
+
+    public int getHttpStatus() {
         return error.getHttpStatusCode();
     }
 }

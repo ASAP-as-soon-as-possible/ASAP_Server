@@ -1,5 +1,6 @@
 package com.asap.server.controller.dto.response;
 
+import com.asap.server.common.utils.DayOfWeekConverter;
 import com.asap.server.domain.ConfirmedDateTime;
 import com.asap.server.domain.Meeting;
 import com.asap.server.domain.User;
@@ -35,7 +36,7 @@ public class FixedMeetingResponseDto {
         ConfirmedDateTime confirmedDateTime = meeting.getConfirmedDateTime();
         String month = String.valueOf(confirmedDateTime.getStartDateTime().getMonthValue());
         String day = String.valueOf(confirmedDateTime.getStartDateTime().getDayOfMonth());
-        String dayOfWeek = confirmedDateTime.getStartDateTime().getDayOfWeek().toString();
+        String dayOfWeek = DayOfWeekConverter.convertDayOfWeekEnToKo(confirmedDateTime.getStartDateTime().getDayOfWeek());
         String startTime = confirmedDateTime.getStartDateTime().toLocalTime().toString();
         String endTime = confirmedDateTime.getEndDateTime().toLocalTime().toString();
 
