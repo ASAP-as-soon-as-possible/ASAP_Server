@@ -44,7 +44,7 @@ public class Meeting extends AuditingTimeEntity {
     @Embedded
     private Place place;
     @Embedded
-    private ConfirmedTime confirmedTime;
+    private ConfirmedDateTime confirmedDateTime;
 
     private Meeting(User host,
                     List<AvailableDate> availableDates,
@@ -87,7 +87,7 @@ public class Meeting extends AuditingTimeEntity {
         this.fixedUsers = users;
     }
 
-    public void setConfirmedTime(ConfirmedTime confirmedTime) {
-        this.confirmedTime = confirmedTime;
+    public void setConfirmedDateTime(ConfirmedDateTime confirmedDateTime) {
+        this.confirmedDateTime = confirmedDateTime;
     }
 }

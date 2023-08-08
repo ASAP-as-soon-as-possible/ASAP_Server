@@ -18,15 +18,24 @@ import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.repository.MeetingRepository;
+import com.asap.server.repository.PreferTimeRepository;
+import com.asap.server.service.vo.MeetingTimeVo;
+import com.asap.server.service.vo.MeetingVo;
+import com.asap.server.service.vo.UserVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
-
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 
 
 @Service
@@ -138,27 +147,7 @@ public class MeetingService {
     public FixedMeetingResponseDto getFixedMeetingInformation(Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-
-        List<String> userNames = meeting
-                .getFixedUsers()
-                .stream()
-                .map(User::getName)
-                .collect(Collectors.toList());
-
-        return FixedMeetingResponseDto
-                .builder()
-                .title(meeting.getTitle())
-                .place(meeting.getPlace().toString())
-                .placeDetail(meeting.getPlaceDetail())
-                .month(Integer.valueOf(meeting.getMonth()).toString())
-                .day(Integer.valueOf(meeting.getDay()).toString())
-                .dayOfWeek(meeting.getDayOfWeek())
-                .startTime(meeting.getStartTime().getTime())
-                .endTime(meeting.getEndTime().getTime())
-                .hostName(meeting.getHost().getName())
-                .userNames(userNames)
-                .additionalInfo(meeting.getAdditionalInfo())
-                .build();
+        return FixedMeetingResponseDto.of(meeting);
     }
 
     public TimeTableResponseDto getTimeTable(Long userId, Long meetingId) {
