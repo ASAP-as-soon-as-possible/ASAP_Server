@@ -5,6 +5,7 @@ import com.asap.server.common.utils.TimeTableUtil;
 import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
 import com.asap.server.controller.dto.request.PreferTimeSaveRequestDto;
+import com.asap.server.controller.dto.response.IsFixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.domain.AvailableDate;
 import com.asap.server.domain.Meeting;
@@ -14,6 +15,8 @@ import com.asap.server.domain.User;
 import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
+import com.asap.server.exception.model.ConflictException;
+import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.repository.AvailableDateRepository;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.PreferTimeRepository;
@@ -199,7 +202,7 @@ public class MeetingService {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        if (meeting.getMonth() != null) {
+        if (meeting.getConfirmedTime() != null) {
             throw new ConflictException(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
         }
 
