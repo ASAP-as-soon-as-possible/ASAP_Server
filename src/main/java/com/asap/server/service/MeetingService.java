@@ -29,6 +29,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
 @RequiredArgsConstructor
 public class MeetingService {
@@ -41,13 +42,15 @@ public class MeetingService {
     private final BestMeetingUtil bestMeetingUtil;
     private final TimeTableUtil timeTableUtil;
 
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+
     @Transactional
     public MeetingSaveResponseDto create(MeetingSaveRequestDto meetingSaveRequestDto) {
 
         List<AvailableDate> availableDates = meetingSaveRequestDto.getAvailableDates()
                 .stream()
-                .sorted(Comparator.comparing(s -> s.substring(0, 10)))
-                .map(AvailableDate::of)
+                .map(s -> new AvailableDate(LocalDate.parse(s.substring(0, 10), formatter)))
+                .sorted(Comparator.comparing(s -> s.getDate()))
                 .collect(Collectors.toList());
         availableDateRepository.saveAll(availableDates);
 

@@ -21,12 +21,8 @@ public class AvailableDate extends AuditingTimeEntity{
     @OneToMany
     private List<TimeBlock> timeBlocks;
 
-    private AvailableDate(LocalDate date) {
+    public AvailableDate(LocalDate date) {
         this.date = date;
     }
 
-    public static AvailableDate of(String date){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        return new AvailableDate(LocalDate.parse(date.substring(0, 10), formatter)));
-    }
 }

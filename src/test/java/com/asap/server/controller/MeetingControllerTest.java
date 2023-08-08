@@ -51,12 +51,10 @@ public class MeetingControllerTest {
     @DisplayName("회의가 저장된다.")
     void createMeetingTest() throws Exception {
         //given
-        List<PreferTimeSaveRequestDto> preferTimeDtos = new ArrayList<>();
-        preferTimeDtos.add(new PreferTimeSaveRequestDto(TimeSlot.SLOT_6_00, TimeSlot.SLOT_12_00));
         MeetingSaveRequestDto saveRequestDto = new MeetingSaveRequestDto(
                 "테스트 회의",
                 Arrays.asList("2023/08/07/MON", "2023/08/08/TUE"),
-                preferTimeDtos,
+                Arrays.asList(new PreferTimeSaveRequestDto(TimeSlot.SLOT_6_00, TimeSlot.SLOT_12_00)),
                 PlaceType.OFFLINE,
                 "어디서 만날까",
                 Duration.HOUR_HALF,
