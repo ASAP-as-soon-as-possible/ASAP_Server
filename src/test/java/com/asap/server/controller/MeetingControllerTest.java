@@ -1,4 +1,4 @@
-package com.asap.server.service;
+package com.asap.server.controller;
 
 import com.asap.server.controller.MeetingController;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.verify;
@@ -37,25 +38,24 @@ public class MeetingControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    ObjectMapper objectMapper;
 
     @BeforeEach
     public void beforeEach() {
+        objectMapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.standaloneSetup(meetingController).build();
     }
 
     @Test
     @Transactional
     @DisplayName("회의가 저장된다.")
-    void createMeeting() throws Exception {
-        List<String> date = new ArrayList<>();
-        date.add("2023/08/07/MON");
-        date.add("2023/08/08/TUE");
+    void createMeetingTest() throws Exception {
+        //given
         List<PreferTimeSaveRequestDto> preferTimeDtos = new ArrayList<>();
         preferTimeDtos.add(new PreferTimeSaveRequestDto(TimeSlot.SLOT_6_00, TimeSlot.SLOT_12_00));
         MeetingSaveRequestDto saveRequestDto = new MeetingSaveRequestDto(
                 "테스트 회의",
-                date,
+                Arrays.asList("2023/08/07/MON", "2023/08/08/TUE"),
                 preferTimeDtos,
                 PlaceType.OFFLINE,
                 "어디서 만날까",
@@ -64,6 +64,7 @@ public class MeetingControllerTest {
                 "2028",
                 "추가 정보 비밀"
         );
+        //when, then
         mockMvc.perform(
                 post("/meeting")
                         .contentType(MediaType.APPLICATION_JSON)

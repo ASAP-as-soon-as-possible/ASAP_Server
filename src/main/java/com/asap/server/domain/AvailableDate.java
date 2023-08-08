@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
@@ -20,7 +21,12 @@ public class AvailableDate extends AuditingTimeEntity{
     @OneToMany
     private List<TimeBlock> timeBlocks;
 
-    public AvailableDate(LocalDate date) {
+    private AvailableDate(LocalDate date) {
         this.date = date;
+    }
+
+    public static AvailableDate of(String date){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        return new AvailableDate(LocalDate.parse(date.substring(0, 10), formatter)));
     }
 }

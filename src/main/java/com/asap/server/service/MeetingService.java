@@ -40,7 +40,6 @@ public class MeetingService {
     private final JwtService jwtService;
     private final BestMeetingUtil bestMeetingUtil;
     private final TimeTableUtil timeTableUtil;
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
     @Transactional
     public MeetingSaveResponseDto create(MeetingSaveRequestDto meetingSaveRequestDto) {
@@ -48,13 +47,13 @@ public class MeetingService {
         List<AvailableDate> availableDates = meetingSaveRequestDto.getAvailableDates()
                 .stream()
                 .sorted(Comparator.comparing(s -> s.substring(0, 10)))
-                .map(s -> new AvailableDate(LocalDate.parse(s.substring(0, 10), formatter)))
+                .map(AvailableDate::of)
                 .collect(Collectors.toList());
         availableDateRepository.saveAll(availableDates);
 
         isDuplicatedTime(meetingSaveRequestDto.getPreferTimes());
 
-        List<PreferTime> preferTimeList = meetingSaveRequestDto
+        List<PreferTime> preferTimes = meetingSaveRequestDto
                 .getPreferTimes()
                 .stream()
                 .map(
@@ -65,7 +64,7 @@ public class MeetingService {
                                 )
                 )
                 .collect(Collectors.toList());
-        preferTimeRepository.saveAll(preferTimeList);
+        preferTimeRepository.saveAll(preferTimes);
 
         User host = userService.createHost(meetingSaveRequestDto.getName());
         List<User> users = new ArrayList<>();
@@ -74,7 +73,7 @@ public class MeetingService {
         Meeting newMeeting = Meeting.newInstance(
                 host,
                 availableDates,
-                preferTimeList,
+                preferTimes,
                 users,
                 meetingSaveRequestDto.getPassword(),
                 meetingSaveRequestDto.getTitle(),
