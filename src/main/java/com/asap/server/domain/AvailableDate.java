@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
@@ -24,4 +24,5 @@ public class AvailableDate extends AuditingTimeEntity{
     public AvailableDate(LocalDate date) {
         this.date = date;
     }
+
 }

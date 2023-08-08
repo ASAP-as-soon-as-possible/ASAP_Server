@@ -11,11 +11,13 @@ import javax.validation.constraints.Size;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Schema(description = "회의 생성 DTO")
 public class MeetingSaveRequestDto {
 
@@ -32,7 +34,7 @@ public class MeetingSaveRequestDto {
 
     @NotNull(message = "회의 형식이 입력되지 않았습니다.")
     @Schema(description = "회의 방식", example = "ONLINE")
-    private PlaceType place;
+    private PlaceType placeType;
 
     @Schema(description = "회의 장소 설명")
     private String placeDetail;

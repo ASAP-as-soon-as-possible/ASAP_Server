@@ -47,6 +47,7 @@ public class Meeting extends AuditingTimeEntity {
     private ConfirmedDateTime confirmedDateTime;
 
     private Meeting(User host,
+                    List<AvailableDate> availableDates,
                     List<PreferTime> preferTimes,
                     List<User> users,
                     String password,
@@ -56,6 +57,7 @@ public class Meeting extends AuditingTimeEntity {
                     String additionalInfo
     ) {
         this.host = host;
+        this.availableDates = availableDates;
         this.preferTimes = preferTimes;
         this.users = users;
         this.password = password;
@@ -66,6 +68,7 @@ public class Meeting extends AuditingTimeEntity {
     }
 
     public static Meeting newInstance(User host,
+                                      List<AvailableDate> availableDates,
                                       List<PreferTime> preferTimes,
                                       List<User> users,
                                       String password,
@@ -73,7 +76,7 @@ public class Meeting extends AuditingTimeEntity {
                                       Place place,
                                       Duration duration,
                                       String additionalInfo) {
-        return new Meeting(host, preferTimes, users, password, title, place, duration, additionalInfo);
+        return new Meeting(host, availableDates, preferTimes, users, password, title, place, duration, additionalInfo);
     }
 
     public void setUrl(String url) {
