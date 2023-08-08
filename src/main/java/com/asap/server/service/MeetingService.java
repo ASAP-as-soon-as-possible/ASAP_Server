@@ -17,16 +17,12 @@ import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.NotFoundException;
-import com.asap.server.repository.AvailableDateRepository;
 import com.asap.server.repository.MeetingRepository;
-import com.asap.server.repository.PreferTimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -39,54 +35,22 @@ public class MeetingService {
 
     private final MeetingRepository meetingRepository;
     private final UserService userService;
-    private final AvailableDateRepository availableDateRepository;
-    private final PreferTimeRepository preferTimeRepository;
+    private final AvailableDateService availableDateService;
+    private final PreferTimeService preferTimeService;
     private final JwtService jwtService;
     private final BestMeetingUtil bestMeetingUtil;
     private final TimeTableUtil timeTableUtil;
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-
     @Transactional
     public MeetingSaveResponseDto create(MeetingSaveRequestDto meetingSaveRequestDto) {
 
-        List<AvailableDate> availableDates = meetingSaveRequestDto.getAvailableDates()
-                .stream()
-                .map(s -> new AvailableDate(LocalDate.parse(s.substring(0, 10), formatter)))
-                .sorted(Comparator.comparing(s -> s.getDate()))
-                .collect(Collectors.toList());
-        availableDateRepository.saveAll(availableDates);
+        List<AvailableDate> availableDates = availableDateService.create(meetingSaveRequestDto.getAvailableDates());
 
         isDuplicatedTime(meetingSaveRequestDto.getPreferTimes());
-
-        List<PreferTime> preferTimes = meetingSaveRequestDto
-                .getPreferTimes()
-                .stream()
-                .map(
-                        preferTimeSaveRequestDto ->
-                                PreferTime.newInstance(
-                                        preferTimeSaveRequestDto.getStartTime(),
-                                        preferTimeSaveRequestDto.getEndTime()
-                                )
-                )
-                .collect(Collectors.toList());
-        preferTimeRepository.saveAll(preferTimes);
+        List<PreferTime> preferTimes = preferTimeService.create(meetingSaveRequestDto.getPreferTimes());
 
         User host = userService.createHost(meetingSaveRequestDto.getName());
-        List<User> users = new ArrayList<>();
-        users.add(host);
-
-        Meeting newMeeting = Meeting.newInstance(
-                host,
-                availableDates,
-                preferTimes,
-                users,
-                meetingSaveRequestDto.getPassword(),
-                meetingSaveRequestDto.getTitle(),
-                new Place(meetingSaveRequestDto.getPlaceType(), meetingSaveRequestDto.getPlaceDetail()),
-                meetingSaveRequestDto.getDuration(),
-                meetingSaveRequestDto.getAdditionalInfo());
-        meetingRepository.save(newMeeting);
+        Meeting newMeeting = createMeeting(host, availableDates, preferTimes, meetingSaveRequestDto);
 
         String accessToken = jwtService.issuedToken(host.getId().toString());
         newMeeting.setUrl(Base64Utils.encodeToUrlSafeString(newMeeting.getId().toString().getBytes()));
@@ -95,6 +59,30 @@ public class MeetingService {
                 .url(newMeeting.getUrl())
                 .accessToken(accessToken)
                 .build();
+    }
+
+    private Meeting createMeeting(
+            User host,
+            List<AvailableDate> availableDates,
+            List<PreferTime> preferTimes,
+            MeetingSaveRequestDto requestDto) {
+
+        List<User> users = new ArrayList<>();
+        users.add(host);
+
+        Meeting newMeeting = Meeting.newInstance(
+                host,
+                availableDates,
+                preferTimes,
+                users,
+                requestDto.getPassword(),
+                requestDto.getTitle(),
+                new Place(requestDto.getPlaceType(), requestDto.getPlaceDetail()),
+                requestDto.getDuration(),
+                requestDto.getAdditionalInfo());
+
+        meetingRepository.save(newMeeting);
+        return newMeeting;
     }
 
     @Transactional
