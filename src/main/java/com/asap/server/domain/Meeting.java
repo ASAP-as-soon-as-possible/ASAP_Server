@@ -12,6 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.asap.server.exception.Error;
+import com.asap.server.exception.model.ConflictException;
+import com.asap.server.exception.model.UnauthorizedException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -89,5 +92,18 @@ public class Meeting extends AuditingTimeEntity {
 
     public void setConfirmedDateTime(ConfirmedDateTime confirmedDateTime) {
         this.confirmedDateTime = confirmedDateTime;
+    }
+
+    public void authenticateHost(Long userId){
+        if (!this.host.getId().equals(userId)) {
+            throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
+        }
+    }
+
+    public void isFixedMeeting(){
+        if (this.confirmedDateTime != null) {
+            throw new ConflictException(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
+        }
+
     }
 }

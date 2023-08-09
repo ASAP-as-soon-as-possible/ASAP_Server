@@ -131,7 +131,8 @@ public class MeetingService {
     public TimeTableResponseDto getTimeTable(Long userId, Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-        authoriseHost(meeting, userId);
+
+        meeting.authenticateHost(userId);
 
         return TimeTableResponseDto.of(
                 meeting.getUsers().size(),
@@ -142,10 +143,7 @@ public class MeetingService {
     public IsFixedMeetingResponseDto getIsFixedMeeting(Long meetingId) throws ConflictException {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-
-        if (meeting.getConfirmedDateTime() != null) {
-            throw new ConflictException(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
-        }
+        meeting.isFixedMeeting();
 
         return IsFixedMeetingResponseDto.builder()
                 .isFixed(true)
@@ -183,9 +181,4 @@ public class MeetingService {
         }
     }
 
-    public void authoriseHost(Meeting meeting, Long userId){
-        if (!meeting.getHost().getId().equals(userId)) {
-            throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
-        }
-    }
 }
