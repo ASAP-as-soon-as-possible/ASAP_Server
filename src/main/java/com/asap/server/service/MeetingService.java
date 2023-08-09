@@ -132,7 +132,9 @@ public class MeetingService {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        meeting.authenticateHost(userId);
+        if(!meeting.isMeetingHost(userId)){
+            throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
+        }
 
         return TimeTableResponseDto.of(
                 meeting.getUsers().size(),

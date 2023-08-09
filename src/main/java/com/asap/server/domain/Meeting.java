@@ -1,8 +1,6 @@
 package com.asap.server.domain;
 
 import com.asap.server.domain.enums.Duration;
-import com.asap.server.exception.Error;
-import com.asap.server.exception.model.UnauthorizedException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -92,10 +90,8 @@ public class Meeting extends AuditingTimeEntity {
         this.confirmedDateTime = confirmedDateTime;
     }
 
-    public void authenticateHost(Long userId) {
-        if (!this.host.getId().equals(userId)) {
-            throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
-        }
+    public boolean isMeetingHost(Long userId) {
+        return this.host.getId().equals(userId);
     }
 
     public boolean isFixedMeeting() {
