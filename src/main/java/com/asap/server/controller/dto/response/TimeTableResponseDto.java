@@ -12,12 +12,12 @@ import java.util.List;
 public class TimeTableResponseDto {
     public int memberCount;
     public List<String> totalUserNames;
-    private List<AvailableDatesResponseDto> availableDateTimes;
+    private List<AvailableDateResponseDto> availableDateTimes;
 
     public static TimeTableResponseDto of(
             int memberCount,
             List<String> totalUserNames,
-            List<AvailableDatesResponseDto> availableDateTimes
+            List<AvailableDateResponseDto> availableDateTimes
     ) {
         return new TimeTableResponseDto(memberCount, totalUserNames, availableDateTimes);
     }
