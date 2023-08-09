@@ -29,12 +29,8 @@ public class PreferTimeService {
     public List<PreferTimeResponseDto> getPreferTime(List<PreferTime> preferTimes) {
         return preferTimes
                 .stream()
-                .map(preferTime -> new PreferTimeResponseDto(
-                        preferTime.getStartTime().getTime(),
-                        preferTime.getEndTime().getTime()
-                ))
+                .map(PreferTimeResponseDto::of)
                 .sorted(Comparator.comparing(PreferTimeResponseDto::getStartTime))
                 .collect(Collectors.toList());
-
     }
 }

@@ -43,11 +43,9 @@ public class AvailableDateService {
     }
 
     public List<AvailableDateResponseDto> getTimeTableDates(List<AvailableDate> availableDates){
-        return availableDates.stream()
-                .map(availableDate -> AvailableDateResponseDto.of(
-                        availableDate.getDate(),
-                        timeBlockService.getTimeBlock(availableDate.getTimeBlocks())
-                        ))
+        return availableDates
+                .stream()
+                .map(AvailableDateResponseDto::of)
                 .collect(Collectors.toList());
     }
 }

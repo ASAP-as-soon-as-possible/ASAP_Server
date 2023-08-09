@@ -1,6 +1,7 @@
 package com.asap.server.controller.dto.response;
 
 import com.asap.server.common.utils.DayOfWeekConverter;
+import com.asap.server.domain.AvailableDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
