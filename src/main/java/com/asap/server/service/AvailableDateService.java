@@ -2,7 +2,7 @@ package com.asap.server.service;
 
 import com.asap.server.common.utils.DayOfWeekConverter;
 import com.asap.server.controller.dto.response.AvailableDateResponseDto;
-import com.asap.server.controller.dto.response.AvailableDatesDto;
+import com.asap.server.controller.dto.response.AvailableDatesResponseDto;
 import com.asap.server.domain.AvailableDate;
 import com.asap.server.repository.AvailableDateRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,9 +46,9 @@ public class AvailableDateService {
                 .collect(Collectors.toList());
     }
 
-    public List<AvailableDatesDto> getTimeTableDates(List<AvailableDate> availableDates){
+    public List<AvailableDatesResponseDto> getTimeTableDates(List<AvailableDate> availableDates){
         return availableDates.stream()
-                .map(availableDate -> AvailableDatesDto.of(
+                .map(availableDate -> AvailableDatesResponseDto.of(
                         availableDate.getDate(),
                         timeBlockService.getTimeSlot(availableDate.getTimeBlocks())
                         ))

@@ -9,14 +9,14 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @Builder
-public class TimeSlotDto {
+public class TimeBlockResponseDto {
     private String time;
     private List<String> userNames;
     private int colorLevel;
 
-    public static TimeSlotDto of(String time,
-                                 List<String> userNames,
-                                 int colorLevel) {
-        return new TimeSlotDto(time, userNames, colorLevel);
+    public static TimeBlockResponseDto of(String time,
+                                          List<String> userNames,
+                                          int colorLevel) {
+        return new TimeBlockResponseDto(time, userNames, colorLevel);
     }
 }
