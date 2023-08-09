@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class TimeBlockService {
     private final UserService userService;
 
-    public List<TimeBlockResponseDto> getTimeSlot(List<TimeBlock> timeBlocks) {
+    public List<TimeBlockResponseDto> getTimeBlock(List<TimeBlock> timeBlocks) {
         return timeBlocks.stream()
                 .map(timeBlock -> TimeBlockResponseDto.of(timeBlock.getTime().getTime(),
                                 userService.getUserNames(timeBlock.getUsers()),
