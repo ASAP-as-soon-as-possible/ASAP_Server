@@ -132,7 +132,7 @@ public class MeetingService {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        if(!meeting.isMeetingHost(userId)){
+        if(!meeting.checkMeetingHost(userId)){
             throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
         }
 

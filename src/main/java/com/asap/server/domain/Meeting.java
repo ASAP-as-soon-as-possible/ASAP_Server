@@ -90,7 +90,7 @@ public class Meeting extends AuditingTimeEntity {
         this.confirmedDateTime = confirmedDateTime;
     }
 
-    public boolean isMeetingHost(Long userId) {
+    public boolean checkMeetingHost(Long userId) {
         return this.host.getId().equals(userId);
     }
 
