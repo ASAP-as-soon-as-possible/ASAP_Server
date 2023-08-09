@@ -143,8 +143,10 @@ public class MeetingService {
     public IsFixedMeetingResponseDto getIsFixedMeeting(Long meetingId) throws ConflictException {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-        meeting.isFixedMeeting();
-
+        if(meeting.isFixedMeeting()){
+            throw new ConflictException(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
+        }
+        
         return IsFixedMeetingResponseDto.builder()
                 .isFixed(true)
                 .build();

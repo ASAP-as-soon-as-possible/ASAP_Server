@@ -1,8 +1,12 @@
 package com.asap.server.domain;
 
 import com.asap.server.domain.enums.Duration;
+import com.asap.server.exception.Error;
+import com.asap.server.exception.model.UnauthorizedException;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -11,13 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-
-import com.asap.server.exception.Error;
-import com.asap.server.exception.model.ConflictException;
-import com.asap.server.exception.model.UnauthorizedException;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Entity
 @Getter
@@ -94,16 +92,13 @@ public class Meeting extends AuditingTimeEntity {
         this.confirmedDateTime = confirmedDateTime;
     }
 
-    public void authenticateHost(Long userId){
+    public void authenticateHost(Long userId) {
         if (!this.host.getId().equals(userId)) {
             throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
         }
     }
 
-    public void isFixedMeeting(){
-        if (this.confirmedDateTime != null) {
-            throw new ConflictException(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
-        }
-
+    public boolean isFixedMeeting() {
+        return this.confirmedDateTime != null;
     }
 }
