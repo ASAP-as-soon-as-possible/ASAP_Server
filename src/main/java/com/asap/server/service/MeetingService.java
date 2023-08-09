@@ -5,8 +5,10 @@ import com.asap.server.common.utils.TimeTableUtil;
 import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
 import com.asap.server.controller.dto.request.PreferTimeSaveRequestDto;
+import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.IsFixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
+import com.asap.server.controller.dto.response.MeetingScheduleResponseDto;
 import com.asap.server.domain.AvailableDate;
 import com.asap.server.domain.Meeting;
 import com.asap.server.domain.Place;
@@ -18,7 +20,6 @@ import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.repository.MeetingRepository;
-import com.asap.server.repository.PreferTimeRepository;
 import com.asap.server.service.vo.MeetingTimeVo;
 import com.asap.server.service.vo.MeetingVo;
 import com.asap.server.service.vo.UserVo;
@@ -26,16 +27,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 
 
 @Service
@@ -114,33 +110,16 @@ public class MeetingService {
         meeting.setFinalUsers(userService.getFixedUsers(meetingConfirmRequestDto.getUsers()));
     }
 
-    @Transactional(readOnly = true)
     public MeetingScheduleResponseDto getMeetingSchedule(Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        List<AvailableDateResponseDto> availableDateResponseDtoList = meeting.getDateAvailabilities()
-                .stream()
-                .map(dateAvailability -> new AvailableDateResponseDto(
-                        Integer.valueOf(dateAvailability.getMonth()).toString(),
-                        Integer.valueOf(dateAvailability.getDay()).toString(),
-                        dateAvailability.getDayOfWeek()))
-                .collect(Collectors.toList());
-        List<PreferTimeResponseDto> preferTimeResponseDtoList = meeting.getPreferTimes()
-                .stream()
-                .map(preferTime -> new PreferTimeResponseDto(
-                        preferTime.getStartTime().getTime(),
-                        preferTime.getEndTime().getTime()
-                ))
-                .sorted(Comparator.comparing(PreferTimeResponseDto::getStartTime))
-                .collect(Collectors.toList());
-
         return MeetingScheduleResponseDto.builder()
                 .duration(meeting.getDuration())
-                .place(meeting.getPlace())
-                .placeDetail(meeting.getPlaceDetail())
-                .availableDates(availableDateResponseDtoList)
-                .preferTimes(preferTimeResponseDtoList)
+                .place(meeting.getPlace().getPlaceType())
+                .placeDetail(meeting.getPlace().getPlaceDetail())
+                .availableDates(availableDateService.getAvailableDate(meeting.getAvailableDates()))
+                .preferTimes(preferTimeService.getPreferTime(meeting.getPreferTimes()))
                 .build();
     }
 

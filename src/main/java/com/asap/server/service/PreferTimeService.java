@@ -1,11 +1,13 @@
 package com.asap.server.service;
 
 import com.asap.server.controller.dto.request.PreferTimeSaveRequestDto;
+import com.asap.server.controller.dto.response.PreferTimeResponseDto;
 import com.asap.server.domain.PreferTime;
 import com.asap.server.repository.PreferTimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,5 +24,13 @@ public class PreferTimeService {
                         .collect(Collectors.toList());
         preferTimeRepository.saveAll(preferTimes);
         return preferTimes;
+    }
+
+    public List<PreferTimeResponseDto> getPreferTime(List<PreferTime> preferTimes) {
+        return preferTimes
+                .stream()
+                .map(PreferTimeResponseDto::of)
+                .sorted(Comparator.comparing(PreferTimeResponseDto::getStartTime))
+                .collect(Collectors.toList());
     }
 }

@@ -1,5 +1,7 @@
 package com.asap.server.service;
 
+import com.asap.server.common.utils.DayOfWeekConverter;
+import com.asap.server.controller.dto.response.AvailableDateResponseDto;
 import com.asap.server.domain.AvailableDate;
 import com.asap.server.repository.AvailableDateRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,13 @@ public class AvailableDateService {
         return availableDateStrings.stream()
                 .map(dateString -> new AvailableDate(LocalDate.parse(dateString.substring(0, 10), formatter)))
                 .sorted(Comparator.comparing(AvailableDate::getDate))
+                .collect(Collectors.toList());
+    }
+
+    public List<AvailableDateResponseDto> getAvailableDate(List<AvailableDate> availableDates) {
+        return availableDates
+                .stream()
+                .map(AvailableDateResponseDto::of)
                 .collect(Collectors.toList());
     }
 }
