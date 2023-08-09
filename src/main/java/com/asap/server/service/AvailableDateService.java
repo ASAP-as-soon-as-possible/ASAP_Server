@@ -46,7 +46,7 @@ public class AvailableDateService {
         return availableDates.stream()
                 .map(availableDate -> AvailableDateResponseDto.of(
                         availableDate.getDate(),
-                        timeBlockService.getTimeSlot(availableDate.getTimeBlocks())
+                        timeBlockService.getTimeBlock(availableDate.getTimeBlocks())
                         ))
                 .collect(Collectors.toList());
     }

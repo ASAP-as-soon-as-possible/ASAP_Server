@@ -17,11 +17,11 @@ public class AvailableDateResponseDto {
     private String dayOfWeek;
     private List<TimeBlockResponseDto> timeSlots;
 
-    public static AvailableDateResponseDto of(LocalDate date, List<TimeBlockResponseDto> timeSlotDtos) {
+    public static AvailableDateResponseDto of(LocalDate date, List<TimeBlockResponseDto> timeBlocks) {
         return new AvailableDateResponseDto(
                 String.valueOf(date.getMonthValue()),
                 String.valueOf(date.getDayOfMonth()),
                 DayOfWeekConverter.convertDayOfWeekEnToKo(date.getDayOfWeek()),
-                timeSlotDtos);
+                timeBlocks);
     }
 }
