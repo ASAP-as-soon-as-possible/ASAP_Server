@@ -11,14 +11,14 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @Builder
-public class AvailableDatesDto {
+public class AvailableDatesResponseDto {
     private String month;
     private String day;
     private String dayOfWeek;
-    private List<TimeSlotDto> timeSlots;
+    private List<TimeBlockResponseDto> timeSlots;
 
-    public static AvailableDatesDto of(LocalDate date, List<TimeSlotDto> timeSlotDtos) {
-        return new AvailableDatesDto(
+    public static AvailableDatesResponseDto of(LocalDate date, List<TimeBlockResponseDto> timeSlotDtos) {
+        return new AvailableDatesResponseDto(
                 String.valueOf(date.getMonthValue()),
                 String.valueOf(date.getDayOfMonth()),
                 DayOfWeekConverter.convertDayOfWeekEnToKo(date.getDayOfWeek()),
