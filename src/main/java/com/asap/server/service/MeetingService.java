@@ -1,14 +1,15 @@
 package com.asap.server.service;
 
 import com.asap.server.common.utils.BestMeetingUtil;
-import com.asap.server.common.utils.TimeTableUtil;
 import com.asap.server.config.jwt.JwtService;
+import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
 import com.asap.server.controller.dto.request.PreferTimeSaveRequestDto;
 import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.IsFixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.controller.dto.response.MeetingScheduleResponseDto;
+import com.asap.server.controller.dto.response.TimeTableResponseDto;
 import com.asap.server.domain.AvailableDate;
 import com.asap.server.domain.Meeting;
 import com.asap.server.domain.Place;
@@ -19,17 +20,16 @@ import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.NotFoundException;
+import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.service.vo.MeetingTimeVo;
 import com.asap.server.service.vo.MeetingVo;
-import com.asap.server.service.vo.UserVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,7 +44,6 @@ public class MeetingService {
     private final PreferTimeService preferTimeService;
     private final JwtService jwtService;
     private final BestMeetingUtil bestMeetingUtil;
-    private final TimeTableUtil timeTableUtil;
 
     @Transactional
     public MeetingSaveResponseDto create(MeetingSaveRequestDto meetingSaveRequestDto) {
@@ -132,33 +131,19 @@ public class MeetingService {
     public TimeTableResponseDto getTimeTable(Long userId, Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-        if (!meeting.getHost().getId().equals(userId)) {
-            throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
-        }
-        List<User> users = meeting.getUsers();
-        timeTableUtil.init();
-        for (User user : users) {
-            UserVo userVo = UserVo.of(user);
-            List<com.asap.server.service.vo.MeetingTimeVo> meetingTimes = meetingTimeRepository.findByUser(user)
-                    .stream()
-                    .map(com.asap.server.service.vo.MeetingTimeVo::of)
-                    .collect(Collectors.toList());
-            timeTableUtil.setTimeTable(userVo, meetingTimes);
-        }
-        timeTableUtil.setColorLevel();
-        return TimeTableResponseDto
-                .builder()
-                .memberCount(users.size())
-                .totalUserNames(timeTableUtil.getUserNames())
-                .availableDateTimes(timeTableUtil.getAvailableDatesDtoList())
-                .build();
+        authoriseHost(meeting, userId);
+
+        return TimeTableResponseDto.of(
+                meeting.getUsers().size(),
+                userService.getUserNames(meeting.getUsers()),
+                availableDateService.getTimeTableDates(meeting.getAvailableDates()));
     }
 
     public IsFixedMeetingResponseDto getIsFixedMeeting(Long meetingId) throws ConflictException {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        if (meeting.getConfirmedTime() != null) {
+        if (meeting.getConfirmedDateTime() != null) {
             throw new ConflictException(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
         }
 
@@ -195,6 +180,12 @@ public class MeetingService {
                 throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
             }
             timeSlots.addAll(timeSlotList);
+        }
+    }
+
+    public void authoriseHost(Meeting meeting, Long userId){
+        if (!meeting.getHost().getId().equals(userId)) {
+            throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
         }
     }
 }
