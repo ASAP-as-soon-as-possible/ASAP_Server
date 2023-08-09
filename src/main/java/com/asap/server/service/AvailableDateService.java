@@ -37,11 +37,7 @@ public class AvailableDateService {
     public List<AvailableDateResponseDto> getAvailableDate(List<AvailableDate> availableDates) {
         return availableDates
                 .stream()
-                .map(dateAvailability -> new AvailableDateResponseDto(
-                        String.valueOf(dateAvailability.getDate().getMonthValue()),
-                        String.valueOf(dateAvailability.getDate().getDayOfMonth()),
-                        DayOfWeekConverter.convertDayOfWeekEnToKo(dateAvailability.getDate().getDayOfWeek())
-                ))
+                .map(AvailableDateResponseDto::of)
                 .collect(Collectors.toList());
     }
 }
