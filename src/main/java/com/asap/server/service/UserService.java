@@ -167,4 +167,10 @@ public class UserService {
                 )
                 .collect(Collectors.toList());
     }
+
+    public List<String> getUserNames(List<User> users){
+        return users.stream()
+                .map(user -> user.getName())
+                .collect(Collectors.toList());
+    }
 }
