@@ -50,4 +50,37 @@ public class MeetingV2 extends AuditingTimeEntity {
     public boolean authenticateHost(final String name, final String password) {
         return this.host.getName().equals(name) && this.password.equals(password);
     }
+
+
+    private MeetingV2(String title,
+                      String password,
+                      String additionalInfo,
+                      Duration duration,
+                      Place place) {
+        this.title = title;
+        this.password = password;
+        this.additionalInfo = additionalInfo;
+        this.duration = duration;
+        this.place = place;
+    }
+
+    public static MeetingV2 of(String title,
+                               String password,
+                               String additionalInfo,
+                               Duration duration,
+                               Place place) {
+        return new MeetingV2(title,
+                password,
+                additionalInfo,
+                duration,
+                place);
+    }
+
+    public void setHost(UserV2 user) {
+        this.host = user;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 }

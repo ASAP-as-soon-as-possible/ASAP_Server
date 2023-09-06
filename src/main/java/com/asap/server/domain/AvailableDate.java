@@ -23,4 +23,13 @@ public class AvailableDate extends AuditingTimeEntity {
     @JoinColumn(name = "meeting_id")
     private MeetingV2 meeting;
     private LocalDate date;
+
+    private AvailableDate(MeetingV2 meeting, LocalDate date) {
+        this.meeting = meeting;
+        this.date = date;
+    }
+
+    public static AvailableDate of(MeetingV2 meeting, LocalDate date) {
+        return new AvailableDate(meeting, date);
+    }
 }

@@ -34,4 +34,14 @@ public class PreferTimeV2 extends AuditingTimeEntity {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private TimeSlot endTime;
+
+    private PreferTimeV2(MeetingV2 meeting, TimeSlot startTime, TimeSlot endTime) {
+        this.meeting = meeting;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public static PreferTimeV2 of(MeetingV2 meeting, TimeSlot startTime, TimeSlot endTime) {
+        return new PreferTimeV2(meeting, startTime, endTime);
+    }
 }

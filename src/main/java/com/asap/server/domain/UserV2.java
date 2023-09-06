@@ -19,6 +19,7 @@ import javax.persistence.ManyToOne;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+
 public class UserV2 extends AuditingTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,4 +38,14 @@ public class UserV2 extends AuditingTimeEntity {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private Role role;
+
+    private UserV2(MeetingV2 meeting, String name, Role role) {
+        this.meeting = meeting;
+        this.name = name;
+        this.role = role;
+    }
+
+    public static UserV2 of(MeetingV2 meeting, String name, Role role) {
+        return new UserV2(meeting, name, role);
+    }
 }
