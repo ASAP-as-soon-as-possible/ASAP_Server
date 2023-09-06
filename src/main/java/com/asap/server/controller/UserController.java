@@ -76,9 +76,9 @@ public class UserController {
     })
     @PostMapping("{meetingId}/host")
     public SuccessResponse loginByHost(
-            @PathVariable("meetingId") String _meetingId,
-            @RequestBody @Valid HostLoginRequestDto requestDto,
-            @MeetingId Long meetingId
+            @PathVariable("meetingId") final String _meetingId,
+            @RequestBody @Valid final HostLoginRequestDto requestDto,
+            @MeetingId final Long meetingId
     ) {
         return SuccessResponse.success(Success.LOGIN_SUCCESS, userService.loginByHost(meetingId, requestDto));
     }
