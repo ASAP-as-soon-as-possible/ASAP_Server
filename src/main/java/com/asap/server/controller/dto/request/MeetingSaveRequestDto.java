@@ -1,7 +1,7 @@
 package com.asap.server.controller.dto.request;
 
 import com.asap.server.domain.enums.Duration;
-import com.asap.server.domain.enums.Place;
+import com.asap.server.domain.enums.PlaceType;
 
 import java.util.List;
 import javax.validation.constraints.NotBlank;
@@ -32,7 +32,7 @@ public class MeetingSaveRequestDto {
 
     @NotNull(message = "회의 형식이 입력되지 않았습니다.")
     @Schema(description = "회의 방식", example = "ONLINE")
-    private Place place;
+    private PlaceType placeType;
 
     @Schema(description = "회의 장소 설명")
     private String placeDetail;

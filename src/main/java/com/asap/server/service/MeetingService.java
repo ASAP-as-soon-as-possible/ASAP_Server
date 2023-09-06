@@ -91,7 +91,7 @@ public class MeetingService {
                 users,
                 meetingSaveRequestDto.getPassword(),
                 meetingSaveRequestDto.getTitle(),
-                meetingSaveRequestDto.getPlace(),
+                meetingSaveRequestDto.getPlaceType(),
                 meetingSaveRequestDto.getPlaceDetail(),
                 meetingSaveRequestDto.getDuration(),
                 meetingSaveRequestDto.getAdditionalInfo());
@@ -149,7 +149,7 @@ public class MeetingService {
 
         return MeetingScheduleResponseDto.builder()
                 .duration(meeting.getDuration())
-                .place(meeting.getPlace())
+                .placeType(meeting.getPlaceType())
                 .placeDetail(meeting.getPlaceDetail())
                 .availableDates(availableDateResponseDtoList)
                 .preferTimes(preferTimeResponseDtoList)
@@ -169,7 +169,7 @@ public class MeetingService {
         return FixedMeetingResponseDto
                 .builder()
                 .title(meeting.getTitle())
-                .place(meeting.getPlace().toString())
+                .place(meeting.getPlaceType().toString())
                 .placeDetail(meeting.getPlaceDetail())
                 .month(Integer.valueOf(meeting.getMonth()).toString())
                 .day(Integer.valueOf(meeting.getDay()).toString())
