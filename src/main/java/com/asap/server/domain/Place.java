@@ -3,6 +3,7 @@ package com.asap.server.domain;
 import com.asap.server.domain.enums.PlaceType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
 @Embeddable
+@Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public class Place {
@@ -18,9 +20,4 @@ public class Place {
     @Enumerated(value = EnumType.STRING)
     private PlaceType placeType;
     private String placeDetail;
-
-    public static Place of(final PlaceType placeType,
-                           final String placeDetail) {
-        return new Place(placeType, placeDetail);
-    }
 }

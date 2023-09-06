@@ -2,6 +2,8 @@ package com.asap.server.domain;
 
 import com.asap.server.domain.enums.Duration;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +19,8 @@ import javax.persistence.OneToOne;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MeetingV2 extends AuditingTimeEntity {
     @Id
@@ -51,30 +55,6 @@ public class MeetingV2 extends AuditingTimeEntity {
         return this.host.getName().equals(name) && this.password.equals(password);
     }
 
-
-    private MeetingV2(String title,
-                      String password,
-                      String additionalInfo,
-                      Duration duration,
-                      Place place) {
-        this.title = title;
-        this.password = password;
-        this.additionalInfo = additionalInfo;
-        this.duration = duration;
-        this.place = place;
-    }
-
-    public static MeetingV2 of(final String title,
-                               final String password,
-                               final String additionalInfo,
-                               final Duration duration,
-                               final Place place) {
-        return new MeetingV2(title,
-                password,
-                additionalInfo,
-                duration,
-                place);
-    }
 
     public void setHost(final UserV2 user) {
         this.host = user;
