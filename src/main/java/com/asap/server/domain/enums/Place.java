@@ -10,7 +10,7 @@ import lombok.Getter;
 import java.util.stream.Stream;
 
 @AllArgsConstructor
-public enum PlaceType {
+public enum Place {
     ONLINE("ONLINE"),
     OFFLINE("OFFLINE"),
     UNDEFINED("UNDEFINED");
@@ -20,8 +20,8 @@ public enum PlaceType {
     private String place;
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static PlaceType findByTime(String place) {
-        return Stream.of(PlaceType.values())
+    public static Place findByTime(String place) {
+        return Stream.of(Place.values())
                 .filter(c -> c.getPlace().equals(place))
                 .findFirst()
                 .orElseThrow(() -> new BadRequestException(Error.INVALID_JSON_INPUT_EXCEPTION));
