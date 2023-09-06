@@ -26,7 +26,7 @@ public class UserV2 extends AuditingTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "meeting_id")
-    private Meeting meeting;
+    private MeetingV2 meeting;
 
     @Column(nullable = false)
     private String name;

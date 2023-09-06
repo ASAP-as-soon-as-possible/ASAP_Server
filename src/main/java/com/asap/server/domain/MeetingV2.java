@@ -39,7 +39,7 @@ public class MeetingV2 extends AuditingTimeEntity {
     private Duration duration;
 
     @OneToOne
-    private User host;
+    private UserV2 host;
 
     @Embedded
     private Place place;

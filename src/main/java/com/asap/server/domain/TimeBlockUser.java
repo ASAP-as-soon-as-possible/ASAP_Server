@@ -20,7 +20,7 @@ public class TimeBlockUser extends AuditingTimeEntity {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserV2 user;
     @ManyToOne
     @JoinColumn(name = "time_block_id")
     private TimeBlock timeBlock;

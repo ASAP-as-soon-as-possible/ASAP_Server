@@ -25,7 +25,7 @@ public class PreferTimeV2 extends AuditingTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "meeting_id")
-    private Meeting meeting;
+    private MeetingV2 meeting;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
