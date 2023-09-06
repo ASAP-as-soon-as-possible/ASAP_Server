@@ -16,11 +16,13 @@ public class PreferTimeService {
     private final PreferTimeV2Repository preferTimeV2Repository;
 
     public void create(final MeetingV2 meeting,
-                       final List<PreferTimeSaveRequestDto> saveRequestDtoList) {
-        saveRequestDtoList.stream()
-                .map(preferTime -> preferTimeV2Repository.save(PreferTimeV2.of(meeting,
-                        preferTime.getStartTime(),
-                        preferTime.getEndTime())))
+                       final List<PreferTimeSaveRequestDto> saveRequestDtos) {
+        saveRequestDtos.stream()
+                .map(preferTime -> preferTimeV2Repository.save(
+                        PreferTimeV2.builder()
+                                .meeting(meeting)
+                                .startTime(preferTime.getStartTime())
+                                .endTime(preferTime.getEndTime()).build()))
                 .collect(Collectors.toList());
     }
 }

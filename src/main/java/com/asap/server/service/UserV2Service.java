@@ -14,7 +14,10 @@ public class UserV2Service {
 
     public UserV2 createHost(final MeetingV2 meeting,
                              final String hostName) {
-        UserV2 user = UserV2.of(meeting, hostName, Role.HOST);
+        UserV2 user = UserV2.builder().meeting(meeting)
+                .name(hostName)
+                .role(Role.HOST)
+                .build();
         userV2Repository.save(user);
         return user;
     }

@@ -62,11 +62,17 @@ public class MeetingService {
     @Transactional
     public MeetingSaveResponseDto create(final MeetingSaveRequestDto meetingSaveRequestDto) {
 
-        MeetingV2 meeting = MeetingV2.of(meetingSaveRequestDto.getTitle(),
-                meetingSaveRequestDto.getPassword(),
-                meetingSaveRequestDto.getAdditionalInfo(),
-                meetingSaveRequestDto.getDuration(),
-                Place.of(meetingSaveRequestDto.getPlace(), meetingSaveRequestDto.getPlaceDetail()));
+        MeetingV2 meeting = MeetingV2.builder()
+                .title(meetingSaveRequestDto.getTitle())
+                .password(meetingSaveRequestDto.getPassword())
+                .additionalInfo(meetingSaveRequestDto.getAdditionalInfo())
+                .duration(meetingSaveRequestDto.getDuration())
+                .place(
+                        Place.builder()
+                                .placeType(meetingSaveRequestDto.getPlace())
+                                .placeDetail(meetingSaveRequestDto.getPlaceDetail())
+                                .build())
+                .build();
 
         meetingV2Repository.save(meeting);
 

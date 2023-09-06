@@ -23,9 +23,11 @@ public class AvailableDateService {
     public void create(final MeetingV2 meeting, final List<String> availableDates) {
         availableDates
                 .stream()
-                .map(
-                        s -> availableDateRepository.save(AvailableDate.of(meeting,
-                                dateFormatter(s.substring(0, 10))))
-                ).collect(Collectors.toList());
+                .map(s -> availableDateRepository.save(
+                        AvailableDate.builder()
+                                .meeting(meeting)
+                                .date(dateFormatter(s.substring(0, 10)))
+                                .build()
+                )).collect(Collectors.toList());
     }
 }
