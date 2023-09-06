@@ -14,20 +14,20 @@ import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.controller.dto.response.MeetingScheduleResponseDto;
 import com.asap.server.controller.dto.response.PreferTimeResponseDto;
 import com.asap.server.controller.dto.response.TimeTableResponseDto;
-import com.asap.server.domain.DateAvailability;
 import com.asap.server.domain.Meeting;
-import com.asap.server.domain.PreferTime;
+import com.asap.server.domain.MeetingV2;
+import com.asap.server.domain.Place;
 import com.asap.server.domain.User;
+import com.asap.server.domain.UserV2;
 import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
-import com.asap.server.repository.DateAvailabilityRepository;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.MeetingTimeRepository;
-import com.asap.server.repository.PreferTimeRepository;
+import com.asap.server.repository.MeetingV2Repository;
 import com.asap.server.service.vo.MeetingTimeVo;
 import com.asap.server.service.vo.MeetingVo;
 import com.asap.server.service.vo.UserVo;
@@ -49,59 +49,45 @@ public class MeetingService {
 
     private final MeetingRepository meetingRepository;
     private final MeetingTimeRepository meetingTimeRepository;
-    private final UserService userService;
-    private final DateAvailabilityRepository dateAvailabilityRepository;
-    private final PreferTimeRepository preferTimeRepository;
+    private final MeetingV2Repository meetingV2Repository;
+    private final UserV2Service userV2Service;
+    private final AvailableDateService availableDateService;
+    private final PreferTimeService preferTimeService;
     private final JwtService jwtService;
+    private final UserService userService;
     private final BestMeetingUtil bestMeetingUtil;
     private final TimeTableUtil timeTableUtil;
 
+
     @Transactional
-    public MeetingSaveResponseDto create(MeetingSaveRequestDto meetingSaveRequestDto) {
+    public MeetingSaveResponseDto create(final MeetingSaveRequestDto meetingSaveRequestDto) {
 
-        List<DateAvailability> dateAvailabilityList = meetingSaveRequestDto.getAvailableDates()
-                .stream()
-                .sorted(Comparator.comparing(s -> s.substring(0, 10)))
-                .map(DateAvailability::newInstance)
-                .collect(Collectors.toList());
-        dateAvailabilityRepository.saveAllAndFlush(dateAvailabilityList);
-        isDuplicatedTime(meetingSaveRequestDto.getPreferTimes());
+        MeetingV2 meeting = MeetingV2.builder()
+                .title(meetingSaveRequestDto.getTitle())
+                .password(meetingSaveRequestDto.getPassword())
+                .additionalInfo(meetingSaveRequestDto.getAdditionalInfo())
+                .duration(meetingSaveRequestDto.getDuration())
+                .place(
+                        Place.builder()
+                                .placeType(meetingSaveRequestDto.getPlace())
+                                .placeDetail(meetingSaveRequestDto.getPlaceDetail())
+                                .build())
+                .build();
 
-        List<PreferTime> preferTimeList = meetingSaveRequestDto
-                .getPreferTimes()
-                .stream()
-                .map(
-                        preferTimeSaveRequestDto ->
-                                PreferTime.newInstance(
-                                        preferTimeSaveRequestDto.getStartTime(),
-                                        preferTimeSaveRequestDto.getEndTime()
-                                )
-                )
-                .collect(Collectors.toList());
-        preferTimeRepository.saveAllAndFlush(preferTimeList);
+        meetingV2Repository.save(meeting);
 
-        User host = userService.createHost(meetingSaveRequestDto.getName());
-        List<User> users = new ArrayList<>();
-        users.add(host);
+        UserV2 host = userV2Service.createHost(meeting, meetingSaveRequestDto.getName());
 
-        Meeting newMeeting = Meeting.newInstance(
-                host,
-                dateAvailabilityList,
-                preferTimeList,
-                users,
-                meetingSaveRequestDto.getPassword(),
-                meetingSaveRequestDto.getTitle(),
-                meetingSaveRequestDto.getPlaceType(),
-                meetingSaveRequestDto.getPlaceDetail(),
-                meetingSaveRequestDto.getDuration(),
-                meetingSaveRequestDto.getAdditionalInfo());
-        meetingRepository.save(newMeeting);
+        preferTimeService.create(meeting, meetingSaveRequestDto.getPreferTimes());
+        availableDateService.create(meeting, meetingSaveRequestDto.getAvailableDates());
+
+        meeting.setHost(host);
 
         String accessToken = jwtService.issuedToken(host.getId().toString());
-        newMeeting.setUrl(Base64Utils.encodeToUrlSafeString(newMeeting.getId().toString().getBytes()));
+        meeting.setUrl(Base64Utils.encodeToUrlSafeString(meeting.getId().toString().getBytes()));
 
         return MeetingSaveResponseDto.builder()
-                .url(newMeeting.getUrl())
+                .url(meeting.getUrl())
                 .accessToken(accessToken)
                 .build();
     }

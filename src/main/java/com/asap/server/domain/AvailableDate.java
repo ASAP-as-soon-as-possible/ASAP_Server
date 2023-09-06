@@ -1,6 +1,8 @@
 package com.asap.server.domain;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +16,8 @@ import java.time.LocalDate;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AvailableDate extends AuditingTimeEntity {
     @Id

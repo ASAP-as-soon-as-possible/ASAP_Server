@@ -2,6 +2,8 @@ package com.asap.server.domain;
 
 import com.asap.server.domain.enums.TimeSlot;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +19,8 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PreferTimeV2 extends AuditingTimeEntity {
     @Id
@@ -34,4 +38,5 @@ public class PreferTimeV2 extends AuditingTimeEntity {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private TimeSlot endTime;
+
 }
