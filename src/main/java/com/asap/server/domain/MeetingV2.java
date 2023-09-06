@@ -39,11 +39,15 @@ public class MeetingV2 extends AuditingTimeEntity {
     private Duration duration;
 
     @OneToOne
-    private User host;
+    private UserV2 host;
 
     @Embedded
     private Place place;
 
     @Embedded
     private ConfirmedDateTime ConfirmedDateTime;
+
+    public boolean authenticateHost(final String name, final String password) {
+        return this.host.getName().equals(name) && this.password.equals(password);
+    }
 }
