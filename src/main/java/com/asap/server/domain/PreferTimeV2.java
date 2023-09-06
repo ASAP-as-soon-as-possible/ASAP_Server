@@ -41,7 +41,9 @@ public class PreferTimeV2 extends AuditingTimeEntity {
         this.endTime = endTime;
     }
 
-    public static PreferTimeV2 of(MeetingV2 meeting, TimeSlot startTime, TimeSlot endTime) {
+    public static PreferTimeV2 of(final MeetingV2 meeting,
+                                  final TimeSlot startTime,
+                                  final TimeSlot endTime) {
         return new PreferTimeV2(meeting, startTime, endTime);
     }
 }

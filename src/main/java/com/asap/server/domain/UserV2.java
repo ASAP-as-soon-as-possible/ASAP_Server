@@ -45,7 +45,9 @@ public class UserV2 extends AuditingTimeEntity {
         this.role = role;
     }
 
-    public static UserV2 of(MeetingV2 meeting, String name, Role role) {
+    public static UserV2 of(final MeetingV2 meeting,
+                            final String name,
+                            final Role role) {
         return new UserV2(meeting, name, role);
     }
 }

@@ -29,7 +29,8 @@ public class AvailableDate extends AuditingTimeEntity {
         this.date = date;
     }
 
-    public static AvailableDate of(MeetingV2 meeting, LocalDate date) {
+    public static AvailableDate of(final MeetingV2 meeting,
+                                   final LocalDate date) {
         return new AvailableDate(meeting, date);
     }
 }

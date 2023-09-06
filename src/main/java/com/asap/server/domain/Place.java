@@ -19,7 +19,8 @@ public class Place {
     private PlaceType placeType;
     private String placeDetail;
 
-    public static Place of(PlaceType placeType, String placeDetail) {
+    public static Place of(final PlaceType placeType,
+                           final String placeDetail) {
         return new Place(placeType, placeDetail);
     }
 }

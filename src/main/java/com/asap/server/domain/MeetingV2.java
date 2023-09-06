@@ -64,11 +64,11 @@ public class MeetingV2 extends AuditingTimeEntity {
         this.place = place;
     }
 
-    public static MeetingV2 of(String title,
-                               String password,
-                               String additionalInfo,
-                               Duration duration,
-                               Place place) {
+    public static MeetingV2 of(final String title,
+                               final String password,
+                               final String additionalInfo,
+                               final Duration duration,
+                               final Place place) {
         return new MeetingV2(title,
                 password,
                 additionalInfo,
@@ -76,11 +76,11 @@ public class MeetingV2 extends AuditingTimeEntity {
                 place);
     }
 
-    public void setHost(UserV2 user) {
+    public void setHost(final UserV2 user) {
         this.host = user;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(final String url) {
         this.url = url;
     }
 }

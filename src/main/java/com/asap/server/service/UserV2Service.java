@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 public class UserV2Service {
     private final UserV2Repository userV2Repository;
 
-    public UserV2 createHost(MeetingV2 meeting, String hostName) {
+    public UserV2 createHost(final MeetingV2 meeting,
+                             final String hostName) {
         UserV2 user = UserV2.of(meeting, hostName, Role.HOST);
         userV2Repository.save(user);
         return user;
