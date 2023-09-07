@@ -15,11 +15,13 @@ import java.util.stream.Collectors;
 public class UserV2Service {
     private final UserV2Repository userV2Repository;
 
-    public UserV2 createHost(final MeetingV2 meeting,
-                             final String hostName) {
+    public UserV2 createUser(final MeetingV2 meeting,
+                             final String hostName,
+                             final Role role) {
         UserV2 user = UserV2.builder().meeting(meeting)
                 .name(hostName)
-                .role(Role.HOST)
+                .role(role)
+                .isFixed(false)
                 .build();
         userV2Repository.save(user);
         return user;

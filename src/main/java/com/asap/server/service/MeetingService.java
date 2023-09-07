@@ -19,6 +19,7 @@ import com.asap.server.domain.MeetingV2;
 import com.asap.server.domain.Place;
 import com.asap.server.domain.User;
 import com.asap.server.domain.UserV2;
+import com.asap.server.domain.enums.Role;
 import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
@@ -75,7 +76,7 @@ public class MeetingService {
 
         meetingV2Repository.save(meeting);
 
-        UserV2 host = userV2Service.createHost(meeting, meetingSaveRequestDto.getName());
+        UserV2 host = userV2Service.createUser(meeting, meetingSaveRequestDto.getName(), Role.HOST);
 
         preferTimeService.create(meeting, meetingSaveRequestDto.getPreferTimes());
         availableDateService.create(meeting, meetingSaveRequestDto.getAvailableDates());
