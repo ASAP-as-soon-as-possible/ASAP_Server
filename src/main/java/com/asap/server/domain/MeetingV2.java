@@ -16,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -55,10 +56,17 @@ public class MeetingV2 extends AuditingTimeEntity {
         return this.host.getName().equals(name) && this.password.equals(password);
     }
 
+    public boolean authenticateHost(final Long userId) {
+        return this.host.getId().equals(userId);
+    }
+
     public boolean isConfirmedMeeting() {
         return this.confirmedDateTime != null;
     }
 
+    public void setConfirmedDateTime(final LocalDateTime startDateTime, final LocalDateTime endDateTime) {
+        this.confirmedDateTime = new ConfirmedDateTime(startDateTime, endDateTime);
+    }
 
     public void setHost(final UserV2 user) {
         this.host = user;
