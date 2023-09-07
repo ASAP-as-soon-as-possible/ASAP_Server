@@ -9,5 +9,5 @@ import java.util.List;
 public interface UserV2Repository extends Repository<UserV2, Long> {
     UserV2 save(UserV2 userV2);
 
-    List<UserV2> findByMeetingAndIsFixed(MeetingV2 meeting, boolean isFixed);
+    List<UserV2> findByMeetingAndIsFixed(final MeetingV2 meeting, final boolean isFixed);
 }

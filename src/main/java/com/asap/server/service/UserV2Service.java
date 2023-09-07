@@ -25,7 +25,7 @@ public class UserV2Service {
         return user;
     }
 
-    public List<String> getFixedUsers(MeetingV2 meeting) {
+    public List<String> getFixedUsers(final MeetingV2 meeting) {
         return userV2Repository
                 .findByMeetingAndIsFixed(meeting, true)
                 .stream()
