@@ -20,7 +20,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +27,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @Tag(name = "회의", description = "회의 관련 API 입니다.")
 @RestController
@@ -77,8 +78,8 @@ public class MeetingController {
     })
     @GetMapping("/{meetingId}/schedule")
     public SuccessResponse getMeetingSchedule(
-            @PathVariable("meetingId") String _meetingId,
-            @MeetingId Long meetingId
+            @PathVariable("meetingId") final String _meetingId,
+            @MeetingId final Long meetingId
     ) {
         return SuccessResponse.success(Success.FIND_MEETING_SCHEDULE_SUCCESS, meetingService.getMeetingSchedule(meetingId));
     }
@@ -124,8 +125,8 @@ public class MeetingController {
     })
     @GetMapping("/{meetingId}")
     public SuccessResponse getIsFixedMeeting(
-            @PathVariable("meetingId") String _meetingId,
-            @MeetingId Long meetingId
+            @PathVariable("meetingId") final String _meetingId,
+            @MeetingId final Long meetingId
     ) {
         return SuccessResponse.success(Success.MEETING_VALIDATION_SUCCESS, meetingService.getIsFixedMeeting(meetingId));
     }

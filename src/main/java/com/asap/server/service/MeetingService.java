@@ -6,13 +6,11 @@ import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
 import com.asap.server.controller.dto.request.PreferTimeSaveRequestDto;
-import com.asap.server.controller.dto.response.AvailableDateResponseDto;
 import com.asap.server.controller.dto.response.BestMeetingTimeResponseDto;
 import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.IsFixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.controller.dto.response.MeetingScheduleResponseDto;
-import com.asap.server.controller.dto.response.PreferTimeResponseDto;
 import com.asap.server.controller.dto.response.TimeTableResponseDto;
 import com.asap.server.domain.Meeting;
 import com.asap.server.domain.MeetingV2;
@@ -37,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,31 +111,15 @@ public class MeetingService {
 
     @Transactional(readOnly = true)
     public MeetingScheduleResponseDto getMeetingSchedule(Long meetingId) {
-        Meeting meeting = meetingRepository.findById(meetingId)
+        MeetingV2 meeting = meetingV2Repository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-
-        List<AvailableDateResponseDto> availableDateResponseDtoList = meeting.getDateAvailabilities()
-                .stream()
-                .map(dateAvailability -> new AvailableDateResponseDto(
-                        Integer.valueOf(dateAvailability.getMonth()).toString(),
-                        Integer.valueOf(dateAvailability.getDay()).toString(),
-                        dateAvailability.getDayOfWeek()))
-                .collect(Collectors.toList());
-        List<PreferTimeResponseDto> preferTimeResponseDtoList = meeting.getPreferTimes()
-                .stream()
-                .map(preferTime -> new PreferTimeResponseDto(
-                        preferTime.getStartTime().getTime(),
-                        preferTime.getEndTime().getTime()
-                ))
-                .sorted(Comparator.comparing(PreferTimeResponseDto::getStartTime))
-                .collect(Collectors.toList());
 
         return MeetingScheduleResponseDto.builder()
                 .duration(meeting.getDuration())
-                .placeType(meeting.getPlaceType())
-                .placeDetail(meeting.getPlaceDetail())
-                .availableDates(availableDateResponseDtoList)
-                .preferTimes(preferTimeResponseDtoList)
+                .placeType(meeting.getPlace().getPlaceType())
+                .placeDetail(meeting.getPlace().getPlaceDetail())
+                .availableDates(availableDateService.getAvailableDates(meeting))
+                .preferTimes(preferTimeService.getPreferTimes(meeting))
                 .build();
     }
 
@@ -193,13 +174,12 @@ public class MeetingService {
                 .build();
     }
 
-    public IsFixedMeetingResponseDto getIsFixedMeeting(Long meetingId) throws ConflictException {
-        Meeting meeting = meetingRepository.findById(meetingId)
+    public IsFixedMeetingResponseDto getIsFixedMeeting(final Long meetingId) throws ConflictException {
+        MeetingV2 meeting = meetingV2Repository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        if (meeting.getMonth() != null) {
+        if (meeting.isConfirmedMeeting())
             throw new ConflictException(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
-        }
 
         return IsFixedMeetingResponseDto.builder()
                 .isFixed(true)
