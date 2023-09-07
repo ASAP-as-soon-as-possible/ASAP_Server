@@ -7,6 +7,9 @@ import com.asap.server.repository.UserV2Repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class UserV2Service {
@@ -20,5 +23,13 @@ public class UserV2Service {
                 .build();
         userV2Repository.save(user);
         return user;
+    }
+
+    public List<String> getFixedUsers(MeetingV2 meeting) {
+        return userV2Repository
+                .findByMeetingAndIsFixed(meeting, true)
+                .stream()
+                .map(UserV2::getName)
+                .collect(Collectors.toList());
     }
 }
