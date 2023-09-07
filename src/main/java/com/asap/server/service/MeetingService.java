@@ -1,6 +1,7 @@
 package com.asap.server.service;
 
 import com.asap.server.common.utils.BestMeetingUtil;
+import com.asap.server.common.utils.DateUtil;
 import com.asap.server.common.utils.TimeTableUtil;
 import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
@@ -12,6 +13,7 @@ import com.asap.server.controller.dto.response.IsFixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.controller.dto.response.MeetingScheduleResponseDto;
 import com.asap.server.controller.dto.response.TimeTableResponseDto;
+import com.asap.server.domain.ConfirmedDateTime;
 import com.asap.server.domain.Meeting;
 import com.asap.server.domain.MeetingV2;
 import com.asap.server.domain.Place;
@@ -123,28 +125,29 @@ public class MeetingService {
                 .build();
     }
 
-    public FixedMeetingResponseDto getFixedMeetingInformation(Long meetingId) {
-        Meeting meeting = meetingRepository.findById(meetingId)
+    public FixedMeetingResponseDto getFixedMeetingInformation(final Long meetingId) {
+        MeetingV2 meeting = meetingV2Repository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        List<String> userNames = meeting
-                .getFixedUsers()
-                .stream()
-                .map(User::getName)
-                .collect(Collectors.toList());
+        if (!meeting.isConfirmedMeeting())
+            throw new ConflictException(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
+
+        List<String> fixedUserNames = userV2Service.getFixedUsers(meeting);
+
+        ConfirmedDateTime confirmedDateTime = meeting.getConfirmedDateTime();
 
         return FixedMeetingResponseDto
                 .builder()
                 .title(meeting.getTitle())
-                .place(meeting.getPlaceType().toString())
-                .placeDetail(meeting.getPlaceDetail())
-                .month(Integer.valueOf(meeting.getMonth()).toString())
-                .day(Integer.valueOf(meeting.getDay()).toString())
-                .dayOfWeek(meeting.getDayOfWeek())
-                .startTime(meeting.getStartTime().getTime())
-                .endTime(meeting.getEndTime().getTime())
+                .place(meeting.getPlace().getPlaceType().getPlace())
+                .placeDetail(meeting.getPlace().getPlaceDetail())
+                .month(DateUtil.getMonth(confirmedDateTime.getConfirmedStartTime()))
+                .day(DateUtil.getDay(confirmedDateTime.getConfirmedStartTime()))
+                .dayOfWeek(DateUtil.getDayOfWeek(confirmedDateTime.getConfirmedStartTime()))
+                .startTime(DateUtil.getTime(confirmedDateTime.getConfirmedStartTime()))
+                .endTime(DateUtil.getTime(confirmedDateTime.getConfirmedEndTime()))
                 .hostName(meeting.getHost().getName())
-                .userNames(userNames)
+                .userNames(fixedUserNames)
                 .additionalInfo(meeting.getAdditionalInfo())
                 .build();
     }
