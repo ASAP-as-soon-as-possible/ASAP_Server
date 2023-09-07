@@ -6,6 +6,9 @@ import java.time.format.TextStyle;
 import java.util.Locale;
 
 public class DateUtil {
+    public static LocalDate transformLocalDate(final String month, final String day) {
+        return LocalDate.of(2023, Integer.parseInt(month), Integer.parseInt(day));
+    }
     public static String getMonth(final LocalDate localDate) {
         return String.valueOf(localDate.getMonthValue());
     }
