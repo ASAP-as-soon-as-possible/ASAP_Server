@@ -193,7 +193,7 @@ public class MeetingService {
                 .build();
     }
 
-    public IsFixedMeetingResponseDto getIsFixedMeeting(Long meetingId) throws ConflictException {
+    public IsFixedMeetingResponseDto getIsFixedMeeting(final Long meetingId) throws ConflictException {
         MeetingV2 meeting = meetingV2Repository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 

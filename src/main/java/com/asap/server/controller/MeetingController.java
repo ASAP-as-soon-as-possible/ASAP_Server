@@ -124,8 +124,8 @@ public class MeetingController {
     })
     @GetMapping("/{meetingId}")
     public SuccessResponse getIsFixedMeeting(
-            @PathVariable("meetingId") String _meetingId,
-            @MeetingId Long meetingId
+            @PathVariable("meetingId") final String _meetingId,
+            @MeetingId final Long meetingId
     ) {
         return SuccessResponse.success(Success.MEETING_VALIDATION_SUCCESS, meetingService.getIsFixedMeeting(meetingId));
     }
