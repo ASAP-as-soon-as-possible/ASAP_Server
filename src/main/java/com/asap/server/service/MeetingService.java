@@ -174,13 +174,12 @@ public class MeetingService {
                 .build();
     }
 
-    public IsFixedMeetingResponseDto getIsFixedMeeting(Long meetingId) throws ConflictException {
-        Meeting meeting = meetingRepository.findById(meetingId)
+    public IsFixedMeetingResponseDto getIsFixedMeeting(final Long meetingId) throws ConflictException {
+        MeetingV2 meeting = meetingV2Repository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        if (meeting.getMonth() != null) {
+        if (meeting.isConfirmedMeeting())
             throw new ConflictException(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
-        }
 
         return IsFixedMeetingResponseDto.builder()
                 .isFixed(true)
