@@ -1,14 +1,19 @@
 package com.asap.server.service;
 
+import com.asap.server.controller.dto.response.AvailableDateResponseDto;
 import com.asap.server.domain.AvailableDate;
 import com.asap.server.domain.MeetingV2;
+import com.asap.server.exception.Error;
+import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.repository.AvailableDateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,6 +23,20 @@ public class AvailableDateService {
 
     private LocalDate dateFormatter(final String stringOfDate) {
         return LocalDate.parse(stringOfDate, DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+    }
+
+    public List<AvailableDateResponseDto> localDateToString(final MeetingV2 meetingV2) {
+        List<AvailableDate> availableDates = availableDateRepository.findByMeeting(meetingV2)
+                .orElseThrow(() -> new NotFoundException(Error.AVAILABLE_DATE_NOT_FOUND_EXCEPTION));
+
+        return availableDates.stream()
+                .map(availableDate ->
+                        AvailableDateResponseDto.builder()
+                                .month(String.valueOf(availableDate.getDate().getMonthValue()))
+                                .day(String.valueOf(availableDate.getDate().getDayOfMonth()))
+                                .dayOfWeek(availableDate.getDate().getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.KOREAN))
+                                .build())
+                .collect(Collectors.toList());
     }
 
     public void create(final MeetingV2 meeting, final List<String> availableDates) {
