@@ -94,8 +94,8 @@ public class MeetingController {
     })
     @GetMapping("/{meetingId}/card")
     public SuccessResponse<FixedMeetingResponseDto> getFixedMeetingInformation(
-            @PathVariable("meetingId") String _meetingId,
-            @MeetingId Long meetingId
+            @PathVariable("meetingId") final String _meetingId,
+            @MeetingId final Long meetingId
     ) {
         return SuccessResponse.success(Success.FIXED_MEETING_SUCCESS, meetingService.getFixedMeetingInformation(meetingId));
     }
