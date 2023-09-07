@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface AvailableDateRepository extends Repository<AvailableDate, Long> {
     AvailableDate save(AvailableDate availableDate);
 
-    Optional<List<AvailableDate>> findByMeeting(MeetingV2 meetingV2);
+    List<AvailableDate> findByMeeting(MeetingV2 meetingV2);
 }

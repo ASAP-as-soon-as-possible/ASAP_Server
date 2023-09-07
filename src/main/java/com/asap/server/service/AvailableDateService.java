@@ -1,5 +1,6 @@
 package com.asap.server.service;
 
+import com.asap.server.common.utils.DateUtil;
 import com.asap.server.controller.dto.response.AvailableDateResponseDto;
 import com.asap.server.domain.AvailableDate;
 import com.asap.server.domain.MeetingV2;
@@ -11,9 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,16 +24,17 @@ public class AvailableDateService {
         return LocalDate.parse(stringOfDate, DateTimeFormatter.ofPattern("yyyy/MM/dd"));
     }
 
-    public List<AvailableDateResponseDto> localDateToString(final MeetingV2 meetingV2) {
-        List<AvailableDate> availableDates = availableDateRepository.findByMeeting(meetingV2)
-                .orElseThrow(() -> new NotFoundException(Error.AVAILABLE_DATE_NOT_FOUND_EXCEPTION));
+    public List<AvailableDateResponseDto> getAvailableDates(final MeetingV2 meetingV2) {
+        List<AvailableDate> availableDates = availableDateRepository.findByMeeting(meetingV2);
+
+        if (availableDates.isEmpty()) throw new NotFoundException(Error.AVAILABLE_DATE_NOT_FOUND_EXCEPTION);
 
         return availableDates.stream()
                 .map(availableDate ->
                         AvailableDateResponseDto.builder()
-                                .month(String.valueOf(availableDate.getDate().getMonthValue()))
-                                .day(String.valueOf(availableDate.getDate().getDayOfMonth()))
-                                .dayOfWeek(availableDate.getDate().getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.KOREAN))
+                                .month(DateUtil.getMonth(availableDate.getDate()))
+                                .day(DateUtil.getDay(availableDate.getDate()))
+                                .dayOfWeek(DateUtil.getDayOfWeek(availableDate.getDate()))
                                 .build())
                 .collect(Collectors.toList());
     }

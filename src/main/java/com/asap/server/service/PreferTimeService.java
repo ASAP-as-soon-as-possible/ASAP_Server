@@ -30,8 +30,8 @@ public class PreferTimeService {
     }
 
     public List<PreferTimeResponseDto> getPreferTimes(final MeetingV2 meetingV2) {
-        List<PreferTimeV2> preferTimeV2s = preferTimeV2Repository.findByMeeting(meetingV2)
-                .orElseThrow(() -> new NotFoundException(Error.PREFER_TIME_NOT_FOUND_EXCEPTION));
+        List<PreferTimeV2> preferTimeV2s = preferTimeV2Repository.findByMeeting(meetingV2);
+        if (preferTimeV2s.isEmpty()) throw new NotFoundException(Error.PREFER_TIME_NOT_FOUND_EXCEPTION);
 
         return preferTimeV2s.stream()
                 .map(preferTime -> PreferTimeResponseDto.builder()

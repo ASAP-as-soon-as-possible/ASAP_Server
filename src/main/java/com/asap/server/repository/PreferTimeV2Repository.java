@@ -11,5 +11,5 @@ public interface PreferTimeV2Repository extends Repository<PreferTimeV2, Long> {
 
     PreferTimeV2 save(PreferTimeV2 preferTimeV2);
 
-    Optional<List<PreferTimeV2>> findByMeeting(MeetingV2 meetingV2);
+    List<PreferTimeV2> findByMeeting(MeetingV2 meetingV2);
 }

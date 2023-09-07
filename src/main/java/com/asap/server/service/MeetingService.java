@@ -118,7 +118,7 @@ public class MeetingService {
                 .duration(meeting.getDuration())
                 .placeType(meeting.getPlace().getPlaceType())
                 .placeDetail(meeting.getPlace().getPlaceDetail())
-                .availableDates(availableDateService.localDateToString(meeting))
+                .availableDates(availableDateService.getAvailableDates(meeting))
                 .preferTimes(preferTimeService.getPreferTimes(meeting))
                 .build();
     }
