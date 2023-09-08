@@ -1,22 +1,25 @@
 package com.asap.server.common.utils;
 
+import com.asap.server.domain.enums.Duration;
+import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.service.vo.AvailableMeetingTimeVo;
+import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.DateAvailabilityVo;
 import com.asap.server.service.vo.MeetingTimeVo;
 import com.asap.server.service.vo.MeetingVo;
 import com.asap.server.service.vo.PossibleTimeCaseVo;
+import com.asap.server.service.vo.TimeBlockVo;
 import com.asap.server.service.vo.TimeSlotInfoDto;
-import com.asap.server.domain.enums.Duration;
-import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.service.vo.UserVo;
+import lombok.Getter;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import lombok.Getter;
-import org.springframework.stereotype.Component;
 
 @Component
 @Getter
@@ -40,6 +43,10 @@ public class BestMeetingUtil {
         getAllPossibleMeetingTimeCases(meeting.getDuration());
         collectAvailableMeetingTime();
         selectBestMeetingTime();
+    }
+
+    public List<BestMeetingTimeVo> getBestMeetingTime(List<TimeBlockVo> timeBlocks) {
+        return null;
     }
 
     private void initTimeTable() {
