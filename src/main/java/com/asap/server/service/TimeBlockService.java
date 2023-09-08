@@ -15,11 +15,14 @@ public class TimeBlockService {
     private final TimeBlockRepository timeBlockRepository;
 
     @Transactional
-    public TimeBlock searchTimeBlock(final TimeSlot timeSlot, final AvailableDate availableDate) {
+    public TimeBlock searchTimeBlock(final TimeSlot timeSlot,
+                                     final AvailableDate availableDate,
+                                     final int weight) {
         TimeBlock timeBlock = timeBlockRepository.findByAvailableDateAndTimeSlot(availableDate, timeSlot)
                 .orElse(
                         create(timeSlot, availableDate)
                 );
+        timeBlock.addWeight(weight);
         timeBlockRepository.save(timeBlock);
         return timeBlock;
     }

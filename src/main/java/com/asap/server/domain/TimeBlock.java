@@ -49,4 +49,8 @@ public class TimeBlock extends AuditingTimeEntity {
         }
         timeBlockUsers.add(timeBlockUser);
     }
+
+    public void addWeight(int weight) {
+        this.weight += weight;
+    }
 }
