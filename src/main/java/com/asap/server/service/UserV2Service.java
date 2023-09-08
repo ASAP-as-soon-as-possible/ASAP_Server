@@ -56,7 +56,7 @@ public class UserV2Service {
         MeetingV2 meetingV2 = meetingV2Repository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        if (!meeting.authenticateHost(userId))
+        if (!meetingV2.authenticateHost(userId))
             throw new BadRequestException(INVALID_MEETING_HOST_EXCEPTION);
 
         isDuplicatedDate(requestDtos);
