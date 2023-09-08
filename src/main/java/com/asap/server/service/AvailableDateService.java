@@ -39,6 +39,14 @@ public class AvailableDateService {
                 .collect(Collectors.toList());
     }
 
+    public AvailableDate findByMeetingAndDate(final MeetingV2 meetingV2,
+                                              final String month,
+                                              final String day) {
+        return availableDateRepository.findByMeetingAndDate(meetingV2,
+                        DateUtil.transformLocalDate(month, day))
+                .orElseThrow(() -> new NotFoundException(Error.AVAILABLE_DATE_NOT_FOUND_EXCEPTION));
+    }
+
     public void create(final MeetingV2 meeting, final List<String> availableDates) {
         availableDates
                 .stream()

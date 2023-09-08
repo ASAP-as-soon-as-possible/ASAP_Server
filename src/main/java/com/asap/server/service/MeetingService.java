@@ -19,6 +19,7 @@ import com.asap.server.domain.MeetingV2;
 import com.asap.server.domain.Place;
 import com.asap.server.domain.User;
 import com.asap.server.domain.UserV2;
+import com.asap.server.domain.enums.Role;
 import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
@@ -36,6 +37,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -75,7 +79,7 @@ public class MeetingService {
 
         meetingV2Repository.save(meeting);
 
-        UserV2 host = userV2Service.createHost(meeting, meetingSaveRequestDto.getName());
+        UserV2 host = userV2Service.createUser(meeting, meetingSaveRequestDto.getName(), Role.HOST);
 
         preferTimeService.create(meeting, meetingSaveRequestDto.getPreferTimes());
         availableDateService.create(meeting, meetingSaveRequestDto.getAvailableDates());
@@ -93,22 +97,26 @@ public class MeetingService {
 
     @Transactional
     public void confirmMeeting(
-            MeetingConfirmRequestDto meetingConfirmRequestDto,
-            Long meetingId,
-            Long userId
+            final MeetingConfirmRequestDto meetingConfirmRequestDto,
+            final Long meetingId,
+            final Long userId
     ) {
-        Meeting meeting = meetingRepository.findById(meetingId)
+        MeetingV2 meeting = meetingV2Repository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        if (!userId.equals(meeting.getHost().getId()))
+        if (!meeting.authenticateHost(userId))
             throw new BadRequestException(INVALID_MEETING_HOST_EXCEPTION);
 
-        meeting.setMonth(meetingConfirmRequestDto.getMonth());
-        meeting.setDay(meetingConfirmRequestDto.getDay());
-        meeting.setDayOfWeek(meetingConfirmRequestDto.getDayOfWeek());
-        meeting.setStartTime(meetingConfirmRequestDto.getStartTime());
-        meeting.setEndTime(meetingConfirmRequestDto.getEndTime());
-        meeting.setFinalUsers(userService.getFixedUsers(meetingConfirmRequestDto.getUsers()));
+        userV2Service.setFixedUsers(meetingConfirmRequestDto.getUsers());
+
+        LocalDate fixedDate = DateUtil.transformLocalDate(meetingConfirmRequestDto.getMonth(), meetingConfirmRequestDto.getDay());
+        LocalTime startTime = LocalTime.parse(meetingConfirmRequestDto.getStartTime().getTime());
+        LocalTime endTime = LocalTime.parse(meetingConfirmRequestDto.getEndTime().getTime());
+
+        LocalDateTime fixedStartDateTime = LocalDateTime.of(fixedDate, startTime);
+        LocalDateTime fixedEndDateTime = LocalDateTime.of(fixedDate, endTime);
+
+        meeting.setConfirmedDateTime(fixedStartDateTime, fixedEndDateTime);
     }
 
     @Transactional(readOnly = true)
