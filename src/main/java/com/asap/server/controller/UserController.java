@@ -63,11 +63,11 @@ public class UserController {
     })
     @PostMapping("/{meetingId}/time")
     public SuccessResponse createMemberTime(
-            @PathVariable("meetingId") String _meetingId,
-            @RequestBody @Valid AvailableTimeRequestDto requestDto,
-            @MeetingId Long meetingId
+            @PathVariable("meetingId") final String _meetingId,
+            @RequestBody @Valid final AvailableTimeRequestDto requestDto,
+            @MeetingId final Long meetingId
     ) {
-        return SuccessResponse.success(Success.CREATE_MEETING_TIME_SUCCESS, userService.createMemberMeetingTime(meetingId, requestDto));
+        return SuccessResponse.success(Success.CREATE_MEETING_TIME_SUCCESS, userV2Service.createUserTime(meetingId, requestDto));
     }
 
     @Operation(summary = "[방장 입장 뷰] 방장 로그인 API")
