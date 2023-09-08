@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.asap.server.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
 import static com.asap.server.exception.Error.USER_NOT_FOUND_EXCEPTION;
 
 @Service
@@ -55,7 +56,8 @@ public class UserV2Service {
         MeetingV2 meetingV2 = meetingV2Repository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        meetingV2.authenticateHost(userId);
+        if (!meeting.authenticateHost(userId))
+            throw new BadRequestException(INVALID_MEETING_HOST_EXCEPTION);
 
         isDuplicatedDate(requestDtos);
         requestDtos.forEach(requestDto -> createUserTimeBlock(meetingV2, meetingV2.getHost(), requestDto));
