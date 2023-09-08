@@ -1,19 +1,39 @@
 package com.asap.server.service;
 
+import com.asap.server.common.utils.DateUtil;
+import com.asap.server.config.jwt.JwtService;
+import com.asap.server.controller.dto.request.UserMeetingTimeSaveRequestDto;
+import com.asap.server.controller.dto.response.UserMeetingTimeResponseDto;
+import com.asap.server.domain.AvailableDate;
 import com.asap.server.domain.MeetingV2;
+import com.asap.server.domain.TimeBlock;
 import com.asap.server.domain.UserV2;
 import com.asap.server.domain.enums.Role;
+import com.asap.server.domain.enums.TimeSlot;
+import com.asap.server.exception.Error;
+import com.asap.server.exception.model.BadRequestException;
+import com.asap.server.exception.model.NotFoundException;
+import com.asap.server.repository.AvailableDateRepository;
+import com.asap.server.repository.MeetingV2Repository;
 import com.asap.server.repository.UserV2Repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserV2Service {
     private final UserV2Repository userV2Repository;
+    private final TimeBlockService timeBlockService;
+    private final TimeBlockUserService timeBlockUserService;
+    private final AvailableDateRepository availableDateRepository;
+    private final MeetingV2Repository meetingV2Repository;
+    private final JwtService jwtService;
 
     public UserV2 createUser(final MeetingV2 meeting,
                              final String hostName,
@@ -25,6 +45,55 @@ public class UserV2Service {
                 .build();
         userV2Repository.save(user);
         return user;
+    }
+
+    @Transactional
+    public UserMeetingTimeResponseDto createHostTime(final Long userId,
+                                                     final String url,
+                                                     final Long meetingId,
+                                                     final List<UserMeetingTimeSaveRequestDto> requestDtos) {
+        UserV2 host = userV2Repository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(Error.USER_NOT_FOUND_EXCEPTION));
+
+        MeetingV2 meetingV2 = meetingV2Repository.findById(meetingId)
+                .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+
+        isDuplicatedDate(requestDtos);
+        requestDtos.forEach(requestDto -> createUserTimeBlock(meetingV2, host, requestDto));
+
+        String accessToken = jwtService.issuedToken(host.getId().toString());
+
+        return UserMeetingTimeResponseDto.builder()
+                .url(url)
+                .accessToken(accessToken)
+                .build();
+    }
+
+    private void createUserTimeBlock(final MeetingV2 meetingV2,
+                                     final UserV2 userV2,
+                                     final UserMeetingTimeSaveRequestDto requestDto) {
+        AvailableDate availableDate = availableDateRepository.findByMeetingAndDate(meetingV2,
+                        DateUtil.transformLocalDate(requestDto.getMonth(), requestDto.getDay()))
+                .orElseThrow(() -> new BadRequestException(Error.INVALID_TIME_RANGE));
+        TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal() - 1)
+                .stream()
+                .map( timeSlot -> timeBlockService.searchTimeBlock(timeSlot, availableDate)).collect(Collectors.toList())
+                .forEach( timeBlock -> timeBlock.addTimeBlockUsers(timeBlockUserService.create(timeBlock, userV2)));
+    }
+
+    private void isDuplicatedDate(final List<UserMeetingTimeSaveRequestDto> requestDtoList) {
+        Map<String, List<TimeSlot>> meetingTimeAvailable = new HashMap<>();
+        for (UserMeetingTimeSaveRequestDto requestDto : requestDtoList) {
+            String col = String.format("%s %s %s", requestDto.getMonth(), requestDto.getDay(), requestDto.getDayOfWeek());
+            List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal());
+            if (meetingTimeAvailable.containsKey(col)) {
+                if (meetingTimeAvailable.get(col).stream().anyMatch(timeSlots::contains)) {
+                    throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
+                }
+            } else {
+                meetingTimeAvailable.put(col, timeSlots);
+            }
+        }
     }
 
     public List<String> getFixedUsers(final MeetingV2 meeting) {
