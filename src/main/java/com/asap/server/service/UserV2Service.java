@@ -1,9 +1,11 @@
 package com.asap.server.service;
 
 import com.asap.server.config.jwt.JwtService;
+import com.asap.server.controller.dto.request.AvailableTimeRequestDto;
 import com.asap.server.controller.dto.request.UserMeetingTimeSaveRequestDto;
 import com.asap.server.controller.dto.request.UserRequestDto;
 import com.asap.server.controller.dto.response.UserMeetingTimeResponseDto;
+import com.asap.server.controller.dto.response.UserTimeResponseDto;
 import com.asap.server.domain.AvailableDate;
 import com.asap.server.domain.MeetingV2;
 import com.asap.server.domain.UserV2;
@@ -67,6 +69,21 @@ public class UserV2Service {
         return UserMeetingTimeResponseDto.builder()
                 .url(url)
                 .accessToken(accessToken)
+                .build();
+    }
+
+    @Transactional
+    public UserTimeResponseDto createUserTime(final Long meetingId,
+                                              final AvailableTimeRequestDto requestDto) {
+        MeetingV2 meetingV2 = meetingV2Repository.findById(meetingId)
+                .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+
+        UserV2 userV2 = createUser(meetingV2, requestDto.getName(), Role.MEMBER);
+
+        requestDto.getAvailableTimes().forEach(availableTime -> createUserTimeBlock(meetingV2, userV2, availableTime));
+
+        return UserTimeResponseDto.builder()
+                .role(Role.MEMBER.getRole())
                 .build();
     }
 
