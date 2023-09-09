@@ -101,7 +101,7 @@ public class UserV2Service {
         Map<String, List<TimeSlot>> meetingTimeAvailable = new HashMap<>();
         for (UserMeetingTimeSaveRequestDto requestDto : requestDtoList) {
             String col = String.format("%s %s %s", requestDto.getMonth(), requestDto.getDay(), requestDto.getDayOfWeek());
-            List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal());
+            List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal() - 1);
             if (meetingTimeAvailable.containsKey(col)) {
                 if (meetingTimeAvailable.get(col).stream().anyMatch(timeSlots::contains)) {
                     throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
