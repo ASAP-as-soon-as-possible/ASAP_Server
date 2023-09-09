@@ -41,7 +41,8 @@ public class UserV2Service {
     public UserV2 createUser(final MeetingV2 meeting,
                              final String hostName,
                              final Role role) {
-        UserV2 user = UserV2.builder().meeting(meeting)
+        UserV2 user = UserV2.builder()
+                .meeting(meeting)
                 .name(hostName)
                 .role(role)
                 .isFixed(false)
@@ -85,6 +86,16 @@ public class UserV2Service {
         return UserTimeResponseDto.builder()
                 .role(Role.MEMBER.getRole())
                 .build();
+    }
+
+    public List<String> findUserNameByMeeting(final MeetingV2 meetingV2) {
+        List<UserV2> users = userV2Repository.findByMeeting(meetingV2);
+        if (users == null) {
+            throw new NotFoundException(USER_NOT_FOUND_EXCEPTION);
+        }
+        return users.stream()
+                .map(UserV2::getName)
+                .collect(Collectors.toList());
     }
 
     private void createUserTimeBlock(final MeetingV2 meetingV2,
