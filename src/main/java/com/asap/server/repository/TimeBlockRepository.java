@@ -12,6 +12,6 @@ public interface TimeBlockRepository extends Repository<TimeBlock, Long> {
 
     void save(TimeBlock timeBlock);
 
-    List<TimeBlock> findByAvailableDate(AvailableDate availableDate);
-    Optional<TimeBlock> findByAvailableDateAndTimeSlot(AvailableDate availableDate, TimeSlot timeSlot);
+    List<TimeBlock> findByAvailableDate(final AvailableDate availableDate);
+    Optional<TimeBlock> findByAvailableDateAndTimeSlot(final AvailableDate availableDate, TimeSlot timeSlot);
 }
