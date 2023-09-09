@@ -90,7 +90,7 @@ public class UserV2Service {
 
     public List<String> findUserNameByMeeting(final MeetingV2 meetingV2) {
         List<UserV2> users = userV2Repository.findByMeeting(meetingV2);
-        if (users == null) {
+        if (users.isEmpty()) {
             throw new NotFoundException(USER_NOT_FOUND_EXCEPTION);
         }
         return users.stream()
