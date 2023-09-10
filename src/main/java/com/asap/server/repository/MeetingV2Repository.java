@@ -6,7 +6,7 @@ import org.springframework.data.repository.Repository;
 import java.util.Optional;
 
 public interface MeetingV2Repository extends Repository<MeetingV2, Long> {
-    Optional<MeetingV2> findById(Long id);
+    Optional<MeetingV2> findById(final Long id);
 
-    MeetingV2 save(MeetingV2 meetingV2);
+    MeetingV2 save(final MeetingV2 meetingV2);
 }

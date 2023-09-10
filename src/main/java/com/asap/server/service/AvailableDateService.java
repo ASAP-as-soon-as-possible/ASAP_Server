@@ -2,6 +2,8 @@ package com.asap.server.service;
 
 import com.asap.server.common.utils.DateUtil;
 import com.asap.server.controller.dto.response.AvailableDateResponseDto;
+import com.asap.server.controller.dto.response.AvailableDatesDto;
+import com.asap.server.controller.dto.response.TimeSlotDto;
 import com.asap.server.domain.AvailableDate;
 import com.asap.server.domain.MeetingV2;
 import com.asap.server.exception.Error;
@@ -19,17 +21,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AvailableDateService {
     private final AvailableDateRepository availableDateRepository;
+    private final TimeBlockService timeBlockService;
+    private final TimeBlockUserService timeBlockUserService;
 
     private LocalDate dateFormatter(final String stringOfDate) {
         return LocalDate.parse(stringOfDate, DateTimeFormatter.ofPattern("yyyy/MM/dd"));
     }
 
     public List<AvailableDateResponseDto> getAvailableDates(final MeetingV2 meetingV2) {
-        List<AvailableDate> availableDates = availableDateRepository.findByMeeting(meetingV2);
 
-        if (availableDates.isEmpty()) throw new NotFoundException(Error.AVAILABLE_DATE_NOT_FOUND_EXCEPTION);
-
-        return availableDates.stream()
+        return findAvailableDateByMeeting(meetingV2)
+                .stream()
                 .map(availableDate ->
                         AvailableDateResponseDto.builder()
                                 .month(DateUtil.getMonth(availableDate.getDate()))
@@ -38,6 +40,29 @@ public class AvailableDateService {
                                 .build())
                 .collect(Collectors.toList());
     }
+
+    public List<AvailableDate> findAvailableDateByMeeting(final MeetingV2 meetingV2) {
+        List<AvailableDate> availableDates = availableDateRepository.findByMeeting(meetingV2);
+
+        if (availableDates.isEmpty()) throw new NotFoundException(Error.AVAILABLE_DATE_NOT_FOUND_EXCEPTION);
+
+        return availableDates;
+    }
+
+    public AvailableDatesDto getAvailableDatesDto(final AvailableDate availableDate, final int memberCount) {
+        List<TimeSlotDto> timeSlotDtos = timeBlockService.findByAvailableDate(availableDate).stream().map(
+                timeBlock -> timeBlockUserService.getTimeSlotDto(timeBlock, memberCount)
+        ).collect(Collectors.toList());
+
+        return AvailableDatesDto.builder()
+                .timeSlots(timeSlotDtos)
+                .month(DateUtil.getMonth(availableDate.getDate()))
+                .day(DateUtil.getDay(availableDate.getDate()))
+                .dayOfWeek(DateUtil.getDayOfWeek(availableDate.getDate()))
+                .build();
+    }
+
+    ;
 
     public AvailableDate findByMeetingAndDate(final MeetingV2 meetingV2,
                                               final String month,

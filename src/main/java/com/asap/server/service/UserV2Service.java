@@ -41,7 +41,8 @@ public class UserV2Service {
     public UserV2 createUser(final MeetingV2 meeting,
                              final String hostName,
                              final Role role) {
-        UserV2 user = UserV2.builder().meeting(meeting)
+        UserV2 user = UserV2.builder()
+                .meeting(meeting)
                 .name(hostName)
                 .role(role)
                 .isFixed(false)
@@ -87,6 +88,16 @@ public class UserV2Service {
                 .build();
     }
 
+    public List<String> findUserNameByMeeting(final MeetingV2 meetingV2) {
+        List<UserV2> users = userV2Repository.findByMeeting(meetingV2);
+        if (users.isEmpty()) {
+            throw new NotFoundException(USER_NOT_FOUND_EXCEPTION);
+        }
+        return users.stream()
+                .map(UserV2::getName)
+                .collect(Collectors.toList());
+    }
+
     private void createUserTimeBlock(final MeetingV2 meetingV2,
                                      final UserV2 userV2,
                                      final UserMeetingTimeSaveRequestDto requestDto) {
@@ -101,7 +112,7 @@ public class UserV2Service {
         Map<String, List<TimeSlot>> meetingTimeAvailable = new HashMap<>();
         for (UserMeetingTimeSaveRequestDto requestDto : requestDtoList) {
             String col = String.format("%s %s %s", requestDto.getMonth(), requestDto.getDay(), requestDto.getDayOfWeek());
-            List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal());
+            List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal() - 1);
             if (meetingTimeAvailable.containsKey(col)) {
                 if (meetingTimeAvailable.get(col).stream().anyMatch(timeSlots::contains)) {
                     throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);

@@ -6,7 +6,7 @@ import com.asap.server.common.utils.TimeTableUtil;
 import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
-import com.asap.server.controller.dto.request.PreferTimeSaveRequestDto;
+import com.asap.server.controller.dto.response.AvailableDatesDto;
 import com.asap.server.controller.dto.response.BestMeetingTimeResponseDto;
 import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.IsFixedMeetingResponseDto;
@@ -20,7 +20,6 @@ import com.asap.server.domain.Place;
 import com.asap.server.domain.User;
 import com.asap.server.domain.UserV2;
 import com.asap.server.domain.enums.Role;
-import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
@@ -31,7 +30,6 @@ import com.asap.server.repository.MeetingTimeRepository;
 import com.asap.server.repository.MeetingV2Repository;
 import com.asap.server.service.vo.MeetingTimeVo;
 import com.asap.server.service.vo.MeetingVo;
-import com.asap.server.service.vo.UserVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -160,28 +158,23 @@ public class MeetingService {
                 .build();
     }
 
-    public TimeTableResponseDto getTimeTable(Long userId, Long meetingId) {
-        Meeting meeting = meetingRepository.findById(meetingId)
+    public TimeTableResponseDto getTimeTable(final Long userId, final Long meetingId) {
+        MeetingV2 meetingV2 = meetingV2Repository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-        if (!meeting.getHost().getId().equals(userId)) {
-            throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
-        }
-        List<User> users = meeting.getUsers();
-        timeTableUtil.init();
-        for (User user : users) {
-            UserVo userVo = UserVo.of(user);
-            List<com.asap.server.service.vo.MeetingTimeVo> meetingTimes = meetingTimeRepository.findByUser(user)
-                    .stream()
-                    .map(com.asap.server.service.vo.MeetingTimeVo::of)
-                    .collect(Collectors.toList());
-            timeTableUtil.setTimeTable(userVo, meetingTimes);
-        }
-        timeTableUtil.setColorLevel();
-        return TimeTableResponseDto
-                .builder()
-                .memberCount(users.size())
-                .totalUserNames(timeTableUtil.getUserNames())
-                .availableDateTimes(timeTableUtil.getAvailableDatesDtoList())
+
+        if (!meetingV2.authenticateHost(userId))
+            throw new BadRequestException(INVALID_MEETING_HOST_EXCEPTION);
+
+        List<String> memberNames = userV2Service.findUserNameByMeeting(meetingV2);
+
+        List<AvailableDatesDto> availableDatesDtos = availableDateService.findAvailableDateByMeeting(meetingV2).stream()
+                .map(availableDate -> availableDateService.getAvailableDatesDto(availableDate, memberNames.size()))
+                .collect(Collectors.toList());
+
+        return TimeTableResponseDto.builder()
+                .totalUserNames(memberNames)
+                .memberCount(memberNames.size())
+                .availableDateTimes(availableDatesDtos)
                 .build();
     }
 
@@ -217,14 +210,4 @@ public class MeetingService {
         return BestMeetingTimeResponseDto.of(meeting.getUsers().size(), bestMeetingUtil.getFixedMeetingTime());
     }
 
-    private void isDuplicatedTime(List<PreferTimeSaveRequestDto> requestDtoList) {
-        List<TimeSlot> timeSlots = new ArrayList<>();
-        for (PreferTimeSaveRequestDto requestDto : requestDtoList) {
-            List<TimeSlot> timeSlotList = TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal() - 1);
-            if (timeSlots.stream().anyMatch(timeSlotList::contains)) {
-                throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
-            }
-            timeSlots.addAll(timeSlotList);
-        }
-    }
 }
