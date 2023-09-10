@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface TimeBlockRepository extends Repository<TimeBlock, Long> {
 
-    void save(TimeBlock timeBlock);
+    void save(final TimeBlock timeBlock);
 
     List<TimeBlock> findByAvailableDate(final AvailableDate availableDate);
     Optional<TimeBlock> findByAvailableDateAndTimeSlot(final AvailableDate availableDate, TimeSlot timeSlot);

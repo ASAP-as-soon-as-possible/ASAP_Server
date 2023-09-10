@@ -11,7 +11,7 @@ public interface TimeBlockUserRepository extends Repository<TimeBlockUser, Long>
 
     void save(final TimeBlockUser timeBlockUser);
 
-    List<TimeBlockUser> findAllByUser(UserV2 user);
+    List<TimeBlockUser> findAllByUser(final UserV2 user);
 
     List<TimeBlockUser> findByTimeBlock(final TimeBlock timeBlock);
 }
