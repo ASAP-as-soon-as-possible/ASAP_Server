@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @Getter
@@ -45,8 +46,34 @@ public class BestMeetingUtil {
         selectBestMeetingTime();
     }
 
-    public List<BestMeetingTimeVo> getBestMeetingTime(List<TimeBlockVo> timeBlocks) {
-        return null;
+    public List<BestMeetingTimeVo> getBestMeetingTime(List<TimeBlockVo> timeBlocks, final Duration duration, final int targetUserCount) {
+        timeBlocks = timeBlocks.stream()
+                .filter(timeBlockVo -> timeBlockVo.getUsers().size() == targetUserCount)
+                .sorted(TimeBlockVo::compareTo)
+                .collect(Collectors.toList());
+
+        List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>();
+        for (int timeBlockIdx = 0; timeBlockIdx < timeBlocks.size() - duration.getNeedBlock(); timeBlockIdx++) {
+            TimeSlot nextTime = timeBlocks.get(timeBlockIdx).getTimeSlot();
+            boolean isBestMeeting = true;
+            for (int i = timeBlockIdx + 1; i <= timeBlockIdx + duration.getNeedBlock(); i++) {
+                if (nextTime.ordinal() + 1 != timeBlocks.get(i).getTimeSlot().ordinal()) {
+                    isBestMeeting = false;
+                    break;
+                }
+                nextTime = timeBlocks.get(i).getTimeSlot();
+            }
+            if (!isBestMeeting) continue;
+
+            BestMeetingTimeVo bestMeetingTime = new BestMeetingTimeVo(
+                    timeBlocks.get(timeBlockIdx).getTimeSlot(),
+                    timeBlocks.get(timeBlockIdx + duration.getNeedBlock()).getTimeSlot(),
+                    timeBlocks.get(timeBlockIdx).getUsers()
+            );
+            bestMeetingTimes.add(bestMeetingTime);
+        }
+
+        return bestMeetingTimes;
     }
 
     private void initTimeTable() {
