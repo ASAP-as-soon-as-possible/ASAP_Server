@@ -9,6 +9,7 @@ import com.asap.server.service.vo.MeetingTimeVo;
 import com.asap.server.service.vo.MeetingVo;
 import com.asap.server.service.vo.PossibleTimeCaseVo;
 import com.asap.server.service.vo.TimeBlockVo;
+import com.asap.server.service.vo.TimeBlocksByDateVo;
 import com.asap.server.service.vo.TimeSlotInfoDto;
 import com.asap.server.service.vo.UserVo;
 import lombok.Getter;
@@ -46,8 +47,8 @@ public class BestMeetingUtil {
         selectBestMeetingTime();
     }
 
-    public List<BestMeetingTimeVo> getBestMeetingTime(final List<TimeBlockVo> timeBlocks, final Duration duration, final int userCount) {
-        List<TimeBlockVo> sortedTimeBlocks = filterByUserCountAndSortByTime(timeBlocks, userCount);
+    public List<BestMeetingTimeVo> getBestMeetingTime(final TimeBlocksByDateVo timeBlocksByDate, final Duration duration, final int userCount) {
+        List<TimeBlockVo> sortedTimeBlocks = filterByUserCountAndSortByTime(timeBlocksByDate.getTimeBlocks(), userCount);
 
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>();
         int endIndex = sortedTimeBlocks.size() - duration.getNeedBlock();
@@ -55,7 +56,7 @@ public class BestMeetingUtil {
             if (!isBestMeetingTime(sortedTimeBlocks, timeBlockIdx, duration.getNeedBlock())) continue;
 
             BestMeetingTimeVo bestMeetingTime = new BestMeetingTimeVo(
-                    sortedTimeBlocks.get(timeBlockIdx).getAvailableDate().getDate(),
+                    timeBlocksByDate.getDate(),
                     sortedTimeBlocks.get(timeBlockIdx).getTimeSlot(),
                     sortedTimeBlocks.get(timeBlockIdx + duration.getNeedBlock()).getTimeSlot(),
                     sortedTimeBlocks.get(timeBlockIdx).getUsers()
