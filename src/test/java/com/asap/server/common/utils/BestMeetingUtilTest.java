@@ -233,7 +233,7 @@ public class BestMeetingUtilTest {
         );
 
         // when
-        bestMeetingUtil.getBestMeetingTime(meetingVo, meetingTimes);
+        bestMeetingUtil.searchBestMeetingTime(meetingVo, meetingTimes);
 
         // then
         assertAll(

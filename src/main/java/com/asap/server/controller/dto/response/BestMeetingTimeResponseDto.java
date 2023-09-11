@@ -1,10 +1,11 @@
 package com.asap.server.controller.dto.response;
 
-import com.asap.server.service.vo.AvailableMeetingTimeVo;
-import java.util.Arrays;
-import java.util.List;
+import com.asap.server.service.vo.BestMeetingTimeVo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -13,11 +14,11 @@ public class BestMeetingTimeResponseDto {
     private MeetingTimeResponseDto bestDateTime;
     private List<MeetingTimeResponseDto> otherDateTimes;
 
-    public static BestMeetingTimeResponseDto of(int memberCount, List<AvailableMeetingTimeVo> availableMeetingTimes) {
+    public static BestMeetingTimeResponseDto of(int memberCount, List<BestMeetingTimeVo> bestMeetingTimes) {
         return new BestMeetingTimeResponseDto(
                 memberCount,
-                MeetingTimeResponseDto.of(availableMeetingTimes.get(0)),
-                Arrays.asList(MeetingTimeResponseDto.of(availableMeetingTimes.get(1)), MeetingTimeResponseDto.of(availableMeetingTimes.get(2)))
+                MeetingTimeResponseDto.of(bestMeetingTimes.get(0)),
+                Arrays.asList(MeetingTimeResponseDto.of(bestMeetingTimes.get(1)), MeetingTimeResponseDto.of(bestMeetingTimes.get(2)))
         );
     }
 }

@@ -60,7 +60,7 @@ public class SearchBestMeetingTest {
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>(List.of(bestMeetingTime, bestMeetingTime2, bestMeetingTime3));
 
         // when
-        List<BestMeetingTimeVo> result = bestMeetingUtil.getBestMeetingTime(availableDate, Duration.TWO_HOUR, 2);
+        List<BestMeetingTimeVo> result = bestMeetingUtil.searchBestMeetingTime(availableDate, Duration.TWO_HOUR.getNeedBlock(), 2);
 
         // then
         assertThat(result).isEqualTo(bestMeetingTimes);
@@ -95,7 +95,7 @@ public class SearchBestMeetingTest {
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>(List.of(bestMeetingTime, bestMeetingTime2));
 
         // when
-        List<BestMeetingTimeVo> result = bestMeetingUtil.getBestMeetingTime(availableDate, Duration.HOUR, 2);
+        List<BestMeetingTimeVo> result = bestMeetingUtil.searchBestMeetingTime(availableDate, Duration.HOUR.getNeedBlock(), 2);
 
         // then
         assertThat(result).isEqualTo(bestMeetingTimes);

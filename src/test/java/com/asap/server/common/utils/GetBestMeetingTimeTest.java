@@ -48,7 +48,7 @@ public class GetBestMeetingTimeTest {
         AvailableMeetingTimeVo result = new AvailableMeetingTimeVo("7.10.월", SLOT_12_00, SLOT_12_30, 0, List.of(userVo), true);
 
         // when
-        bestMeetingUtil.getBestMeetingTime(meetingVo, meetingTimes);
+        bestMeetingUtil.searchBestMeetingTime(meetingVo, meetingTimes);
 
         // then
         assertThat(bestMeetingUtil.getFixedMeetingTime()).isEqualTo(Arrays.asList(result, null, null));
@@ -74,7 +74,7 @@ public class GetBestMeetingTimeTest {
         AvailableMeetingTimeVo result2 = new AvailableMeetingTimeVo("7.10.월", SLOT_12_30, SLOT_13_00, 0, List.of(userVo), true);
 
         // when
-        bestMeetingUtil.getBestMeetingTime(meetingVo, meetingTimes);
+        bestMeetingUtil.searchBestMeetingTime(meetingVo, meetingTimes);
 
         // then
         assertThat(bestMeetingUtil.getFixedMeetingTime()).isEqualTo(Arrays.asList(result, result2, null));
@@ -103,7 +103,7 @@ public class GetBestMeetingTimeTest {
         AvailableMeetingTimeVo result3 = new AvailableMeetingTimeVo("7.10.월", SLOT_13_00, SLOT_15_00, 0, List.of(userVo), true);
 
         // when
-        bestMeetingUtil.getBestMeetingTime(meetingVo, meetingTimes);
+        bestMeetingUtil.searchBestMeetingTime(meetingVo, meetingTimes);
 
         // then
         assertThat(bestMeetingUtil.getFixedMeetingTime()).isEqualTo(Arrays.asList(result, result2, result3));
