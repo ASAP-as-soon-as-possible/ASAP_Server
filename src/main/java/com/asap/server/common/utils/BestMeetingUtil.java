@@ -55,6 +55,7 @@ public class BestMeetingUtil {
             if (!isBestMeetingTime(sortedTimeBlocks, timeBlockIdx, duration.getNeedBlock())) continue;
 
             BestMeetingTimeVo bestMeetingTime = new BestMeetingTimeVo(
+                    sortedTimeBlocks.get(timeBlockIdx).getAvailableDate().getDate(),
                     sortedTimeBlocks.get(timeBlockIdx).getTimeSlot(),
                     sortedTimeBlocks.get(timeBlockIdx + duration.getNeedBlock()).getTimeSlot(),
                     sortedTimeBlocks.get(timeBlockIdx).getUsers()

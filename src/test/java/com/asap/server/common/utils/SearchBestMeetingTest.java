@@ -54,9 +54,9 @@ public class SearchBestMeetingTest {
         TimeBlockVo timeBlock7 = new TimeBlockVo(1L, 0, availableDate, SLOT_14_00, users);
         List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlock, timeBlock2, timeBlock3, timeBlock4, timeBlock5, timeBlock6, timeBlock7));
 
-        BestMeetingTimeVo bestMeetingTime = new BestMeetingTimeVo(SLOT_11_00, SLOT_13_00, users);
-        BestMeetingTimeVo bestMeetingTime2 = new BestMeetingTimeVo(SLOT_11_30, SLOT_13_30, users);
-        BestMeetingTimeVo bestMeetingTime3 = new BestMeetingTimeVo(SLOT_12_00, SLOT_14_00, users);
+        BestMeetingTimeVo bestMeetingTime = new BestMeetingTimeVo(meetingDate, SLOT_11_00, SLOT_13_00, users);
+        BestMeetingTimeVo bestMeetingTime2 = new BestMeetingTimeVo(meetingDate, SLOT_11_30, SLOT_13_30, users);
+        BestMeetingTimeVo bestMeetingTime3 = new BestMeetingTimeVo(meetingDate, SLOT_12_00, SLOT_14_00, users);
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>(List.of(bestMeetingTime, bestMeetingTime2, bestMeetingTime3));
 
         // when
@@ -90,8 +90,8 @@ public class SearchBestMeetingTest {
         TimeBlockVo timeBlock9 = new TimeBlockVo(1L, 0, availableDate, SLOT_21_00, users);
         List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlock, timeBlock2, timeBlock3, timeBlock4, timeBlock5, timeBlock6, timeBlock7, timeBlock8, timeBlock9));
 
-        BestMeetingTimeVo bestMeetingTime = new BestMeetingTimeVo(SLOT_11_00, SLOT_12_00, users);
-        BestMeetingTimeVo bestMeetingTime2 = new BestMeetingTimeVo(SLOT_20_00, SLOT_21_00, users);
+        BestMeetingTimeVo bestMeetingTime = new BestMeetingTimeVo(meetingDate, SLOT_11_00, SLOT_12_00, users);
+        BestMeetingTimeVo bestMeetingTime2 = new BestMeetingTimeVo(meetingDate, SLOT_20_00, SLOT_21_00, users);
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>(List.of(bestMeetingTime, bestMeetingTime2));
 
         // when
