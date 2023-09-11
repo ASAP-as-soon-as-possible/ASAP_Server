@@ -21,6 +21,9 @@ import static com.asap.server.domain.enums.TimeSlot.SLOT_12_30;
 import static com.asap.server.domain.enums.TimeSlot.SLOT_13_00;
 import static com.asap.server.domain.enums.TimeSlot.SLOT_13_30;
 import static com.asap.server.domain.enums.TimeSlot.SLOT_14_00;
+import static com.asap.server.domain.enums.TimeSlot.SLOT_20_00;
+import static com.asap.server.domain.enums.TimeSlot.SLOT_20_30;
+import static com.asap.server.domain.enums.TimeSlot.SLOT_21_00;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class SearchBestMeetingTest {
@@ -58,6 +61,41 @@ public class SearchBestMeetingTest {
 
         // when
         List<BestMeetingTimeVo> result = bestMeetingUtil.getBestMeetingTime(timeBlocks, Duration.TWO_HOUR, 2);
+
+        // then
+        assertThat(result).isEqualTo(bestMeetingTimes);
+    }
+
+    @Test
+    @DisplayName("특정 날짜에 최적의 회의 시간대가 아침에 하나 저녁에 하나 있을 경우")
+    public void getBestMeetingTime2() {
+        // given
+        LocalDate meetingDate = LocalDate.of(2023, 9, 8);
+        AvailableDateVo availableDate = new AvailableDateVo(1L, meetingDate);
+
+        UserVo kwy = new UserVo(1L, "KWY");
+        UserVo dsy = new UserVo(1L, "DSY");
+        List<UserVo> users = List.of(kwy, dsy);
+
+        TimeBlockVo timeBlock = new TimeBlockVo(1L, 0, availableDate, SLOT_11_00, users);
+        TimeBlockVo timeBlock2 = new TimeBlockVo(1L, 0, availableDate, SLOT_11_30, users);
+        TimeBlockVo timeBlock3 = new TimeBlockVo(1L, 0, availableDate, SLOT_12_00, users);
+
+        TimeBlockVo timeBlock4 = new TimeBlockVo(1L, 0, availableDate, SLOT_12_30, List.of(kwy));
+        TimeBlockVo timeBlock5 = new TimeBlockVo(1L, 0, availableDate, SLOT_13_00, List.of(kwy));
+        TimeBlockVo timeBlock6 = new TimeBlockVo(1L, 0, availableDate, SLOT_13_30, List.of(kwy));
+
+        TimeBlockVo timeBlock7 = new TimeBlockVo(1L, 0, availableDate, SLOT_20_00, users);
+        TimeBlockVo timeBlock8 = new TimeBlockVo(1L, 0, availableDate, SLOT_20_30, users);
+        TimeBlockVo timeBlock9 = new TimeBlockVo(1L, 0, availableDate, SLOT_21_00, users);
+        List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlock, timeBlock2, timeBlock3, timeBlock4, timeBlock5, timeBlock6, timeBlock7, timeBlock8, timeBlock9));
+
+        BestMeetingTimeVo bestMeetingTime = new BestMeetingTimeVo(SLOT_11_00, SLOT_12_00, users);
+        BestMeetingTimeVo bestMeetingTime2 = new BestMeetingTimeVo(SLOT_20_00, SLOT_21_00, users);
+        List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>(List.of(bestMeetingTime, bestMeetingTime2));
+
+        // when
+        List<BestMeetingTimeVo> result = bestMeetingUtil.getBestMeetingTime(timeBlocks, Duration.HOUR, 2);
 
         // then
         assertThat(result).isEqualTo(bestMeetingTimes);
