@@ -31,9 +31,6 @@ public class AvailableDateService {
     }
 
     public List<AvailableDateResponseDto> getAvailableDates(final MeetingV2 meetingV2) {
-
-        return findAvailableDateByMeeting(meetingV2)
-                .stream()
         List<AvailableDate> availableDates = findAvailableDates(meetingV2);
 
         return availableDates.stream()

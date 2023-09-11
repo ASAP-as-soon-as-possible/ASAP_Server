@@ -10,11 +10,6 @@ import com.asap.server.repository.TimeBlockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.asap.server.domain.AvailableDate;
-import com.asap.server.domain.TimeBlock;
-import com.asap.server.repository.TimeBlockRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -51,6 +46,8 @@ public class TimeBlockService {
 
         timeBlockRepository.save(timeBlock);
         return timeBlock;
+    }
+
     public List<TimeBlock> getTimeBlocksByAvailableDate(final AvailableDate availableDate) {
         return timeBlockRepository.findByAvailableDate(availableDate);
     }
