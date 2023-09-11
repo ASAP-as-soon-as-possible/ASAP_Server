@@ -14,7 +14,7 @@ public class UserVo {
     public static UserVo of(User user) {
         return new UserVo(user.getId(), user.getName());
     }
-    public static UserVo of(UserV2 user) {
+    public static UserVo of(final UserV2 user) {
         return new UserVo(user.getId(), user.getName());
     }
 }
