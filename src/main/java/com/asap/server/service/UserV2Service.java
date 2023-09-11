@@ -47,4 +47,8 @@ public class UserV2Service {
             fixedUser.setIsFixed(true);
         });
     }
+
+    public int getMeetingUserCount(MeetingV2 meeting) {
+        return userV2Repository.countByMeeting(meeting);
+    }
 }

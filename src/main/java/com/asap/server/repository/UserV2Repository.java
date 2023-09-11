@@ -13,4 +13,6 @@ public interface UserV2Repository extends Repository<UserV2, Long> {
     List<UserV2> findByMeetingAndIsFixed(final MeetingV2 meeting, final boolean isFixed);
 
     Optional<UserV2> findById(final Long id);
+
+    int countByMeeting(final MeetingV2 meeting);
 }
