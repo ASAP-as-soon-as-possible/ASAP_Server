@@ -14,4 +14,5 @@ public interface UserV2Repository extends Repository<UserV2, Long> {
     Optional<UserV2> findById(final Long id);
 
     List<UserV2> findByMeeting(final MeetingV2 meetingV2);
+    int countByMeeting(final MeetingV2 meeting);
 }

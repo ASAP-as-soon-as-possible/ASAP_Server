@@ -47,4 +47,8 @@ public class TimeBlockService {
         timeBlockRepository.save(timeBlock);
         return timeBlock;
     }
+
+    public List<TimeBlock> getTimeBlocksByAvailableDate(final AvailableDate availableDate) {
+        return timeBlockRepository.findByAvailableDate(availableDate);
+    }
 }

@@ -30,6 +30,9 @@ import com.asap.server.repository.MeetingTimeRepository;
 import com.asap.server.repository.MeetingV2Repository;
 import com.asap.server.service.vo.MeetingTimeVo;
 import com.asap.server.service.vo.MeetingVo;
+import com.asap.server.service.vo.BestMeetingTimeVo;
+import com.asap.server.service.vo.TimeBlocksByDateVo;
+import com.asap.server.service.vo.UserVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,7 +61,7 @@ public class MeetingService {
     private final UserService userService;
     private final BestMeetingUtil bestMeetingUtil;
     private final TimeTableUtil timeTableUtil;
-
+    private final TimeBlockService timeBlockService;
 
     @Transactional
     public MeetingSaveResponseDto create(final MeetingSaveRequestDto meetingSaveRequestDto) {
@@ -190,24 +193,17 @@ public class MeetingService {
                 .build();
     }
 
-    public BestMeetingTimeResponseDto getBestMeetingTime(Long meetingId, Long userId) {
-        Meeting meeting = meetingRepository.findById(meetingId)
+    public BestMeetingTimeResponseDto getBestMeetingTime(final Long meetingId, final Long userId) {
+        MeetingV2 meeting = meetingV2Repository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-        if (!meeting.getHost().getId().equals(userId)) {
-            throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
-        }
-        List<MeetingTimeVo> meetingTimes = new ArrayList<>();
-        for (User user : meeting.getUsers()) {
-            meetingTimes.addAll(
-                    meetingTimeRepository.findByUser(user)
-                            .stream()
-                            .map(MeetingTimeVo::of)
-                            .collect(Collectors.toList())
-            );
-        }
-        MeetingVo meetingVo = MeetingVo.of(meeting);
-        bestMeetingUtil.getBestMeetingTime(meetingVo, meetingTimes);
-        return BestMeetingTimeResponseDto.of(meeting.getUsers().size(), bestMeetingUtil.getFixedMeetingTime());
+
+        if (!meeting.authenticateHost(userId)) throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
+
+        int userCount = userV2Service.getMeetingUserCount(meeting);
+        List<TimeBlocksByDateVo> availableDates = availableDateService.getAvailableDateVos(meeting);
+
+        List<BestMeetingTimeVo> bestMeetingTimes = bestMeetingUtil.getBestMeetingTime(availableDates, meeting.getDuration(), userCount);
+        return BestMeetingTimeResponseDto.of(userCount, bestMeetingTimes);
     }
 
 }
