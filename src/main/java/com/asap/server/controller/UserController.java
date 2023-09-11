@@ -9,6 +9,7 @@ import com.asap.server.controller.dto.request.HostLoginRequestDto;
 import com.asap.server.controller.dto.request.UserMeetingTimeSaveRequestDto;
 import com.asap.server.exception.Success;
 import com.asap.server.service.UserService;
+import com.asap.server.service.UserV2Service;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,6 +35,7 @@ import java.util.List;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
+    private final UserV2Service userV2Service;
     private final UserService userService;
 
     @Operation(summary = "[회의 가능 시간 입력 뷰 - 방장] 방장 가능 시간 입력 API")
@@ -45,12 +47,12 @@ public class UserController {
     })
     @PostMapping("/host/{meetingId}/time")
     public SuccessResponse createHostTime(
-            @PathVariable("meetingId") String _meetingId,
-            @RequestBody List<@Valid UserMeetingTimeSaveRequestDto> requestDtoList,
-            @UserId @Parameter(hidden = true) Long userId,
-            @MeetingId Long meetingId
+            @PathVariable("meetingId") final String _meetingId,
+            @RequestBody final List<@Valid UserMeetingTimeSaveRequestDto> requestDtoList,
+            @UserId @Parameter(hidden = true) final Long userId,
+            @MeetingId final Long meetingId
     ) {
-        return SuccessResponse.success(Success.CREATE_HOST_TIME_SUCCESS, userService.createHostTime(meetingId, _meetingId, userId, requestDtoList));
+        return SuccessResponse.success(Success.CREATE_HOST_TIME_SUCCESS, userV2Service.createHostTime(meetingId, _meetingId, userId, requestDtoList));
     }
 
     @Operation(summary = "[회의 가능 시간 입력 뷰 - 참여자] 참여자 정보 및 가능 시간 입력 API")
@@ -61,11 +63,11 @@ public class UserController {
     })
     @PostMapping("/{meetingId}/time")
     public SuccessResponse createMemberTime(
-            @PathVariable("meetingId") String _meetingId,
-            @RequestBody @Valid AvailableTimeRequestDto requestDto,
-            @MeetingId Long meetingId
+            @PathVariable("meetingId") final String _meetingId,
+            @RequestBody @Valid final AvailableTimeRequestDto requestDto,
+            @MeetingId final Long meetingId
     ) {
-        return SuccessResponse.success(Success.CREATE_MEETING_TIME_SUCCESS, userService.createMemberMeetingTime(meetingId, requestDto));
+        return SuccessResponse.success(Success.CREATE_MEETING_TIME_SUCCESS, userV2Service.createUserTime(meetingId, requestDto));
     }
 
     @Operation(summary = "[방장 입장 뷰] 방장 로그인 API")

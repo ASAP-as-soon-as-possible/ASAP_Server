@@ -62,9 +62,9 @@ public class MeetingController {
     @SecurityRequirement(name = "JWT Auth")
     public SuccessResponse confirmMeeting(
             @PathVariable("meetingId") String _meetingId,
-            @RequestBody @Valid MeetingConfirmRequestDto meetingConfirmRequestDto,
-            @MeetingId Long meetingId,
-            @UserId @Parameter(hidden = true) Long userId
+            @RequestBody @Valid final MeetingConfirmRequestDto meetingConfirmRequestDto,
+            @MeetingId final Long meetingId,
+            @UserId @Parameter(hidden = true) final Long userId
     ) {
         meetingService.confirmMeeting(meetingConfirmRequestDto, meetingId, userId);
         return SuccessResponse.success(Success.CONFIRM_MEETING_SUCCESS);
@@ -109,9 +109,9 @@ public class MeetingController {
             @ApiResponse(responseCode = "401", description = "해당 유저는 해당 방의 방장이 아닙니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public SuccessResponse<TimeTableResponseDto> getTimeTable(
-            @PathVariable("meetingId") String _meetingId,
-            @UserId @Parameter(hidden = true) Long userId,
-            @MeetingId Long meetingId
+            @PathVariable("meetingId") final String _meetingId,
+            @UserId @Parameter(hidden = true) final Long userId,
+            @MeetingId final Long meetingId
     ) {
         return SuccessResponse.success(Success.FIND_TIME_TABLE_SUCCESS, meetingService.getTimeTable(userId, meetingId));
     }
