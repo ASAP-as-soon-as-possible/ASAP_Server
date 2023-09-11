@@ -19,9 +19,9 @@ public class BestMeetingUtil {
     public List<BestMeetingTimeVo> getBestMeetingTime(
             final List<TimeBlocksByDateVo> timeBlocksByDates,
             final Duration duration,
-            final int userCount
+            final int totalUserCount
     ) {
-        List<PossibleTimeCaseVo> timeCases = getAllPossibleMeetingTimeCases(duration, userCount);
+        List<PossibleTimeCaseVo> timeCases = getAllPossibleMeetingTimeCases(duration, totalUserCount);
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>();
 
         for (PossibleTimeCaseVo timeCase : timeCases) {
@@ -30,7 +30,7 @@ public class BestMeetingUtil {
                         searchBestMeetingTime(timeBlocksByDate, timeCase.getDuration().getNeedBlock(), timeCase.getMemberCnt())
                 );
             });
-            if (bestMeetingTimes.size() > 2) return bestMeetingTimes;
+            if (bestMeetingTimes.size() > 2) return bestMeetingTimes.subList(0, 3);
         }
 
         while (bestMeetingTimes.size() < 3) {
@@ -79,20 +79,20 @@ public class BestMeetingUtil {
         return isBestMeetingTime;
     }
 
-    private List<PossibleTimeCaseVo> getAllPossibleMeetingTimeCases(final Duration duration, final int userCount) {
-        int userCnt = userCount;
+    private List<PossibleTimeCaseVo> getAllPossibleMeetingTimeCases(final Duration duration, final int totalUserCount) {
+        int userCount = totalUserCount;
         Duration[] durations = Duration.values();
         List<PossibleTimeCaseVo> timeCases = new ArrayList<>();
-        while (userCnt > 0) {
-            timeCases.addAll(getPossibleMeetingTimeCases(durations, duration, userCnt));
-            userCnt = userCnt / 2;
+        while (userCount > 0) {
+            timeCases.addAll(getPossibleMeetingTimeCases(durations, duration, userCount));
+            userCount = userCount / 2;
         }
         return timeCases;
     }
 
-    private List<PossibleTimeCaseVo> getPossibleMeetingTimeCases(final Duration[] durations, final Duration duration, final int memberCount) {
+    private List<PossibleTimeCaseVo> getPossibleMeetingTimeCases(final Duration[] durations, final Duration duration, final int userCount) {
         List<PossibleTimeCaseVo> timeCases = new ArrayList<>();
-        for (int count = memberCount; count > memberCount / 2; count--) {
+        for (int count = userCount; count > userCount / 2; count--) {
             timeCases.add(new PossibleTimeCaseVo(durations[duration.ordinal()], count));
             if (duration.ordinal() > 0)
                 timeCases.add(new PossibleTimeCaseVo(durations[duration.ordinal() - 1], count));
@@ -101,7 +101,7 @@ public class BestMeetingUtil {
         int secondDuration = (duration.ordinal() >= 2) ? duration.ordinal() - 2 : -1;
 
         for (int durationCount = secondDuration; durationCount > -1; durationCount--) {
-            for (int count = memberCount; count > memberCount / 2; count--) {
+            for (int count = userCount; count > userCount / 2; count--) {
                 timeCases.add(new PossibleTimeCaseVo(durations[durationCount], count));
             }
         }
