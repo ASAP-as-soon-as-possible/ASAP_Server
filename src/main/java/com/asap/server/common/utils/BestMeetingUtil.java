@@ -46,34 +46,43 @@ public class BestMeetingUtil {
         selectBestMeetingTime();
     }
 
-    public List<BestMeetingTimeVo> getBestMeetingTime(List<TimeBlockVo> timeBlocks, final Duration duration, final int targetUserCount) {
-        timeBlocks = timeBlocks.stream()
-                .filter(timeBlockVo -> timeBlockVo.getUsers().size() == targetUserCount)
-                .sorted(TimeBlockVo::compareTo)
-                .collect(Collectors.toList());
+    public List<BestMeetingTimeVo> getBestMeetingTime(final List<TimeBlockVo> timeBlocks, final Duration duration, final int userCount) {
+        List<TimeBlockVo> sortedTimeBlocks = filterByUserCountAndSortByTime(timeBlocks, userCount);
 
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>();
-        for (int timeBlockIdx = 0; timeBlockIdx < timeBlocks.size() - duration.getNeedBlock(); timeBlockIdx++) {
-            TimeSlot nextTime = timeBlocks.get(timeBlockIdx).getTimeSlot();
-            boolean isBestMeeting = true;
-            for (int i = timeBlockIdx + 1; i <= timeBlockIdx + duration.getNeedBlock(); i++) {
-                if (nextTime.ordinal() + 1 != timeBlocks.get(i).getTimeSlot().ordinal()) {
-                    isBestMeeting = false;
-                    break;
-                }
-                nextTime = timeBlocks.get(i).getTimeSlot();
-            }
-            if (!isBestMeeting) continue;
+        int endIndex = sortedTimeBlocks.size() - duration.getNeedBlock();
+        for (int timeBlockIdx = 0; timeBlockIdx < endIndex; timeBlockIdx++) {
+            if (!isBestMeetingTime(sortedTimeBlocks, timeBlockIdx, duration.getNeedBlock())) continue;
 
             BestMeetingTimeVo bestMeetingTime = new BestMeetingTimeVo(
-                    timeBlocks.get(timeBlockIdx).getTimeSlot(),
-                    timeBlocks.get(timeBlockIdx + duration.getNeedBlock()).getTimeSlot(),
-                    timeBlocks.get(timeBlockIdx).getUsers()
+                    sortedTimeBlocks.get(timeBlockIdx).getTimeSlot(),
+                    sortedTimeBlocks.get(timeBlockIdx + duration.getNeedBlock()).getTimeSlot(),
+                    sortedTimeBlocks.get(timeBlockIdx).getUsers()
             );
             bestMeetingTimes.add(bestMeetingTime);
         }
 
         return bestMeetingTimes;
+    }
+
+    private List<TimeBlockVo> filterByUserCountAndSortByTime(final List<TimeBlockVo> timeBlocks, final int userCount) {
+        return timeBlocks.stream()
+                .filter(timeBlockVo -> timeBlockVo.getUsers().size() == userCount)
+                .sorted(TimeBlockVo::compareTo)
+                .collect(Collectors.toList());
+    }
+
+    private boolean isBestMeetingTime(final List<TimeBlockVo> timeBlocks, final int timeBlockIdx, final int needTimeBlockCount) {
+        boolean isBestMeetingTime = true;
+        TimeSlot nextTime = timeBlocks.get(timeBlockIdx).getTimeSlot();
+        for (int i = timeBlockIdx + 1; i <= timeBlockIdx + needTimeBlockCount; i++) {
+            if (nextTime.ordinal() + 1 != timeBlocks.get(i).getTimeSlot().ordinal()) {
+                isBestMeetingTime = false;
+                break;
+            }
+            nextTime = timeBlocks.get(i).getTimeSlot();
+        }
+        return isBestMeetingTime;
     }
 
     private void initTimeTable() {
