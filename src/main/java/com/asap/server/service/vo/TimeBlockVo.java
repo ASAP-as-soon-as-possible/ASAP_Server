@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 public class TimeBlockVo implements Comparable<TimeBlockVo> {
     private Long id;
     private int weight;
-    private AvailableDateVo availableDate;
     private TimeSlot timeSlot;
     private List<UserVo> users;
 
@@ -25,7 +24,6 @@ public class TimeBlockVo implements Comparable<TimeBlockVo> {
         return new TimeBlockVo(
                 timeBlock.getId(),
                 timeBlock.getWeight(),
-                AvailableDateVo.of(timeBlock.getAvailableDate()),
                 timeBlock.getTimeSlot(),
                 timeBlock.getTimeBlockUsers()
                         .stream()
