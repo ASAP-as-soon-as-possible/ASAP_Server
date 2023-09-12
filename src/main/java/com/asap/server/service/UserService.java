@@ -10,7 +10,6 @@ import com.asap.server.controller.dto.response.UserMeetingTimeResponseDto;
 import com.asap.server.controller.dto.response.UserTimeResponseDto;
 import com.asap.server.domain.AvailableDate;
 import com.asap.server.domain.Meeting;
-import com.asap.server.domain.TimeBlockUser;
 import com.asap.server.domain.User;
 import com.asap.server.domain.enums.Role;
 import com.asap.server.domain.enums.TimeSlot;
@@ -20,7 +19,6 @@ import com.asap.server.exception.model.ForbiddenException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.MeetingRepository;
-import com.asap.server.repository.TimeBlockUserRepository;
 import com.asap.server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,7 +35,6 @@ import static com.asap.server.exception.Error.USER_NOT_FOUND_EXCEPTION;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final TimeBlockUserRepository timeBlockUserRepository;
     private final UserRepository userRepository;
     private final TimeBlockService timeBlockService;
     private final TimeBlockUserService timeBlockUserService;
@@ -162,17 +159,12 @@ public class UserService {
         if (!meeting.authenticateHost(requestDto.getName(), requestDto.getPassword()))
             throw new UnauthorizedException(Error.INVALID_HOST_ID_PASSWORD_EXCEPTION);
 
-        if (isEmptyHostTimeBlock(meeting.getHost()))
+        if (timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost()))
             throw new ForbiddenException(Error.HOST_MEETING_TIME_NOT_PROVIDED);
 
         return HostLoginResponseDto
                 .builder()
                 .accessToken(jwtService.issuedToken(meeting.getHost().getId().toString()))
                 .build();
-    }
-
-    private Boolean isEmptyHostTimeBlock(User host) {
-        List<TimeBlockUser> hostTimeBlocks = timeBlockUserRepository.findAllByUser(host);
-        return hostTimeBlocks.isEmpty();
     }
 }
