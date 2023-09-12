@@ -20,7 +20,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +27,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @Tag(name = "회의", description = "회의 관련 API 입니다.")
 @RestController
@@ -45,7 +46,7 @@ public class MeetingController {
     })
     @PostMapping
     public SuccessResponse<MeetingSaveResponseDto> create(
-            @RequestBody @Valid MeetingSaveRequestDto meetingSaveRequestDto
+            @RequestBody @Valid final MeetingSaveRequestDto meetingSaveRequestDto
     ) {
         return SuccessResponse.success(Success.CREATE_MEETING_SUCCESS, meetingService.create(meetingSaveRequestDto));
     }
@@ -61,9 +62,9 @@ public class MeetingController {
     @SecurityRequirement(name = "JWT Auth")
     public SuccessResponse confirmMeeting(
             @PathVariable("meetingId") String _meetingId,
-            @RequestBody @Valid MeetingConfirmRequestDto meetingConfirmRequestDto,
-            @MeetingId Long meetingId,
-            @UserId @Parameter(hidden = true) Long userId
+            @RequestBody @Valid final MeetingConfirmRequestDto meetingConfirmRequestDto,
+            @MeetingId final Long meetingId,
+            @UserId @Parameter(hidden = true) final Long userId
     ) {
         meetingService.confirmMeeting(meetingConfirmRequestDto, meetingId, userId);
         return SuccessResponse.success(Success.CONFIRM_MEETING_SUCCESS);
@@ -77,8 +78,8 @@ public class MeetingController {
     })
     @GetMapping("/{meetingId}/schedule")
     public SuccessResponse getMeetingSchedule(
-            @PathVariable("meetingId") String _meetingId,
-            @MeetingId Long meetingId
+            @PathVariable("meetingId") final String _meetingId,
+            @MeetingId final Long meetingId
     ) {
         return SuccessResponse.success(Success.FIND_MEETING_SCHEDULE_SUCCESS, meetingService.getMeetingSchedule(meetingId));
     }
@@ -93,8 +94,8 @@ public class MeetingController {
     })
     @GetMapping("/{meetingId}/card")
     public SuccessResponse<FixedMeetingResponseDto> getFixedMeetingInformation(
-            @PathVariable("meetingId") String _meetingId,
-            @MeetingId Long meetingId
+            @PathVariable("meetingId") final String _meetingId,
+            @MeetingId final Long meetingId
     ) {
         return SuccessResponse.success(Success.FIXED_MEETING_SUCCESS, meetingService.getFixedMeetingInformation(meetingId));
     }
@@ -108,9 +109,9 @@ public class MeetingController {
             @ApiResponse(responseCode = "401", description = "해당 유저는 해당 방의 방장이 아닙니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public SuccessResponse<TimeTableResponseDto> getTimeTable(
-            @PathVariable("meetingId") String _meetingId,
-            @UserId @Parameter(hidden = true) Long userId,
-            @MeetingId Long meetingId
+            @PathVariable("meetingId") final String _meetingId,
+            @UserId @Parameter(hidden = true) final Long userId,
+            @MeetingId final Long meetingId
     ) {
         return SuccessResponse.success(Success.FIND_TIME_TABLE_SUCCESS, meetingService.getTimeTable(userId, meetingId));
     }
@@ -124,13 +125,13 @@ public class MeetingController {
     })
     @GetMapping("/{meetingId}")
     public SuccessResponse getIsFixedMeeting(
-            @PathVariable("meetingId") String _meetingId,
-            @MeetingId Long meetingId
+            @PathVariable("meetingId") final String _meetingId,
+            @MeetingId final Long meetingId
     ) {
         return SuccessResponse.success(Success.MEETING_VALIDATION_SUCCESS, meetingService.getIsFixedMeeting(meetingId));
     }
 
-    @Operation(summary = "[회의 일정 확정 뷰] 회의 일정 확정 뷰")
+    @Operation(summary = "[회의 일정 확정 뷰] 최적의 회의 시간 확인 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "유저 정보 조회 성공"),
             @ApiResponse(responseCode = "401", description = "해당 유저는 해당 방의 방장이 아닙니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),

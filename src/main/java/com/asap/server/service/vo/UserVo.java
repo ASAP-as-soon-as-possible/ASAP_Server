@@ -10,7 +10,7 @@ public class UserVo {
     private Long id;
     private String name;
 
-    public static UserVo of(User user) {
+    public static UserVo of(final User user) {
         return new UserVo(user.getId(), user.getName());
     }
 }

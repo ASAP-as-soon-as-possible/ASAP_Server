@@ -1,10 +1,13 @@
 package com.asap.server.controller.dto.response;
 
+import com.asap.server.common.utils.DateUtil;
 import com.asap.server.service.vo.AvailableMeetingTimeVo;
+import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.UserVo;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -28,6 +31,18 @@ public class MeetingTimeResponseDto {
                 availableMeetingTime.getStartTime().getTime(),
                 availableMeetingTime.getEndTime().getTime(),
                 availableMeetingTime.getUsers()
+        );
+    }
+
+    public static MeetingTimeResponseDto of(BestMeetingTimeVo bestMeetingTime) {
+        if (bestMeetingTime == null) return null;
+        return new MeetingTimeResponseDto(
+                DateUtil.getMonth(bestMeetingTime.getDate()),
+                DateUtil.getDay(bestMeetingTime.getDate()),
+                DateUtil.getDayOfWeek(bestMeetingTime.getDate()),
+                bestMeetingTime.getStartTime().getTime(),
+                bestMeetingTime.getEndTime().getTime(),
+                bestMeetingTime.getUsers()
         );
     }
 }

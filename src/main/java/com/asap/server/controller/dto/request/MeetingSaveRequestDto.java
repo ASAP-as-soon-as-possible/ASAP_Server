@@ -32,7 +32,7 @@ public class MeetingSaveRequestDto {
 
     @NotNull(message = "회의 형식이 입력되지 않았습니다.")
     @Schema(description = "회의 방식", example = "ONLINE")
-    private Place place;
+    private PlaceType place;
 
     @Schema(description = "회의 장소 설명")
     private String placeDetail;
