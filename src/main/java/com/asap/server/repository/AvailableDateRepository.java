@@ -1,7 +1,7 @@
 package com.asap.server.repository;
 
 import com.asap.server.domain.AvailableDate;
-import com.asap.server.domain.MeetingV2;
+import com.asap.server.domain.Meeting;
 import org.springframework.data.repository.Repository;
 
 import java.time.LocalDate;
@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AvailableDateRepository extends Repository<AvailableDate, Long> {
-    AvailableDate save(AvailableDate availableDate);
+    AvailableDate save(final AvailableDate availableDate);
 
-    List<AvailableDate> findByMeeting(MeetingV2 meetingV2);
+    List<AvailableDate> findByMeeting(final Meeting meeting);
 
-    Optional<AvailableDate> findByMeetingAndDate(MeetingV2 meetingV2, LocalDate date);
+    Optional<AvailableDate> findByMeetingAndDate(final Meeting meeting, final LocalDate date);
 }

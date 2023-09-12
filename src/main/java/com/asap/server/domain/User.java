@@ -1,39 +1,49 @@
 package com.asap.server.domain;
 
 import com.asap.server.domain.enums.Role;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
-@ToString
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class User extends AuditingTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "meeting_id")
+    private Meeting meeting;
+
     @Column(nullable = false)
     private String name;
 
+    @ColumnDefault(value = "false")
+    private Boolean isFixed;
+
     @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    private User(String name, Role role) {
-        this.name = name;
-        this.role = role;
-    }
-
-    public static User newInstance(String name, Role role) {
-        return new User(name, role);
+    public void setIsFixed(final Boolean isFixed) {
+        this.isFixed = isFixed;
     }
 }

@@ -11,12 +11,12 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum Duration {
-    HALF("HALF", 2),
-    HOUR("HOUR", 3),
-    HOUR_HALF("HOUR_HALF", 4),
-    TWO_HOUR("TWO_HOUR", 5),
-    TWO_HOUR_HALF("TWO_HOUR_HALF", 6),
-    THREE_HOUR("THREE_HOUR", 7);
+    HALF("HALF", 1),
+    HOUR("HOUR", 2),
+    HOUR_HALF("HOUR_HALF", 3),
+    TWO_HOUR("TWO_HOUR", 4),
+    TWO_HOUR_HALF("TWO_HOUR_HALF", 5),
+    THREE_HOUR("THREE_HOUR", 6);
 
 
     @JsonValue
