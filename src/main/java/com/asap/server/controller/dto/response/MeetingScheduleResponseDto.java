@@ -14,7 +14,7 @@ import java.util.*;
 @Builder
 public class MeetingScheduleResponseDto {
     private Duration duration;
-    private PlaceType placeType;
+    private PlaceType place;
     private String placeDetail;
     private List<AvailableDateResponseDto> availableDates;
     private List<PreferTimeResponseDto> preferTimes;
