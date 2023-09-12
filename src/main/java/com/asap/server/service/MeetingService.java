@@ -112,7 +112,7 @@ public class MeetingService {
 
         return MeetingScheduleResponseDto.builder()
                 .duration(meeting.getDuration())
-                .placeType(meeting.getPlace().getPlaceType())
+                .place(meeting.getPlace().getPlaceType())
                 .placeDetail(meeting.getPlace().getPlaceDetail())
                 .availableDates(availableDateService.getAvailableDates(meeting))
                 .preferTimes(preferTimeService.getPreferTimes(meeting))

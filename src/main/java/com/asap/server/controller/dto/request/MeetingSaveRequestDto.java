@@ -1,7 +1,7 @@
 package com.asap.server.controller.dto.request;
 
 import com.asap.server.domain.enums.Duration;
-import com.asap.server.domain.enums.Place;
+import com.asap.server.domain.enums.PlaceType;
 
 import java.util.List;
 import javax.validation.constraints.NotBlank;
