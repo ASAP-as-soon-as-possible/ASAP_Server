@@ -174,7 +174,7 @@ public class MeetingService {
             throw new ConflictException(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
 
         return IsFixedMeetingResponseDto.builder()
-                .isFixed(true)
+                .title(meeting.getTitle())
                 .build();
     }
 

@@ -8,5 +8,5 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class IsFixedMeetingResponseDto {
-    private boolean isFixed;
+    private String title;
 }
