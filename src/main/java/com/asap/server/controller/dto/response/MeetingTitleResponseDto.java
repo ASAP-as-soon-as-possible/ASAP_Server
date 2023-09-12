@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class IsFixedMeetingResponseDto {
+public class MeetingTitleResponseDto {
     private String title;
 }
