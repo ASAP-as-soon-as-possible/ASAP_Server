@@ -2,7 +2,6 @@ package com.asap.server.service;
 
 import com.asap.server.common.utils.BestMeetingUtil;
 import com.asap.server.common.utils.DateUtil;
-import com.asap.server.common.utils.TimeTableUtil;
 import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
@@ -15,10 +14,8 @@ import com.asap.server.controller.dto.response.MeetingScheduleResponseDto;
 import com.asap.server.controller.dto.response.TimeTableResponseDto;
 import com.asap.server.domain.ConfirmedDateTime;
 import com.asap.server.domain.Meeting;
-import com.asap.server.domain.MeetingV2;
 import com.asap.server.domain.Place;
 import com.asap.server.domain.User;
-import com.asap.server.domain.UserV2;
 import com.asap.server.domain.enums.Role;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
@@ -26,13 +23,8 @@ import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.MeetingRepository;
-import com.asap.server.repository.MeetingTimeRepository;
-import com.asap.server.repository.MeetingV2Repository;
-import com.asap.server.service.vo.MeetingTimeVo;
-import com.asap.server.service.vo.MeetingVo;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.TimeBlocksByDateVo;
-import com.asap.server.service.vo.UserVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +33,6 @@ import org.springframework.util.Base64Utils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,23 +41,17 @@ import static com.asap.server.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
 @Service
 @RequiredArgsConstructor
 public class MeetingService {
-
     private final MeetingRepository meetingRepository;
-    private final MeetingTimeRepository meetingTimeRepository;
-    private final MeetingV2Repository meetingV2Repository;
-    private final UserV2Service userV2Service;
+    private final UserService userService;
     private final AvailableDateService availableDateService;
     private final PreferTimeService preferTimeService;
     private final JwtService jwtService;
-    private final UserService userService;
     private final BestMeetingUtil bestMeetingUtil;
-    private final TimeTableUtil timeTableUtil;
-    private final TimeBlockService timeBlockService;
 
     @Transactional
     public MeetingSaveResponseDto create(final MeetingSaveRequestDto meetingSaveRequestDto) {
 
-        MeetingV2 meeting = MeetingV2.builder()
+        Meeting meeting = Meeting.builder()
                 .title(meetingSaveRequestDto.getTitle())
                 .password(meetingSaveRequestDto.getPassword())
                 .additionalInfo(meetingSaveRequestDto.getAdditionalInfo())
@@ -78,9 +63,9 @@ public class MeetingService {
                                 .build())
                 .build();
 
-        meetingV2Repository.save(meeting);
+        meetingRepository.save(meeting);
 
-        UserV2 host = userV2Service.createUser(meeting, meetingSaveRequestDto.getName(), Role.HOST);
+        User host = userService.createUser(meeting, meetingSaveRequestDto.getName(), Role.HOST);
 
         preferTimeService.create(meeting, meetingSaveRequestDto.getPreferTimes());
         availableDateService.create(meeting, meetingSaveRequestDto.getAvailableDates());
@@ -102,13 +87,13 @@ public class MeetingService {
             final Long meetingId,
             final Long userId
     ) {
-        MeetingV2 meeting = meetingV2Repository.findById(meetingId)
+        Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
         if (!meeting.authenticateHost(userId))
             throw new BadRequestException(INVALID_MEETING_HOST_EXCEPTION);
 
-        userV2Service.setFixedUsers(meetingConfirmRequestDto.getUsers());
+        userService.setFixedUsers(meetingConfirmRequestDto.getUsers());
 
         LocalDate fixedDate = DateUtil.transformLocalDate(meetingConfirmRequestDto.getMonth(), meetingConfirmRequestDto.getDay());
         LocalTime startTime = LocalTime.parse(meetingConfirmRequestDto.getStartTime().getTime());
@@ -122,7 +107,7 @@ public class MeetingService {
 
     @Transactional(readOnly = true)
     public MeetingScheduleResponseDto getMeetingSchedule(Long meetingId) {
-        MeetingV2 meeting = meetingV2Repository.findById(meetingId)
+        Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
         return MeetingScheduleResponseDto.builder()
@@ -135,13 +120,13 @@ public class MeetingService {
     }
 
     public FixedMeetingResponseDto getFixedMeetingInformation(final Long meetingId) {
-        MeetingV2 meeting = meetingV2Repository.findById(meetingId)
+        Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
         if (!meeting.isConfirmedMeeting())
             throw new ConflictException(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
 
-        List<String> fixedUserNames = userV2Service.getFixedUsers(meeting);
+        List<String> fixedUserNames = userService.getFixedUsers(meeting);
 
         ConfirmedDateTime confirmedDateTime = meeting.getConfirmedDateTime();
 
@@ -162,15 +147,15 @@ public class MeetingService {
     }
 
     public TimeTableResponseDto getTimeTable(final Long userId, final Long meetingId) {
-        MeetingV2 meetingV2 = meetingV2Repository.findById(meetingId)
+        Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        if (!meetingV2.authenticateHost(userId))
+        if (!meeting.authenticateHost(userId))
             throw new BadRequestException(INVALID_MEETING_HOST_EXCEPTION);
 
-        List<String> memberNames = userV2Service.findUserNameByMeeting(meetingV2);
+        List<String> memberNames = userService.findUserNameByMeeting(meeting);
 
-        List<AvailableDatesDto> availableDatesDtos = availableDateService.findAvailableDateByMeeting(meetingV2).stream()
+        List<AvailableDatesDto> availableDatesDtos = availableDateService.findAvailableDateByMeeting(meeting).stream()
                 .map(availableDate -> availableDateService.getAvailableDatesDto(availableDate, memberNames.size()))
                 .collect(Collectors.toList());
 
@@ -182,7 +167,7 @@ public class MeetingService {
     }
 
     public IsFixedMeetingResponseDto getIsFixedMeeting(final Long meetingId) throws ConflictException {
-        MeetingV2 meeting = meetingV2Repository.findById(meetingId)
+        Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
         if (meeting.isConfirmedMeeting())
@@ -194,12 +179,12 @@ public class MeetingService {
     }
 
     public BestMeetingTimeResponseDto getBestMeetingTime(final Long meetingId, final Long userId) {
-        MeetingV2 meeting = meetingV2Repository.findById(meetingId)
+        Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
         if (!meeting.authenticateHost(userId)) throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
 
-        int userCount = userV2Service.getMeetingUserCount(meeting);
+        int userCount = userService.getMeetingUserCount(meeting);
         List<TimeBlocksByDateVo> availableDates = availableDateService.getAvailableDateVos(meeting);
 
         List<BestMeetingTimeVo> bestMeetingTimes = bestMeetingUtil.getBestMeetingTime(availableDates, meeting.getDuration(), userCount);

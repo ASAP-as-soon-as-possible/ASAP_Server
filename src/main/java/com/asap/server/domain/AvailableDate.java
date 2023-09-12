@@ -26,6 +26,6 @@ public class AvailableDate extends AuditingTimeEntity {
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "meeting_id")
-    private MeetingV2 meeting;
+    private Meeting meeting;
     private LocalDate date;
 }

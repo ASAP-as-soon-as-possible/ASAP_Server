@@ -1,13 +1,18 @@
 package com.asap.server.repository;
 
+import com.asap.server.domain.Meeting;
 import com.asap.server.domain.User;
 import org.springframework.data.repository.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends Repository<User, Long> {
+    User save(final User user);
+    List<User> findByMeetingAndIsFixed(final Meeting meeting, final boolean isFixed);
 
-    void save(User user);
-    Optional<User> findById(Long id);
+    Optional<User> findById(final Long id);
 
+    List<User> findByMeeting(final Meeting meeting);
+    int countByMeeting(final Meeting meeting);
 }
