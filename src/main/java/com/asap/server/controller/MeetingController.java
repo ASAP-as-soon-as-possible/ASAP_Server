@@ -131,7 +131,7 @@ public class MeetingController {
         return SuccessResponse.success(Success.MEETING_VALIDATION_SUCCESS, meetingService.getIsFixedMeeting(meetingId));
     }
 
-    @Operation(summary = "[회의 일정 확정 뷰] 회의 일정 확정 뷰")
+    @Operation(summary = "[회의 일정 확정 뷰] 최적의 회의 시간 확인 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "유저 정보 조회 성공"),
             @ApiResponse(responseCode = "401", description = "해당 유저는 해당 방의 방장이 아닙니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
