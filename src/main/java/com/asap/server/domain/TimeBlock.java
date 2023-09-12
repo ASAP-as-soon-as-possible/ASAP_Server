@@ -11,6 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,7 +34,7 @@ public class TimeBlock extends AuditingTimeEntity {
     @ColumnDefault(value = "0")
     private int weight;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "available_date_id")
     private AvailableDate availableDate;
 
