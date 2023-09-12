@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MeetingV2 extends AuditingTimeEntity {
+public class Meeting extends AuditingTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,7 +45,7 @@ public class MeetingV2 extends AuditingTimeEntity {
     private Duration duration;
 
     @OneToOne(fetch = FetchType.LAZY)
-    private UserV2 host;
+    private User host;
 
     @Embedded
     private Place place;
@@ -69,7 +69,7 @@ public class MeetingV2 extends AuditingTimeEntity {
         this.confirmedDateTime = new ConfirmedDateTime(startDateTime, endDateTime);
     }
 
-    public void setHost(final UserV2 user) {
+    public void setHost(final User user) {
         this.host = user;
     }
 

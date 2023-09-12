@@ -1,6 +1,6 @@
 package com.asap.server.service.vo;
 
-import com.asap.server.domain.UserV2;
+import com.asap.server.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,7 +10,7 @@ public class UserVo {
     private Long id;
     private String name;
 
-    public static UserVo of(final UserV2 user) {
+    public static UserVo of(final User user) {
         return new UserVo(user.getId(), user.getName());
     }
 }

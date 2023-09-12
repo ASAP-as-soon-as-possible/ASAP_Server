@@ -25,7 +25,7 @@ public class TimeBlockUser extends AuditingTimeEntity {
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private UserV2 user;
+    private User user;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "time_block_id")
     private TimeBlock timeBlock;

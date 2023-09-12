@@ -22,14 +22,14 @@ import javax.persistence.ManyToOne;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PreferTimeV2 extends AuditingTimeEntity {
+public class PreferTime extends AuditingTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "meeting_id")
-    private MeetingV2 meeting;
+    private Meeting meeting;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)

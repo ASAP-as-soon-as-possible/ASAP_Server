@@ -24,14 +24,14 @@ import javax.persistence.ManyToOne;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class UserV2 extends AuditingTimeEntity {
+public class User extends AuditingTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "meeting_id")
-    private MeetingV2 meeting;
+    private Meeting meeting;
 
     @Column(nullable = false)
     private String name;
