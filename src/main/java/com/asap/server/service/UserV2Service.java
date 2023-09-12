@@ -2,19 +2,25 @@ package com.asap.server.service;
 
 import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.AvailableTimeRequestDto;
+import com.asap.server.controller.dto.request.HostLoginRequestDto;
 import com.asap.server.controller.dto.request.UserMeetingTimeSaveRequestDto;
 import com.asap.server.controller.dto.request.UserRequestDto;
+import com.asap.server.controller.dto.response.HostLoginResponseDto;
 import com.asap.server.controller.dto.response.UserMeetingTimeResponseDto;
 import com.asap.server.controller.dto.response.UserTimeResponseDto;
 import com.asap.server.domain.AvailableDate;
 import com.asap.server.domain.MeetingV2;
+import com.asap.server.domain.TimeBlockUser;
 import com.asap.server.domain.UserV2;
 import com.asap.server.domain.enums.Role;
 import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
+import com.asap.server.exception.model.ForbiddenException;
 import com.asap.server.exception.model.NotFoundException;
+import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.MeetingV2Repository;
+import com.asap.server.repository.TimeBlockUserRepository;
 import com.asap.server.repository.UserV2Repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +37,7 @@ import static com.asap.server.exception.Error.USER_NOT_FOUND_EXCEPTION;
 @Service
 @RequiredArgsConstructor
 public class UserV2Service {
+    private final TimeBlockUserRepository timeBlockUserRepository;
     private final UserV2Repository userV2Repository;
     private final TimeBlockService timeBlockService;
     private final TimeBlockUserService timeBlockUserService;
@@ -142,5 +149,30 @@ public class UserV2Service {
 
     public int getMeetingUserCount(MeetingV2 meeting) {
         return userV2Repository.countByMeeting(meeting);
+    }
+
+    @Transactional
+    public HostLoginResponseDto loginByHost(
+            final Long meetingId,
+            final HostLoginRequestDto requestDto
+    ) {
+        MeetingV2 meeting = meetingV2Repository.findById(meetingId)
+                .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+
+        if (!meeting.authenticateHost(requestDto.getName(), requestDto.getPassword()))
+            throw new UnauthorizedException(Error.INVALID_HOST_ID_PASSWORD_EXCEPTION);
+
+        if (isEmptyHostTimeBlock(meeting.getHost()))
+            throw new ForbiddenException(Error.HOST_MEETING_TIME_NOT_PROVIDED);
+
+        return HostLoginResponseDto
+                .builder()
+                .accessToken(jwtService.issuedToken(meeting.getHost().getId().toString()))
+                .build();
+    }
+
+    private Boolean isEmptyHostTimeBlock(UserV2 host) {
+        List<TimeBlockUser> hostTimeBlocks = timeBlockUserRepository.findAllByUser(host);
+        return hostTimeBlocks.isEmpty();
     }
 }

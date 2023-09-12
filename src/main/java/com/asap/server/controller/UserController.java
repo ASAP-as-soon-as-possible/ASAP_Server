@@ -8,7 +8,6 @@ import com.asap.server.controller.dto.request.AvailableTimeRequestDto;
 import com.asap.server.controller.dto.request.HostLoginRequestDto;
 import com.asap.server.controller.dto.request.UserMeetingTimeSaveRequestDto;
 import com.asap.server.exception.Success;
-import com.asap.server.service.UserService;
 import com.asap.server.service.UserV2Service;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,7 +35,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserV2Service userV2Service;
-    private final UserService userService;
 
     @Operation(summary = "[회의 가능 시간 입력 뷰 - 방장] 방장 가능 시간 입력 API")
     @SecurityRequirement(name = "JWT Auth")
@@ -82,6 +80,6 @@ public class UserController {
             @RequestBody @Valid final HostLoginRequestDto requestDto,
             @MeetingId final Long meetingId
     ) {
-        return SuccessResponse.success(Success.LOGIN_SUCCESS, userService.loginByHost(meetingId, requestDto));
+        return SuccessResponse.success(Success.LOGIN_SUCCESS, userV2Service.loginByHost(meetingId, requestDto));
     }
 }

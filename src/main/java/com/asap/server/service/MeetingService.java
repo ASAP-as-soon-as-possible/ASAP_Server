@@ -2,7 +2,6 @@ package com.asap.server.service;
 
 import com.asap.server.common.utils.BestMeetingUtil;
 import com.asap.server.common.utils.DateUtil;
-import com.asap.server.common.utils.TimeTableUtil;
 import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
@@ -14,10 +13,8 @@ import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.controller.dto.response.MeetingScheduleResponseDto;
 import com.asap.server.controller.dto.response.TimeTableResponseDto;
 import com.asap.server.domain.ConfirmedDateTime;
-import com.asap.server.domain.Meeting;
 import com.asap.server.domain.MeetingV2;
 import com.asap.server.domain.Place;
-import com.asap.server.domain.User;
 import com.asap.server.domain.UserV2;
 import com.asap.server.domain.enums.Role;
 import com.asap.server.exception.Error;
@@ -25,14 +22,9 @@ import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
-import com.asap.server.repository.MeetingRepository;
-import com.asap.server.repository.MeetingTimeRepository;
 import com.asap.server.repository.MeetingV2Repository;
-import com.asap.server.service.vo.MeetingTimeVo;
-import com.asap.server.service.vo.MeetingVo;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.TimeBlocksByDateVo;
-import com.asap.server.service.vo.UserVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +33,6 @@ import org.springframework.util.Base64Utils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,18 +41,12 @@ import static com.asap.server.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
 @Service
 @RequiredArgsConstructor
 public class MeetingService {
-
-    private final MeetingRepository meetingRepository;
-    private final MeetingTimeRepository meetingTimeRepository;
     private final MeetingV2Repository meetingV2Repository;
     private final UserV2Service userV2Service;
     private final AvailableDateService availableDateService;
     private final PreferTimeService preferTimeService;
     private final JwtService jwtService;
-    private final UserService userService;
     private final BestMeetingUtil bestMeetingUtil;
-    private final TimeTableUtil timeTableUtil;
-    private final TimeBlockService timeBlockService;
 
     @Transactional
     public MeetingSaveResponseDto create(final MeetingSaveRequestDto meetingSaveRequestDto) {
