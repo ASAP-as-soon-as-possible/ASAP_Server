@@ -56,9 +56,9 @@ public class UserService {
     }
 
     @Transactional
-    public UserMeetingTimeResponseDto createHostTime(final Long userId,
+    public UserMeetingTimeResponseDto createHostTime(final Long meetingId,
                                                      final String url,
-                                                     final Long meetingId,
+                                                     final Long userId,
                                                      final List<UserMeetingTimeSaveRequestDto> requestDtos) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
