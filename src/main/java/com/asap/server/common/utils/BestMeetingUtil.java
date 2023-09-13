@@ -10,6 +10,7 @@ import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,11 @@ public class BestMeetingUtil {
                         searchBestMeetingTime(timeBlocksByDate, timeCase.getDuration().getNeedBlock(), timeCase.getMemberCnt())
                 );
             });
-            if (bestMeetingTimes.size() > 2) return bestMeetingTimes.subList(0, 3);
+            if (bestMeetingTimes.size() > 2) return bestMeetingTimes
+                    .stream()
+                    .sorted(Comparator.comparing(BestMeetingTimeVo::getWeight, Comparator.reverseOrder()))
+                    .limit(3)
+                    .collect(Collectors.toList());
         }
 
         while (bestMeetingTimes.size() < 3) {
@@ -47,11 +52,18 @@ public class BestMeetingUtil {
         for (int timeBlockIdx = 0; timeBlockIdx < endIndex; timeBlockIdx++) {
             if (!isBestMeetingTime(sortedTimeBlocks, timeBlockIdx, needTimeBlockCount)) continue;
 
+            int sumWeight = sortedTimeBlocks
+                    .subList(timeBlockIdx, timeBlockIdx + needTimeBlockCount + 1)
+                    .stream()
+                    .map(TimeBlockVo::getWeight)
+                    .reduce(0, Integer::sum);
+
             BestMeetingTimeVo bestMeetingTime = new BestMeetingTimeVo(
                     timeBlocksByDate.getDate(),
                     sortedTimeBlocks.get(timeBlockIdx).getTimeSlot(),
                     sortedTimeBlocks.get(timeBlockIdx + needTimeBlockCount).getTimeSlot(),
-                    sortedTimeBlocks.get(timeBlockIdx).getUsers()
+                    sortedTimeBlocks.get(timeBlockIdx).getUsers(),
+                    sumWeight
             );
             bestMeetingTimes.add(bestMeetingTime);
         }
