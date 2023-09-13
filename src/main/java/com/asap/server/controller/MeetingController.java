@@ -9,6 +9,7 @@ import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
 import com.asap.server.controller.dto.response.BestMeetingTimeResponseDto;
 import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
+import com.asap.server.controller.dto.response.MeetingTitleResponseDto;
 import com.asap.server.controller.dto.response.TimeTableResponseDto;
 import com.asap.server.exception.Success;
 import com.asap.server.service.MeetingService;
@@ -124,14 +125,14 @@ public class MeetingController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/{meetingId}")
-    public SuccessResponse getIsFixedMeeting(
+    public SuccessResponse<MeetingTitleResponseDto> getIsFixedMeeting(
             @PathVariable("meetingId") final String _meetingId,
             @MeetingId final Long meetingId
     ) {
         return SuccessResponse.success(Success.MEETING_VALIDATION_SUCCESS, meetingService.getIsFixedMeeting(meetingId));
     }
 
-    @Operation(summary = "[회의 일정 확정 뷰] 회의 일정 확정 뷰")
+    @Operation(summary = "[회의 일정 확정 뷰] 최적의 회의 시간 확인 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "유저 정보 조회 성공"),
             @ApiResponse(responseCode = "401", description = "해당 유저는 해당 방의 방장이 아닙니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),

@@ -36,10 +36,15 @@ public class TimeBlockUserService {
 
     public TimeSlotDto getTimeSlotDto(final TimeBlock timeBlock, final int memberCount) {
         TimeSlotDto timeSlotDto = TimeSlotDto.builder()
-                        .time(timeBlock.getTimeSlot().getTime())
-                        .userNames(findUsersByTimeBlock(timeBlock).stream().map(User::getName).collect(Collectors.toList()))
+                .time(timeBlock.getTimeSlot().getTime())
+                .userNames(findUsersByTimeBlock(timeBlock).stream().map(User::getName).collect(Collectors.toList()))
                 .build();
         timeSlotDto.setColorLevel(memberCount);
         return timeSlotDto;
+    }
+
+    public boolean isEmptyHostTimeBlock(final User user) {
+        List<TimeBlockUser> hostTimeBlocks = timeBlockUserRepository.findAllByUser(user);
+        return hostTimeBlocks.isEmpty();
     }
 }
