@@ -9,6 +9,7 @@ import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
 import com.asap.server.controller.dto.response.BestMeetingTimeResponseDto;
 import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
+import com.asap.server.controller.dto.response.MeetingTitleResponseDto;
 import com.asap.server.controller.dto.response.TimeTableResponseDto;
 import com.asap.server.exception.Success;
 import com.asap.server.service.MeetingService;
@@ -124,7 +125,7 @@ public class MeetingController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/{meetingId}")
-    public SuccessResponse getIsFixedMeeting(
+    public SuccessResponse<MeetingTitleResponseDto> getIsFixedMeeting(
             @PathVariable("meetingId") final String _meetingId,
             @MeetingId final Long meetingId
     ) {

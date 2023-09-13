@@ -16,4 +16,5 @@ public class BestMeetingTimeVo {
     private TimeSlot startTime;
     private TimeSlot endTime;
     private List<UserVo> users;
+    private int weight;
 }
