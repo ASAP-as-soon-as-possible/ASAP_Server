@@ -1,5 +1,6 @@
 package com.asap.server.service;
 
+import com.asap.server.common.utils.PasswordEncryptionUtil;
 import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.AvailableTimeRequestDto;
 import com.asap.server.controller.dto.request.HostLoginRequestDto;
@@ -156,7 +157,8 @@ public class UserService {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        if (!meeting.authenticateHost(requestDto.getName(), requestDto.getPassword()))
+        String encryptedPassword = PasswordEncryptionUtil.encryptPassword(requestDto.getPassword(), meeting.getPasswordInfo().getSalt());
+        if (!meeting.authenticateHost(requestDto.getName(), encryptedPassword))
             throw new UnauthorizedException(Error.INVALID_HOST_ID_PASSWORD_EXCEPTION);
 
         if (timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost()))
