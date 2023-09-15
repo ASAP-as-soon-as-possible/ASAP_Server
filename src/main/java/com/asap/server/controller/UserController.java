@@ -47,7 +47,8 @@ public class UserController {
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401",
                     description = "1. 방장의 토큰이 필요합니다.\n"
-                            + "2. 토큰이 유효하지 않습니다.",
+                            + "2. 토큰이 유효하지 않습니다.\n"
+                            + "3. 해당 유저는 해당 방의 방장이 아닙니다.",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "404", description = "해당 회의는 존재하지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "409", description = "해당 회의 방장의 가능시간이 이미 존재합니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),

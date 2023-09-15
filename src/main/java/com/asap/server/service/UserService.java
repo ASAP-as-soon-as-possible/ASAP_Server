@@ -67,7 +67,7 @@ public class UserService {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
         if (!meeting.authenticateHost(userId))
-            throw new BadRequestException(INVALID_MEETING_HOST_EXCEPTION);
+            throw new UnauthorizedException(INVALID_MEETING_HOST_EXCEPTION);
         if(!timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost()))
             throw new ConflictException(Error.HOST_TIME_EXIST_EXCEPTION);
 
