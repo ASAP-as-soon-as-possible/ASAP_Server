@@ -32,8 +32,9 @@ public class Meeting extends AuditingTimeEntity {
     @Column(nullable = false)
     private String title;
 
+    @Embedded
     @Column(nullable = false)
-    private String password;
+    private PasswordInfo passwordInfo;
 
     @Column(nullable = false)
     private String additionalInfo;
@@ -54,7 +55,7 @@ public class Meeting extends AuditingTimeEntity {
     private ConfirmedDateTime confirmedDateTime;
 
     public boolean authenticateHost(final String name, final String password) {
-        return this.host.getName().equals(name) && this.password.equals(password);
+        return this.host.getName().equals(name) && this.passwordInfo.getPassword().equals(password);
     }
 
     public boolean authenticateHost(final Long userId) {
