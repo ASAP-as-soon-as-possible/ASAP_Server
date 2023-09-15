@@ -41,8 +41,10 @@ public class MeetingController {
     @Operation(summary = "[회의 생성 뷰] 회의 생성 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "회의가 성공적으로 생성되었습니다."),
-            @ApiResponse(responseCode = "400", description = "요청값이 유효하지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "400", description = "입력 형식이 맞지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "400",
+                    description = "1. 요청값이 유효하지 않습니다.\n"
+                            + "2. 입력 형식이 맞지 않습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping
@@ -75,6 +77,7 @@ public class MeetingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회의 선택지가 성공적으로 조회되었습니다."),
             @ApiResponse(responseCode = "404", description = "해당 회의는 존재하지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "이미 확정된 회의입니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/{meetingId}/schedule")

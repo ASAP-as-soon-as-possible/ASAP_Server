@@ -15,6 +15,7 @@ import com.asap.server.domain.enums.Role;
 import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
+import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.ForbiddenException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
@@ -24,13 +25,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.asap.server.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
+import static com.asap.server.exception.Error.MEETING_VALIDATION_FAILED_EXCEPTION;
 import static com.asap.server.exception.Error.USER_NOT_FOUND_EXCEPTION;
+
 
 @Service
 @RequiredArgsConstructor
@@ -62,9 +66,10 @@ public class UserService {
                                                      final List<UserMeetingTimeSaveRequestDto> requestDtos) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-
         if (!meeting.authenticateHost(userId))
             throw new BadRequestException(INVALID_MEETING_HOST_EXCEPTION);
+        if(!timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost()))
+            throw new ConflictException(Error.HOST_TIME_EXIST_EXCEPTION);
 
         isDuplicatedDate(requestDtos);
         requestDtos.forEach(requestDto -> createUserTimeBlock(meeting, meeting.getHost(), requestDto));

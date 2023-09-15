@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.asap.server.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
+import static com.asap.server.exception.Error.MEETING_VALIDATION_FAILED_EXCEPTION;
 
 @Service
 @RequiredArgsConstructor
@@ -109,6 +110,9 @@ public class MeetingService {
     public MeetingScheduleResponseDto getMeetingSchedule(Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+        if(meeting.isConfirmedMeeting())
+            throw new ConflictException(MEETING_VALIDATION_FAILED_EXCEPTION);
+
 
         return MeetingScheduleResponseDto.builder()
                 .duration(meeting.getDuration())
