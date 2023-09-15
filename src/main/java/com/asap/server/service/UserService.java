@@ -14,7 +14,11 @@ import com.asap.server.domain.User;
 import com.asap.server.domain.enums.Role;
 import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.exception.Error;
-import com.asap.server.exception.model.*;
+import com.asap.server.exception.model.BadRequestException;
+import com.asap.server.exception.model.ConflictException;
+import com.asap.server.exception.model.ForbiddenException;
+import com.asap.server.exception.model.NotFoundException;
+import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +31,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.asap.server.exception.Error.*;
+import static com.asap.server.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
+import static com.asap.server.exception.Error.MEETING_VALIDATION_FAILED_EXCEPTION;
+import static com.asap.server.exception.Error.USER_NOT_FOUND_EXCEPTION;
+
 
 @Service
 @RequiredArgsConstructor
