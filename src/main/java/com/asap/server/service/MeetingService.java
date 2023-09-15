@@ -22,6 +22,7 @@ import com.asap.server.domain.enums.Role;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
+import com.asap.server.exception.model.ForbiddenException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.MeetingRepository;
@@ -40,6 +41,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.asap.server.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
+import static com.asap.server.exception.Error.MEETING_VALIDATION_FAILED_EXCEPTION;
 
 @Service
 @RequiredArgsConstructor
@@ -100,7 +102,7 @@ public class MeetingService {
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
         if (!meeting.authenticateHost(userId))
-            throw new BadRequestException(INVALID_MEETING_HOST_EXCEPTION);
+            throw new UnauthorizedException(INVALID_MEETING_HOST_EXCEPTION);
 
         userService.setFixedUsers(meetingConfirmRequestDto.getUsers());
 
@@ -118,6 +120,9 @@ public class MeetingService {
     public MeetingScheduleResponseDto getMeetingSchedule(Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+        if(meeting.isConfirmedMeeting())
+            throw new ConflictException(MEETING_VALIDATION_FAILED_EXCEPTION);
+
 
         return MeetingScheduleResponseDto.builder()
                 .duration(meeting.getDuration())
@@ -133,7 +138,7 @@ public class MeetingService {
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
         if (!meeting.isConfirmedMeeting())
-            throw new ConflictException(Error.MEETING_VALIDATION_FAILED_EXCEPTION);
+            throw new ForbiddenException(Error.MEETING_NOT_CONFIRMED_EXCEPTION);
 
         List<String> fixedUserNames = userService.getFixedUsers(meeting);
 
@@ -160,7 +165,7 @@ public class MeetingService {
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
         if (!meeting.authenticateHost(userId))
-            throw new BadRequestException(INVALID_MEETING_HOST_EXCEPTION);
+            throw new UnauthorizedException(INVALID_MEETING_HOST_EXCEPTION);
 
         List<String> memberNames = userService.findUserNameByMeeting(meeting);
 

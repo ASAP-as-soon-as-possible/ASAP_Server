@@ -26,11 +26,11 @@ public enum Error {
     TOKEN_TIME_EXPIRED_EXCEPTION(HttpStatus.UNAUTHORIZED, "토큰이 유효하지 않습니다."),
     INVALID_MEETING_HOST_EXCEPTION(HttpStatus.UNAUTHORIZED, "해당 유저는 해당 방의 방장이 아닙니다."),
     INVALID_HOST_ID_PASSWORD_EXCEPTION(HttpStatus.UNAUTHORIZED, "유효하지 않은 사용자 이름 또는 비밀번호입니다."),
-
     /**
      * 403 FORBIDDEN
      */
     HOST_MEETING_TIME_NOT_PROVIDED(HttpStatus.FORBIDDEN, "회의 가능 시간이 입력되지 않았습니다."),
+    MEETING_NOT_CONFIRMED_EXCEPTION(HttpStatus.FORBIDDEN, "확정되지 않은 회의입니다."),
     /**
      * 404 NOT FOUND
      */
@@ -45,6 +45,7 @@ public enum Error {
      * 409 CONFLICT
      */
     MEETING_VALIDATION_FAILED_EXCEPTION(HttpStatus.CONFLICT, "이미 확정된 회의입니다."),
+    HOST_TIME_EXIST_EXCEPTION(HttpStatus.CONFLICT, "이미 방장의 회의 가능시간이 이미 존재합니다."),
     /**
      * 500 INTERNAL SERVER ERROR
      */
