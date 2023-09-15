@@ -66,12 +66,10 @@ public class UserService {
                                                      final List<UserMeetingTimeSaveRequestDto> requestDtos) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-        if(meeting.isConfirmedMeeting())
-            throw new ConflictException(MEETING_VALIDATION_FAILED_EXCEPTION);
         if (!meeting.authenticateHost(userId))
             throw new BadRequestException(INVALID_MEETING_HOST_EXCEPTION);
         if(!timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost()))
-            throw new BadRequestException(Error.HOST_TIME_EXIST_EXCEPTION);
+            throw new ConflictException(Error.HOST_TIME_EXIST_EXCEPTION);
 
         isDuplicatedDate(requestDtos);
         requestDtos.forEach(requestDto -> createUserTimeBlock(meeting, meeting.getHost(), requestDto));
