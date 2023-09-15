@@ -132,10 +132,10 @@ public class MeetingController {
     @SecurityRequirement(name = "JWT Auth")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회의 선택지가 성공적으로 조회되었습니다."),
-            @ApiResponse(responseCode = "400", description = "해당 유저는 해당 방의 방장이 아닙니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "해당 유저는 해당 방의 방장이 아닙니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "404",
-                    description = "1. 해당 회의는 존재하지 않습니다\n."
+                    description =
+                            "1. 해당 회의는 존재하지 않습니다.\n"
                             + "2. 해당 유저는 존재하지 않습니다.\n"
                             + "3. 회의 가능 일자가 존재하지 않습니다.\n"
                             + "4. 해당 회의의 가능 시간을 입력한 유저가 없습니다.",
