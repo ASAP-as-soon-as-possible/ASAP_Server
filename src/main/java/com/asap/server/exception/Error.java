@@ -45,7 +45,7 @@ public enum Error {
      * 409 CONFLICT
      */
     MEETING_VALIDATION_FAILED_EXCEPTION(HttpStatus.CONFLICT, "이미 확정된 회의입니다."),
-    HOST_TIME_EXIST_EXCEPTION(HttpStatus.CONFLICT, "해당 회의 방장의 가능시간이 이미 존재합니다. "),
+    HOST_TIME_EXIST_EXCEPTION(HttpStatus.CONFLICT, "해당 회의 방장의 가능시간이 이미 존재합니다."),
     /**
      * 500 INTERNAL SERVER ERROR
      */
