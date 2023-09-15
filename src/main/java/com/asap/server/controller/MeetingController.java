@@ -41,8 +41,10 @@ public class MeetingController {
     @Operation(summary = "[회의 생성 뷰] 회의 생성 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "회의가 성공적으로 생성되었습니다."),
-            @ApiResponse(responseCode = "400", description = "요청값이 유효하지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "400", description = "입력 형식이 맞지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "400",
+                    description = "1. 요청값이 유효하지 않습니다.\n"
+                            + "2. 입력 형식이 맞지 않습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping
