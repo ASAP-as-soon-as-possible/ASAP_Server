@@ -2,29 +2,31 @@ package com.asap.server.service;
 
 import com.asap.server.common.utils.BestMeetingUtil;
 import com.asap.server.common.utils.DateUtil;
+import com.asap.server.common.utils.PasswordEncryptionUtil;
 import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
 import com.asap.server.controller.dto.response.AvailableDatesDto;
 import com.asap.server.controller.dto.response.BestMeetingTimeResponseDto;
 import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
-import com.asap.server.controller.dto.response.MeetingTitleResponseDto;
 import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
 import com.asap.server.controller.dto.response.MeetingScheduleResponseDto;
+import com.asap.server.controller.dto.response.MeetingTitleResponseDto;
 import com.asap.server.controller.dto.response.TimeTableResponseDto;
 import com.asap.server.domain.ConfirmedDateTime;
 import com.asap.server.domain.Meeting;
+import com.asap.server.domain.PasswordInfo;
 import com.asap.server.domain.Place;
 import com.asap.server.domain.User;
 import com.asap.server.domain.enums.Role;
 import com.asap.server.exception.Error;
-import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.ForbiddenException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.service.vo.BestMeetingTimeVo;
+import com.asap.server.service.vo.PasswordInfoVo;
 import com.asap.server.service.vo.TimeBlocksByDateVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -52,10 +54,15 @@ public class MeetingService {
 
     @Transactional
     public MeetingSaveResponseDto create(final MeetingSaveRequestDto meetingSaveRequestDto) {
+        PasswordInfoVo passwordInfoVo = PasswordEncryptionUtil.encryptPassword(meetingSaveRequestDto.getPassword());
+        PasswordInfo passwordInfo = PasswordInfo.builder()
+                .password(passwordInfoVo.getEncryptedPassword())
+                .salt(passwordInfoVo.getSalt())
+                .build();
 
         Meeting meeting = Meeting.builder()
                 .title(meetingSaveRequestDto.getTitle())
-                .password(meetingSaveRequestDto.getPassword())
+                .passwordInfo(passwordInfo)
                 .additionalInfo(meetingSaveRequestDto.getAdditionalInfo())
                 .duration(meetingSaveRequestDto.getDuration())
                 .place(
@@ -111,7 +118,7 @@ public class MeetingService {
     public MeetingScheduleResponseDto getMeetingSchedule(Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-        if(meeting.isConfirmedMeeting())
+        if (meeting.isConfirmedMeeting())
             throw new ConflictException(MEETING_VALIDATION_FAILED_EXCEPTION);
 
 
