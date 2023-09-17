@@ -1,6 +1,5 @@
 package com.asap.server.service;
 
-import com.asap.server.common.utils.PasswordEncryptionUtil;
 import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.AvailableTimeRequestDto;
 import com.asap.server.controller.dto.request.HostLoginRequestDto;
@@ -23,17 +22,16 @@ import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.asap.server.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
-import static com.asap.server.exception.Error.MEETING_VALIDATION_FAILED_EXCEPTION;
 import static com.asap.server.exception.Error.USER_NOT_FOUND_EXCEPTION;
 
 
@@ -46,6 +44,7 @@ public class UserService {
     private final AvailableDateService availableDateService;
     private final MeetingRepository meetingRepository;
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
 
     public User createUser(final Meeting meeting,
                            final String hostName,
@@ -69,7 +68,7 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
         if (!meeting.authenticateHost(userId))
             throw new UnauthorizedException(INVALID_MEETING_HOST_EXCEPTION);
-        if(!timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost()))
+        if (!timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost()))
             throw new ConflictException(Error.HOST_TIME_EXIST_EXCEPTION);
 
         isDuplicatedDate(requestDtos);
@@ -162,8 +161,7 @@ public class UserService {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        String encryptedPassword = PasswordEncryptionUtil.encryptPassword(requestDto.getPassword(), meeting.getPasswordInfo().getSalt());
-        if (!meeting.authenticateHost(requestDto.getName(), encryptedPassword))
+        if (!passwordEncoder.matches(requestDto.getPassword(), meeting.getPassword()))
             throw new UnauthorizedException(Error.INVALID_HOST_ID_PASSWORD_EXCEPTION);
 
         if (timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost()))
