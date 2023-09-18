@@ -99,11 +99,13 @@ public class AvailableDateService {
     public void create(final Meeting meeting, final List<String> availableDates) {
         availableDates
                 .stream()
+                .sorted()
                 .map(s -> availableDateRepository.save(
                         AvailableDate.builder()
                                 .meeting(meeting)
                                 .date(dateFormatter(s.substring(0, 10)))
                                 .build()
-                )).collect(Collectors.toList());
+                ))
+                .collect(Collectors.toList());
     }
 }

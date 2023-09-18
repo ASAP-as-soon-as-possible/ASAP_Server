@@ -31,13 +31,13 @@ public class MeetingSaveRequestDto {
     private List<PreferTimeSaveRequestDto> preferTimes;
 
     @NotNull(message = "회의 형식이 입력되지 않았습니다.")
-    @Schema(description = "회의 방식", example = "ONLINE")
+    @Schema(description = "회의 방식", example = "ONLINE", allowableValues = {"ONLINE", "OFFLINE", "UNDEFINED"})
     private PlaceType place;
 
     @Schema(description = "회의 장소 설명")
     private String placeDetail;
 
-    @Schema(description = "회의 진행 시간", example = "HALF")
+    @Schema(description = "회의 진행 시간", example = "HALF", allowableValues = {"HALF" , "HOUR", "HOUR_HALF", "TWO_HOUR", "TWO_HOUR_HALF", "THREE_HOUR"})
     @NotNull(message = "회의 진행 시간이 입력되지 않았습니다.")
     private Duration duration;
 

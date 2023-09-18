@@ -40,7 +40,18 @@ public class UserController {
     @SecurityRequirement(name = "JWT Auth")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "유효한 회의 입니다."),
+            @ApiResponse(responseCode = "400",
+                    description = "1. 시간 형식이 잘못되었습니다. [YYYY/MM/DD HH:MM]\n"
+                            + "2. 중복 입력된 시간이 있습니다.\n"
+                            + "3. 입력한 시간이 회의 가능 일시에 해당하지 않습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401",
+                    description = "1. 방장의 토큰이 필요합니다.\n"
+                            + "2. 토큰이 유효하지 않습니다.\n"
+                            + "3. 해당 유저는 해당 방의 방장이 아닙니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "404", description = "해당 회의는 존재하지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "해당 회의 방장의 가능시간이 이미 존재합니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("/host/{meetingId}/time")
@@ -56,7 +67,11 @@ public class UserController {
     @Operation(summary = "[회의 가능 시간 입력 뷰 - 참여자] 참여자 정보 및 가능 시간 입력 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회의 선택지가 성공적으로 조회되었습니다."),
-            @ApiResponse(responseCode = "401", description = "해당 유저는 해당 방의 방장이 아닙니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "400",
+                    description = "1. 시간 형식이 잘못되었습니다. [YYYY/MM/DD HH:MM]\n"
+                            + "2. 중복 입력된 시간이 있습니다.\n"
+                            + "3. 입력한 시간이 회의 가능 일시에 해당하지 않습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "404", description = "해당 회의는 존재하지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("/{meetingId}/time")
@@ -71,7 +86,12 @@ public class UserController {
     @Operation(summary = "[방장 입장 뷰] 방장 로그인 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회의 선택지가 성공적으로 조회되었습니다."),
+            @ApiResponse(responseCode = "400",
+                    description = "1. 방장 이름의 최대 입력 길이(8자)를 초과했습니다.\n"
+                            + "2. 비밀번호는 4자리 이상 숫자입니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "유효하지 않은 사용자 이름 또는 비밀번호입니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "회의 가능 시간이 입력되지 않았습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "404", description = "해당 회의는 존재하지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("{meetingId}/host")

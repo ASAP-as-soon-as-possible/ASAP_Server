@@ -15,12 +15,14 @@ import com.asap.server.domain.enums.Role;
 import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
+import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.ForbiddenException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +34,7 @@ import java.util.stream.Collectors;
 import static com.asap.server.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
 import static com.asap.server.exception.Error.USER_NOT_FOUND_EXCEPTION;
 
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -41,6 +44,7 @@ public class UserService {
     private final AvailableDateService availableDateService;
     private final MeetingRepository meetingRepository;
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
 
     public User createUser(final Meeting meeting,
                            final String hostName,
@@ -62,9 +66,10 @@ public class UserService {
                                                      final List<UserMeetingTimeSaveRequestDto> requestDtos) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-
         if (!meeting.authenticateHost(userId))
-            throw new BadRequestException(INVALID_MEETING_HOST_EXCEPTION);
+            throw new UnauthorizedException(INVALID_MEETING_HOST_EXCEPTION);
+        if (!timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost()))
+            throw new ConflictException(Error.HOST_TIME_EXIST_EXCEPTION);
 
         isDuplicatedDate(requestDtos);
         requestDtos.forEach(requestDto -> createUserTimeBlock(meeting, meeting.getHost(), requestDto));
@@ -156,7 +161,7 @@ public class UserService {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        if (!meeting.authenticateHost(requestDto.getName(), requestDto.getPassword()))
+        if (!passwordEncoder.matches(requestDto.getPassword(), meeting.getPassword()))
             throw new UnauthorizedException(Error.INVALID_HOST_ID_PASSWORD_EXCEPTION);
 
         if (timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost()))

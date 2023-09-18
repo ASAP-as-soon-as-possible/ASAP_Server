@@ -53,9 +53,6 @@ public class Meeting extends AuditingTimeEntity {
     @Embedded
     private ConfirmedDateTime confirmedDateTime;
 
-    public boolean authenticateHost(final String name, final String password) {
-        return this.host.getName().equals(name) && this.password.equals(password);
-    }
 
     public boolean authenticateHost(final Long userId) {
         return this.host.getId().equals(userId);
