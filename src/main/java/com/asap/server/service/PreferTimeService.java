@@ -10,6 +10,7 @@ import com.asap.server.repository.PreferTimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ public class PreferTimeService {
     public void create(final Meeting meeting,
                        final List<PreferTimeSaveRequestDto> saveRequestDtos) {
         saveRequestDtos.stream()
+                .sorted(Comparator.comparing(preferTime -> preferTime.getStartTime().getTime()))
                 .map(preferTime -> preferTimeRepository.save(
                         PreferTime.builder()
                                 .meeting(meeting)
