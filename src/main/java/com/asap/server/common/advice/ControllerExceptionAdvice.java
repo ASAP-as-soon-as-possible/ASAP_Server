@@ -4,14 +4,11 @@ import com.asap.server.common.dto.ErrorResponse;
 import com.asap.server.common.utils.SlackUtil;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.AsapException;
-import com.asap.server.exception.model.ConflictException;
-import com.asap.server.exception.model.ForbiddenException;
-import com.asap.server.exception.model.NotFoundException;
-import com.asap.server.exception.model.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -22,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import java.io.IOException;
+
+import static com.asap.server.exception.Error.METHOD_NOT_ALLOWED_EXCEPTION;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
@@ -62,6 +61,17 @@ public class ControllerExceptionAdvice {
     @ExceptionHandler(ConstraintViolationException.class)
     protected ErrorResponse handleValidationException(final ConstraintViolationException e) {
         return ErrorResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION);
+    }
+
+    /**
+     * 405 Method Not Allowed
+     * 지원하지 않은 HTTP method 호출 할 경우 발생하는 Exception
+     */
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    protected ErrorResponse handleHttpRequestMethodNotSupportedException(
+            HttpRequestMethodNotSupportedException exception) {
+        return ErrorResponse.error(METHOD_NOT_ALLOWED_EXCEPTION);
     }
 
 //    /**

@@ -41,6 +41,11 @@ public enum Error {
     TIME_BLOCK_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 회의의 가능 시간을 입력한 유저가 없습니다."),
     AVAILABLE_DATE_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "회의 가능 일자가 존재하지 않습니다."),
     PREFER_TIME_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "회의 선호 시간대가 존재하지 않습니다."),
+
+    /**
+     * 405 METHOD_NOT_ALLOWED
+     */
+    METHOD_NOT_ALLOWED_EXCEPTION(HttpStatus.METHOD_NOT_ALLOWED, "지원하지 않는 메소드 입니다."),
     /**
      * 409 CONFLICT
      */
