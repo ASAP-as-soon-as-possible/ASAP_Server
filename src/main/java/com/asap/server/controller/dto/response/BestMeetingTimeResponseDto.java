@@ -3,11 +3,13 @@ package com.asap.server.controller.dto.response;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Getter
+@ToString
 @AllArgsConstructor
 public class BestMeetingTimeResponseDto {
     private int memberCount;
