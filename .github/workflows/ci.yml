@@ -30,6 +30,8 @@ jobs:
     - name: make application.properties 파일 생성
       run: |
         ## create application.yml
+        rm -r ./src/main/resources
+        mkdir ./src/main/resources
         cd ./src/main/resources
 
         # application.yml 파일 생성
