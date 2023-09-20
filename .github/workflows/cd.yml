@@ -33,7 +33,6 @@ jobs:
     - name: make application.properties 파일 생성
       run: |
         ## create application.yml
-        mkdir ./src/main/resources
         cd ./src/main/resources
 
         # application.yml 파일 생성
@@ -51,7 +50,7 @@ jobs:
       run: chmod +x gradlew
       
     - name: Build with Gradle # 실제 application build(-x 옵션을 통해 test는 제외)
-      run: ./gradlew build -x test
+      run: ./gradlew build -PactiveProfiles=local
       
     # 디렉토리 생성
     - name: Make Directory
