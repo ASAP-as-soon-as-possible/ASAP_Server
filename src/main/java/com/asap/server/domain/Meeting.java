@@ -58,6 +58,10 @@ public class Meeting extends AuditingTimeEntity {
         return this.host.getId().equals(userId);
     }
 
+    public boolean checkHostName(final String name) {
+        return this.host.getName().equals(name);
+    }
+
     public boolean isConfirmedMeeting() {
         return this.confirmedDateTime != null;
     }
