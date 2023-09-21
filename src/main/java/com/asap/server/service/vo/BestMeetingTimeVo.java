@@ -4,11 +4,13 @@ import com.asap.server.domain.enums.TimeSlot;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Getter
+@ToString
 @AllArgsConstructor
 @EqualsAndHashCode
 public class BestMeetingTimeVo {

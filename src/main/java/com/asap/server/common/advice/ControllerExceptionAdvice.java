@@ -5,6 +5,7 @@ import com.asap.server.common.utils.SlackUtil;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.AsapException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -22,6 +23,7 @@ import java.io.IOException;
 
 import static com.asap.server.exception.Error.METHOD_NOT_ALLOWED_EXCEPTION;
 
+@Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class ControllerExceptionAdvice {
@@ -116,6 +118,7 @@ public class ControllerExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     protected ErrorResponse handleException(final Exception error, final HttpServletRequest request) throws IOException {
+        log.error(error.getMessage(), error);
         slackUtil.sendAlert(error, request);
         return ErrorResponse.error(Error.INTERNAL_SERVER_ERROR);
     }

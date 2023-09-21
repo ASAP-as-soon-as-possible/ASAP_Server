@@ -4,8 +4,10 @@ import com.asap.server.exception.Error;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@ToString
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ErrorResponse {
     private final int code;
