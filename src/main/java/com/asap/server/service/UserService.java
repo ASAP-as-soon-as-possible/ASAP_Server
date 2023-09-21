@@ -149,7 +149,7 @@ public class UserService {
         });
     }
 
-    public int getMeetingUserCount(Meeting meeting) {
+    public int getMeetingUserCount(final Meeting meeting) {
         return userRepository.countByMeeting(meeting);
     }
 
@@ -160,6 +160,9 @@ public class UserService {
     ) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
+
+        if (!meeting.checkHostName(requestDto.getName()))
+            throw new UnauthorizedException(Error.INVALID_HOST_ID_PASSWORD_EXCEPTION);
 
         if (!passwordEncoder.matches(requestDto.getPassword(), meeting.getPassword()))
             throw new UnauthorizedException(Error.INVALID_HOST_ID_PASSWORD_EXCEPTION);
