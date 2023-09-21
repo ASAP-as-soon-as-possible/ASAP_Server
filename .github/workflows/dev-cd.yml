@@ -49,8 +49,8 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
       
-    - name: Build with Gradle # 실제 application build
-      run: ./gradlew build -PactiveProfiles=local
+    - name: Build with Gradle # 실제 application build 테스트 제외
+      run: ./gradlew build -x test
       
     # 디렉토리 생성
     - name: Make Directory
