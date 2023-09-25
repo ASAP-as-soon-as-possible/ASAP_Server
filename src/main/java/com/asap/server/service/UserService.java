@@ -111,7 +111,7 @@ public class UserService {
                                      final User user,
                                      final UserMeetingTimeSaveRequestDto requestDto) {
         AvailableDate availableDate = availableDateService.findByMeetingAndDate(meeting, requestDto.getMonth(), requestDto.getDay());
-        TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal() - 1)
+        TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal())
                 .stream()
                 .map(timeSlot -> timeBlockService.searchTimeBlock(timeSlot, availableDate, requestDto.getPriority())).collect(Collectors.toList())
                 .forEach(timeBlock -> timeBlock.addTimeBlockUsers(timeBlockUserService.create(timeBlock, user)));
@@ -121,7 +121,7 @@ public class UserService {
         Map<String, List<TimeSlot>> meetingTimeAvailable = new HashMap<>();
         for (UserMeetingTimeSaveRequestDto requestDto : requestDtoList) {
             String col = String.format("%s %s %s", requestDto.getMonth(), requestDto.getDay(), requestDto.getDayOfWeek());
-            List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal() - 1);
+            List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal());
             if (meetingTimeAvailable.containsKey(col)) {
                 if (meetingTimeAvailable.get(col).stream().anyMatch(timeSlots::contains)) {
                     throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
