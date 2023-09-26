@@ -19,6 +19,7 @@ import static com.asap.server.domain.enums.TimeSlot.SLOT_12_30;
 import static com.asap.server.domain.enums.TimeSlot.SLOT_13_00;
 import static com.asap.server.domain.enums.TimeSlot.SLOT_13_30;
 import static com.asap.server.domain.enums.TimeSlot.SLOT_14_00;
+import static com.asap.server.domain.enums.TimeSlot.SLOT_14_30;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class GetBestMeetingTimeTest {
@@ -37,15 +38,12 @@ public class GetBestMeetingTimeTest {
         List<UserVo> users = List.of(userVo);
 
         TimeBlockVo timeBlockByMeetingDate = new TimeBlockVo(1L, 0, SLOT_12_00, users);
-        TimeBlockVo timeBlock2ByMeetingDate = new TimeBlockVo(1L, 0, SLOT_12_30, users);
-        List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate, timeBlock2ByMeetingDate));
+        List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate));
 
         LocalDate meetingDate = LocalDate.of(2023, 7, 10);
-        LocalDate meetingDate2 = LocalDate.of(2023, 7, 11);
 
         TimeBlocksByDateVo timeBlocksByDate = new TimeBlocksByDateVo(1L, meetingDate, timeBlocks);
-        TimeBlocksByDateVo timeBlocksByDate2 = new TimeBlocksByDateVo(2L, meetingDate2, new ArrayList<>());
-        List<TimeBlocksByDateVo> timeBlocksByDates = Arrays.asList(timeBlocksByDate, timeBlocksByDate2);
+        List<TimeBlocksByDateVo> timeBlocksByDates = Arrays.asList(timeBlocksByDate);
 
         BestMeetingTimeVo result = new BestMeetingTimeVo(meetingDate, SLOT_12_00, SLOT_12_30, users, 0);
 
@@ -67,12 +65,10 @@ public class GetBestMeetingTimeTest {
         LocalDate meetingDate2 = LocalDate.of(2023, 7, 11);
 
         TimeBlockVo timeBlockByMeetingDate = new TimeBlockVo(1L, 0, SLOT_12_00, users);
-        TimeBlockVo timeBlock2ByMeetingDate = new TimeBlockVo(1L, 0, SLOT_12_30, users);
-        List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate, timeBlock2ByMeetingDate));
+        List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate));
 
         TimeBlockVo timeBlockByMeetingDate2 = new TimeBlockVo(1L, 0, SLOT_12_30, users);
-        TimeBlockVo timeBlock2ByMeetingDate2 = new TimeBlockVo(1L, 0, SLOT_13_00, users);
-        List<TimeBlockVo> timeBlocks2 = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate2, timeBlock2ByMeetingDate2));
+        List<TimeBlockVo> timeBlocks2 = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate2));
 
         TimeBlocksByDateVo timeBlocksByDate = new TimeBlocksByDateVo(1L, meetingDate, timeBlocks);
         TimeBlocksByDateVo timeBlocksByDate2 = new TimeBlocksByDateVo(2L, meetingDate2, timeBlocks2);
@@ -105,16 +101,15 @@ public class GetBestMeetingTimeTest {
 
         TimeBlockVo timeBlockByMeetingDate2 = new TimeBlockVo(1L, 0, SLOT_12_30, users);
         TimeBlockVo timeBlock2ByMeetingDate2 = new TimeBlockVo(1L, 0, SLOT_13_00, users);
-        TimeBlockVo timeBlock3ByMeetingDate2 = new TimeBlockVo(1L, 0, SLOT_13_30, users);
-        List<TimeBlockVo> timeBlocks2 = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate2, timeBlock2ByMeetingDate2, timeBlock3ByMeetingDate2));
+        List<TimeBlockVo> timeBlocks2 = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate2, timeBlock2ByMeetingDate2));
 
         TimeBlocksByDateVo timeBlocksByDate = new TimeBlocksByDateVo(1L, meetingDate, timeBlocks);
         TimeBlocksByDateVo timeBlocksByDate2 = new TimeBlocksByDateVo(2L, meetingDate2, timeBlocks2);
         List<TimeBlocksByDateVo> timeBlocksByDates = Arrays.asList(timeBlocksByDate, timeBlocksByDate2);
 
         BestMeetingTimeVo result = new BestMeetingTimeVo(meetingDate, SLOT_12_00, SLOT_12_30, users, 0);
-        BestMeetingTimeVo result2 = new BestMeetingTimeVo(meetingDate2, SLOT_12_30, SLOT_13_00, users, 0);
-        BestMeetingTimeVo result3 = new BestMeetingTimeVo(meetingDate2, SLOT_13_00, SLOT_13_30, users, 0);
+        BestMeetingTimeVo result2 = new BestMeetingTimeVo(meetingDate, SLOT_12_30, SLOT_13_00, users, 0);
+        BestMeetingTimeVo result3 = new BestMeetingTimeVo(meetingDate2, SLOT_12_30, SLOT_13_00, users, 0);
 
         // when
         List<BestMeetingTimeVo> bestMeetingTimes = bestMeetingUtil.getBestMeetingTime(timeBlocksByDates, Duration.HALF, 2);
@@ -136,13 +131,11 @@ public class GetBestMeetingTimeTest {
 
         TimeBlockVo timeBlockByMeetingDate = new TimeBlockVo(1L, 0, SLOT_12_00, users);
         TimeBlockVo timeBlock2ByMeetingDate = new TimeBlockVo(1L, 0, SLOT_12_30, users);
-        TimeBlockVo timeBlock3ByMeetingDate = new TimeBlockVo(1L, 0, SLOT_13_00, users);
-        List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate, timeBlock2ByMeetingDate, timeBlock3ByMeetingDate));
+        List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate, timeBlock2ByMeetingDate));
 
         TimeBlockVo timeBlockByMeetingDate2 = new TimeBlockVo(1L, 0, SLOT_12_30, users);
         TimeBlockVo timeBlock2ByMeetingDate2 = new TimeBlockVo(1L, 0, SLOT_13_00, users);
-        TimeBlockVo timeBlock3ByMeetingDate2 = new TimeBlockVo(1L, 0, SLOT_13_30, users);
-        List<TimeBlockVo> timeBlocks2 = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate2, timeBlock2ByMeetingDate2, timeBlock3ByMeetingDate2));
+        List<TimeBlockVo> timeBlocks2 = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate2, timeBlock2ByMeetingDate2));
 
         TimeBlocksByDateVo timeBlocksByDate = new TimeBlocksByDateVo(1L, meetingDate, timeBlocks);
         TimeBlocksByDateVo timeBlocksByDate2 = new TimeBlocksByDateVo(2L, meetingDate2, timeBlocks2);
@@ -186,12 +179,12 @@ public class GetBestMeetingTimeTest {
         TimeBlocksByDateVo timeBlocksByDate2 = new TimeBlocksByDateVo(2L, meetingDate2, timeBlocks2);
         List<TimeBlocksByDateVo> timeBlocksByDates = Arrays.asList(timeBlocksByDate, timeBlocksByDate2);
 
-        BestMeetingTimeVo result = new BestMeetingTimeVo(meetingDate2, SLOT_13_00, SLOT_14_00, users, 18);
-        BestMeetingTimeVo result2 = new BestMeetingTimeVo(meetingDate2, SLOT_12_30, SLOT_13_30, users, 12);
-        BestMeetingTimeVo result3 = new BestMeetingTimeVo(meetingDate, SLOT_12_00, SLOT_13_00, users, 0);
+        BestMeetingTimeVo result = new BestMeetingTimeVo(meetingDate2, SLOT_13_00, SLOT_14_30, users, 18);
+        BestMeetingTimeVo result2 = new BestMeetingTimeVo(meetingDate2, SLOT_12_30, SLOT_14_00, users, 12);
+        BestMeetingTimeVo result3 = new BestMeetingTimeVo(meetingDate, SLOT_12_00, SLOT_13_30, users, 0);
 
         // when
-        List<BestMeetingTimeVo> bestMeetingTimes = bestMeetingUtil.getBestMeetingTime(timeBlocksByDates, Duration.HOUR, 2);
+        List<BestMeetingTimeVo> bestMeetingTimes = bestMeetingUtil.getBestMeetingTime(timeBlocksByDates, Duration.HOUR_HALF, 2);
 
         // then
         assertThat(bestMeetingTimes).isEqualTo(Arrays.asList(result, result2, result3));
