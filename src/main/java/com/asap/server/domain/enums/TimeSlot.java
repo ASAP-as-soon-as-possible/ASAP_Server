@@ -68,6 +68,15 @@ public enum TimeSlot {
         return result;
     }
 
+    // 특정 ordinal 의 time slot 반환
+    public static TimeSlot getTimeSlot(int ordinal) {
+        TimeSlot[] timeSlots = TimeSlot.values();
+        for (TimeSlot t : timeSlots) {
+            if (t.ordinal() == ordinal) return t;
+        }
+        return null;
+    }
+
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
     public static TimeSlot findByTime(String timeSlot) {
         return Stream.of(TimeSlot.values())
