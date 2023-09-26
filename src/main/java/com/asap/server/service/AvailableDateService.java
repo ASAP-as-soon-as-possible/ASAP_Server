@@ -7,6 +7,7 @@ import com.asap.server.controller.dto.response.TimeSlotDto;
 import com.asap.server.domain.AvailableDate;
 import com.asap.server.domain.Meeting;
 import com.asap.server.exception.Error;
+import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.repository.AvailableDateRepository;
 import com.asap.server.service.vo.TimeBlockVo;
@@ -97,6 +98,7 @@ public class AvailableDateService {
     }
 
     public void create(final Meeting meeting, final List<String> availableDates) {
+        if (isDuplicatedDate(availableDates)) throw new BadRequestException(Error.DUPLICATED_DATE_EXCEPTION);
         availableDates
                 .stream()
                 .sorted()
@@ -107,5 +109,9 @@ public class AvailableDateService {
                                 .build()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    private boolean isDuplicatedDate(final List<String> availableDates) {
+        return availableDates.size() != availableDates.stream().distinct().count();
     }
 }
