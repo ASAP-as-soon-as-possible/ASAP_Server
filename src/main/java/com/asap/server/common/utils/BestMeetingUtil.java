@@ -48,20 +48,21 @@ public class BestMeetingUtil {
         List<TimeBlockVo> sortedTimeBlocks = filterByUserCountAndSortByTime(timeBlocksByDate.getTimeBlocks(), userCount);
 
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>();
-        int endIndex = sortedTimeBlocks.size() - needTimeBlockCount;
+        int endIndex = sortedTimeBlocks.size() - needTimeBlockCount + 1;
         for (int timeBlockIdx = 0; timeBlockIdx < endIndex; timeBlockIdx++) {
             if (!isBestMeetingTime(sortedTimeBlocks, timeBlockIdx, needTimeBlockCount)) continue;
 
             int sumWeight = sortedTimeBlocks
-                    .subList(timeBlockIdx, timeBlockIdx + needTimeBlockCount + 1)
+                    .subList(timeBlockIdx, timeBlockIdx + needTimeBlockCount)
                     .stream()
                     .map(TimeBlockVo::getWeight)
                     .reduce(0, Integer::sum);
 
+            TimeSlot startTime = sortedTimeBlocks.get(timeBlockIdx).getTimeSlot();
             BestMeetingTimeVo bestMeetingTime = new BestMeetingTimeVo(
                     timeBlocksByDate.getDate(),
-                    sortedTimeBlocks.get(timeBlockIdx).getTimeSlot(),
-                    sortedTimeBlocks.get(timeBlockIdx + needTimeBlockCount).getTimeSlot(),
+                    startTime,
+                    TimeSlot.getTimeSlot(startTime.ordinal() + needTimeBlockCount),
                     sortedTimeBlocks.get(timeBlockIdx).getUsers(),
                     sumWeight
             );
@@ -81,7 +82,7 @@ public class BestMeetingUtil {
     private boolean isBestMeetingTime(final List<TimeBlockVo> timeBlocks, final int timeBlockIdx, final int needTimeBlockCount) {
         boolean isBestMeetingTime = true;
         TimeSlot nextTime = timeBlocks.get(timeBlockIdx).getTimeSlot();
-        for (int i = timeBlockIdx + 1; i <= timeBlockIdx + needTimeBlockCount; i++) {
+        for (int i = timeBlockIdx + 1; i < timeBlockIdx + needTimeBlockCount; i++) {
             if (nextTime.ordinal() + 1 != timeBlocks.get(i).getTimeSlot().ordinal()) {
                 isBestMeetingTime = false;
                 break;
