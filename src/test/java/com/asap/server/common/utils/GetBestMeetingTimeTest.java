@@ -189,4 +189,28 @@ public class GetBestMeetingTimeTest {
         // then
         assertThat(bestMeetingTimes).isEqualTo(Arrays.asList(result, result2, result3));
     }
+
+    @Test
+    @DisplayName("회의 시간이 30분이고, time block 이 1개 일 때, (해당 시간, null, null) 을 반환한다.")
+    public void getBestMeetingTime6() {
+        // given
+        UserVo userVo = new UserVo(1L, "강원용");
+        List<UserVo> users = Arrays.asList(userVo);
+
+        LocalDate meetingDate = LocalDate.of(2023, 7, 10);
+
+        TimeBlockVo timeBlockByMeetingDate = new TimeBlockVo(1L, 0, SLOT_12_00, users);
+        List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate));
+
+        TimeBlocksByDateVo timeBlocksByDate = new TimeBlocksByDateVo(1L, meetingDate, timeBlocks);
+        List<TimeBlocksByDateVo> timeBlocksByDates = Arrays.asList(timeBlocksByDate);
+
+        BestMeetingTimeVo result = new BestMeetingTimeVo(meetingDate, SLOT_12_00, SLOT_12_30, users, 0);
+
+        // when
+        List<BestMeetingTimeVo> bestMeetingTimes = bestMeetingUtil.getBestMeetingTime(timeBlocksByDates, Duration.HALF, 2);
+
+        // then
+        assertThat(bestMeetingTimes).isEqualTo(Arrays.asList(result, null, null));
+    }
 }
