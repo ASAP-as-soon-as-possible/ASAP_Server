@@ -100,8 +100,9 @@ public class MeetingService {
         userService.setFixedUsers(meetingConfirmRequestDto.getUsers());
 
         LocalDate fixedDate = DateUtil.transformLocalDate(meetingConfirmRequestDto.getMonth(), meetingConfirmRequestDto.getDay());
-        LocalTime startTime = LocalTime.parse(meetingConfirmRequestDto.getStartTime().getTime());
-        LocalTime endTime = LocalTime.parse(meetingConfirmRequestDto.getEndTime().getTime());
+
+        LocalTime startTime = DateUtil.parseTime(meetingConfirmRequestDto.getStartTime().getTime());
+        LocalTime endTime = DateUtil.parseTime(meetingConfirmRequestDto.getEndTime().getTime());
 
         LocalDateTime fixedStartDateTime = LocalDateTime.of(fixedDate, startTime);
         LocalDateTime fixedEndDateTime = LocalDateTime.of(fixedDate, endTime);
