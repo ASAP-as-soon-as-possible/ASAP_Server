@@ -1,7 +1,5 @@
 package com.asap.server.common.utils;
 
-import com.asap.server.domain.enums.TimeSlot;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -38,14 +36,20 @@ public class DateUtil {
     }
 
     public static String getTime(final LocalDateTime localDateTime) {
-        return localDateTime.toLocalTime().toString();
+        return parseTime(localDateTime.toLocalTime().toString());
     }
 
-    public static LocalTime parseTime(final String timeSlot) {
-        if (timeSlot.equals(TimeSlot.SLOT_24_00.getTime())) {
-            return LocalTime.parse("00:00");
+    public static LocalTime parseLocalTime(final String timeSlot) {
+        return LocalTime.parse(parseTime(timeSlot));
+    }
+
+    private static String parseTime(final String timeSlot) {
+        if (timeSlot.equals("24:00")) {
+            return "00:00";
+        } else if (timeSlot.equals("00:00")) {
+            return "24:00";
         } else {
-            return LocalTime.parse(timeSlot);
+            return timeSlot;
         }
     }
 }
