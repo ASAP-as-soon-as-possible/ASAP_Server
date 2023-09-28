@@ -61,7 +61,6 @@ public class UserService {
 
     @Transactional
     public UserMeetingTimeResponseDto createHostTime(final Long meetingId,
-                                                     final String url,
                                                      final Long userId,
                                                      final List<UserMeetingTimeSaveRequestDto> requestDtos) {
         Meeting meeting = meetingRepository.findById(meetingId)
@@ -77,7 +76,7 @@ public class UserService {
         String accessToken = jwtService.issuedToken(meeting.getHost().getId().toString());
 
         return UserMeetingTimeResponseDto.builder()
-                .url(url)
+                .url(meeting.getUrl())
                 .accessToken(accessToken)
                 .build();
     }
