@@ -2,7 +2,7 @@ package com.asap.server.controller;
 
 import com.asap.server.common.dto.ErrorResponse;
 import com.asap.server.common.dto.SuccessResponse;
-import com.asap.server.config.resolver.meeting.MeetingId;
+import com.asap.server.config.resolver.meeting.MeetingPathVariable;
 import com.asap.server.config.resolver.user.UserId;
 import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
@@ -15,6 +15,7 @@ import com.asap.server.exception.Success;
 import com.asap.server.service.MeetingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,7 +24,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -83,9 +83,8 @@ public class MeetingController {
     @PostMapping("/{meetingId}/confirm")
     @SecurityRequirement(name = "JWT Auth")
     public SuccessResponse confirmMeeting(
-            @PathVariable("meetingId") String _meetingId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @MeetingPathVariable("meetingId") final Long meetingId,
             @RequestBody @Valid final MeetingConfirmRequestDto meetingConfirmRequestDto,
-            @MeetingId final Long meetingId,
             @UserId @Parameter(hidden = true) final Long userId
     ) {
         meetingService.confirmMeeting(meetingConfirmRequestDto, meetingId, userId);
@@ -105,8 +104,7 @@ public class MeetingController {
     })
     @GetMapping("/{meetingId}/schedule")
     public SuccessResponse getMeetingSchedule(
-            @PathVariable("meetingId") final String _meetingId,
-            @MeetingId final Long meetingId
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @MeetingPathVariable("meetingId") final Long meetingId
     ) {
         return SuccessResponse.success(Success.FIND_MEETING_SCHEDULE_SUCCESS, meetingService.getMeetingSchedule(meetingId));
     }
@@ -122,8 +120,7 @@ public class MeetingController {
     })
     @GetMapping("/{meetingId}/card")
     public SuccessResponse<FixedMeetingResponseDto> getFixedMeetingInformation(
-            @PathVariable("meetingId") final String _meetingId,
-            @MeetingId final Long meetingId
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @MeetingPathVariable("meetingId") final Long meetingId
     ) {
         return SuccessResponse.success(Success.FIXED_MEETING_SUCCESS, meetingService.getFixedMeetingInformation(meetingId));
     }
@@ -137,15 +134,14 @@ public class MeetingController {
             @ApiResponse(responseCode = "404",
                     description =
                             "1. 해당 회의는 존재하지 않습니다.\n"
-                            + "2. 해당 유저는 존재하지 않습니다.\n"
-                            + "3. 회의 가능 일자가 존재하지 않습니다.\n"
-                            + "4. 해당 회의의 가능 시간을 입력한 유저가 없습니다.",
+                                    + "2. 해당 유저는 존재하지 않습니다.\n"
+                                    + "3. 회의 가능 일자가 존재하지 않습니다.\n"
+                                    + "4. 해당 회의의 가능 시간을 입력한 유저가 없습니다.",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public SuccessResponse<TimeTableResponseDto> getTimeTable(
-            @PathVariable("meetingId") final String _meetingId,
-            @UserId @Parameter(hidden = true) final Long userId,
-            @MeetingId final Long meetingId
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @MeetingPathVariable("meetingId") final Long meetingId,
+            @UserId @Parameter(hidden = true) final Long userId
     ) {
         return SuccessResponse.success(Success.FIND_TIME_TABLE_SUCCESS, meetingService.getTimeTable(userId, meetingId));
     }
@@ -163,8 +159,7 @@ public class MeetingController {
     })
     @GetMapping("/{meetingId}")
     public SuccessResponse<MeetingTitleResponseDto> getIsFixedMeeting(
-            @PathVariable("meetingId") final String _meetingId,
-            @MeetingId final Long meetingId
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @MeetingPathVariable("meetingId") final Long meetingId
     ) {
         return SuccessResponse.success(Success.MEETING_VALIDATION_SUCCESS, meetingService.getIsFixedMeeting(meetingId));
     }
@@ -182,8 +177,7 @@ public class MeetingController {
     @GetMapping("/{meetingId}/details")
     @SecurityRequirement(name = "JWT Auth")
     public SuccessResponse<BestMeetingTimeResponseDto> getBestMeetingTime(
-            @PathVariable("meetingId") String _meetingId,
-            @MeetingId Long meetingId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @MeetingPathVariable("meetingId") final Long meetingId,
             @Parameter(hidden = true) @UserId Long userId
     ) {
         return SuccessResponse.success(Success.BEST_MEETING_SUCCESS, meetingService.getBestMeetingTime(meetingId, userId));
