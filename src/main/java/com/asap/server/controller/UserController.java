@@ -56,7 +56,7 @@ public class UserController {
     })
     @PostMapping("/host/{meetingId}/time")
     public SuccessResponse createHostTime(
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @MeetingPathVariable("meetingId") final Long meetingId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @MeetingPathVariable final Long meetingId,
             @RequestBody final List<@Valid UserMeetingTimeSaveRequestDto> requestDtoList,
             @UserId @Parameter(hidden = true) final Long userId
     ) {
@@ -75,7 +75,7 @@ public class UserController {
     })
     @PostMapping("/{meetingId}/time")
     public SuccessResponse createMemberTime(
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @MeetingPathVariable("meetingId") final Long meetingId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @MeetingPathVariable final Long meetingId,
             @RequestBody @Valid final AvailableTimeRequestDto requestDto
     ) {
         return SuccessResponse.success(Success.CREATE_MEETING_TIME_SUCCESS, userService.createUserTime(meetingId, requestDto));
@@ -94,7 +94,7 @@ public class UserController {
     })
     @PostMapping("{meetingId}/host")
     public SuccessResponse loginByHost(
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @MeetingPathVariable("meetingId") final Long meetingId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @MeetingPathVariable final Long meetingId,
             @RequestBody @Valid final HostLoginRequestDto requestDto
     ) {
         return SuccessResponse.success(Success.LOGIN_SUCCESS, userService.loginByHost(meetingId, requestDto));
