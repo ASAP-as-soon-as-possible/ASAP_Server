@@ -1,10 +1,12 @@
 package com.asap.server.common.dto;
 
 import com.asap.server.exception.Error;
+import lombok.Getter;
 
+@Getter
 public class ErrorDataResponse<T> extends ErrorResponse {
 
-    public T data;
+    private T data;
     private ErrorDataResponse(int code, String message, T data) {
         super(code, message);
         this.data = data;
