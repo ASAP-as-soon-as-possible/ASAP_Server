@@ -2,7 +2,7 @@ package com.asap.server.controller;
 
 import com.asap.server.common.dto.ErrorResponse;
 import com.asap.server.common.dto.SuccessResponse;
-import com.asap.server.config.resolver.meeting.MeetingId;
+import com.asap.server.config.resolver.meeting.MeetingPathVariable;
 import com.asap.server.config.resolver.user.UserId;
 import com.asap.server.controller.dto.request.AvailableTimeRequestDto;
 import com.asap.server.controller.dto.request.HostLoginRequestDto;
@@ -11,6 +11,7 @@ import com.asap.server.exception.Success;
 import com.asap.server.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,7 +20,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,12 +56,11 @@ public class UserController {
     })
     @PostMapping("/host/{meetingId}/time")
     public SuccessResponse createHostTime(
-            @PathVariable("meetingId") final String _meetingId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @MeetingPathVariable final Long meetingId,
             @RequestBody final List<@Valid UserMeetingTimeSaveRequestDto> requestDtoList,
-            @UserId @Parameter(hidden = true) final Long userId,
-            @MeetingId final Long meetingId
+            @UserId @Parameter(hidden = true) final Long userId
     ) {
-        return SuccessResponse.success(Success.CREATE_HOST_TIME_SUCCESS, userService.createHostTime(meetingId, _meetingId, userId, requestDtoList));
+        return SuccessResponse.success(Success.CREATE_HOST_TIME_SUCCESS, userService.createHostTime(meetingId, userId, requestDtoList));
     }
 
     @Operation(summary = "[회의 가능 시간 입력 뷰 - 참여자] 참여자 정보 및 가능 시간 입력 API")
@@ -76,9 +75,8 @@ public class UserController {
     })
     @PostMapping("/{meetingId}/time")
     public SuccessResponse createMemberTime(
-            @PathVariable("meetingId") final String _meetingId,
-            @RequestBody @Valid final AvailableTimeRequestDto requestDto,
-            @MeetingId final Long meetingId
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @MeetingPathVariable final Long meetingId,
+            @RequestBody @Valid final AvailableTimeRequestDto requestDto
     ) {
         return SuccessResponse.success(Success.CREATE_MEETING_TIME_SUCCESS, userService.createUserTime(meetingId, requestDto));
     }
@@ -96,9 +94,8 @@ public class UserController {
     })
     @PostMapping("{meetingId}/host")
     public SuccessResponse loginByHost(
-            @PathVariable("meetingId") final String _meetingId,
-            @RequestBody @Valid final HostLoginRequestDto requestDto,
-            @MeetingId final Long meetingId
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @MeetingPathVariable final Long meetingId,
+            @RequestBody @Valid final HostLoginRequestDto requestDto
     ) {
         return SuccessResponse.success(Success.LOGIN_SUCCESS, userService.loginByHost(meetingId, requestDto));
     }
