@@ -7,8 +7,6 @@ import com.asap.server.config.resolver.user.UserId;
 import com.asap.server.controller.dto.request.AvailableTimeRequestDto;
 import com.asap.server.controller.dto.request.HostLoginRequestDto;
 import com.asap.server.controller.dto.request.UserMeetingTimeSaveRequestDto;
-import com.asap.server.controller.dto.response.HostLoginStatusDto;
-import com.asap.server.exception.Error;
 import com.asap.server.exception.Success;
 import com.asap.server.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +19,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -100,10 +97,6 @@ public class UserController {
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @MeetingPathVariable final Long meetingId,
             @RequestBody @Valid final HostLoginRequestDto requestDto
     ) {
-        HostLoginStatusDto statusDto = userService.loginByHost(meetingId, requestDto);
-        if(statusDto.getHttpStatus().equals(HttpStatus.FORBIDDEN)) {
-            return SuccessResponse.success(Error.HOST_MEETING_TIME_NOT_PROVIDED, statusDto.getHostLoginResponseDto());
-        }
-        return SuccessResponse.success(Success.LOGIN_SUCCESS, statusDto.getHostLoginResponseDto());
+        return SuccessResponse.success(Success.LOGIN_SUCCESS, userService.loginByHost(meetingId, requestDto));
     }
 }

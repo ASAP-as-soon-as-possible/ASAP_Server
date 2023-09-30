@@ -6,7 +6,6 @@ import com.asap.server.controller.dto.request.HostLoginRequestDto;
 import com.asap.server.controller.dto.request.UserMeetingTimeSaveRequestDto;
 import com.asap.server.controller.dto.request.UserRequestDto;
 import com.asap.server.controller.dto.response.HostLoginResponseDto;
-import com.asap.server.controller.dto.response.HostLoginStatusDto;
 import com.asap.server.controller.dto.response.UserMeetingTimeResponseDto;
 import com.asap.server.controller.dto.response.UserTimeResponseDto;
 import com.asap.server.domain.AvailableDate;
@@ -17,13 +16,12 @@ import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
-import com.asap.server.exception.model.ForbiddenException;
+import com.asap.server.exception.model.HostTimeForbiddenException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -155,7 +153,7 @@ public class UserService {
     }
 
     @Transactional
-    public HostLoginStatusDto loginByHost(
+    public HostLoginResponseDto loginByHost(
             final Long meetingId,
             final HostLoginRequestDto requestDto
     ) {
@@ -172,17 +170,10 @@ public class UserService {
                 .builder()
                 .accessToken(jwtService.issuedToken(meeting.getHost().getId().toString()))
                 .build();
-
         if (timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost())) {
-            return HostLoginStatusDto.builder()
-                    .httpStatus(HttpStatus.FORBIDDEN)
-                    .hostLoginResponseDto(responseDto)
-                    .build();
+            throw new HostTimeForbiddenException(Error.HOST_MEETING_TIME_NOT_PROVIDED, responseDto);
         }
 
-        return HostLoginStatusDto.builder()
-                .httpStatus(HttpStatus.OK)
-                .hostLoginResponseDto(responseDto)
-                .build();
+        return responseDto;
     }
 }
