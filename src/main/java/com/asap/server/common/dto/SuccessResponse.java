@@ -1,6 +1,5 @@
 package com.asap.server.common.dto;
 
-import com.asap.server.exception.Error;
 import com.asap.server.exception.Success;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,9 +20,6 @@ public class SuccessResponse<T> {
         return new SuccessResponse<>(success.getHttpStatusCode(), success.getMessage());
     }
 
-    public static <T> SuccessResponse success(Error error, T data) {
-        return new SuccessResponse<T>(error.getHttpStatusCode(), error.getMessage(), data);
-    }
 
     public static <T> SuccessResponse<T> success(Success success, T data) {
         return new SuccessResponse<T>(success.getHttpStatusCode(), success.getMessage(), data);
