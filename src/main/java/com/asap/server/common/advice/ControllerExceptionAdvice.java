@@ -4,6 +4,7 @@ import com.asap.server.common.dto.ErrorResponse;
 import com.asap.server.common.utils.SlackUtil;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.AsapException;
+import com.asap.server.exception.model.HostTimeForbiddenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -93,6 +94,15 @@ public class ControllerExceptionAdvice {
 //    protected ErrorResponse handleForbiddenException(final ForbiddenException e) {
 //        return ErrorResponse.error(e.getError());
 //    }
+
+    /**
+     * 403 Forbidden
+     */
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(HostTimeForbiddenException.class)
+    protected ErrorResponse handleForbiddenException(final HostTimeForbiddenException e) {
+        return ErrorResponse.error(e.getError(), e.getMessage(), e.getData());
+    }
 
 //    /**
 //     * 404 Not Found
