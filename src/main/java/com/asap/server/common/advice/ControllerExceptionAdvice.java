@@ -1,7 +1,9 @@
 package com.asap.server.common.advice;
 
+import com.asap.server.common.dto.ErrorDataResponse;
 import com.asap.server.common.dto.ErrorResponse;
 import com.asap.server.common.utils.SlackUtil;
+import com.asap.server.controller.dto.response.HostLoginResponseDto;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.AsapException;
 import com.asap.server.exception.model.HostTimeForbiddenException;
@@ -100,8 +102,8 @@ public class ControllerExceptionAdvice {
      */
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(HostTimeForbiddenException.class)
-    protected ErrorResponse handleForbiddenException(final HostTimeForbiddenException e) {
-        return ErrorResponse.error(e.getError(), e.getMessage(), e.getData());
+    protected ErrorDataResponse<HostLoginResponseDto> handleForbiddenException(final HostTimeForbiddenException e) {
+        return ErrorDataResponse.error(e.getError(), e.getMessage(), e.getData());
     }
 
 //    /**
