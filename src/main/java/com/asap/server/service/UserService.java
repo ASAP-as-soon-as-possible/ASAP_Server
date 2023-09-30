@@ -16,7 +16,7 @@ import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
-import com.asap.server.exception.model.ForbiddenException;
+import com.asap.server.exception.model.HostTimeForbiddenException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.MeetingRepository;
@@ -166,12 +166,14 @@ public class UserService {
         if (!passwordEncoder.matches(requestDto.getPassword(), meeting.getPassword()))
             throw new UnauthorizedException(Error.INVALID_HOST_ID_PASSWORD_EXCEPTION);
 
-        if (timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost()))
-            throw new ForbiddenException(Error.HOST_MEETING_TIME_NOT_PROVIDED);
-
-        return HostLoginResponseDto
+        HostLoginResponseDto responseDto = HostLoginResponseDto
                 .builder()
                 .accessToken(jwtService.issuedToken(meeting.getHost().getId().toString()))
                 .build();
+        if (timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost())) {
+            throw new HostTimeForbiddenException(Error.HOST_MEETING_TIME_NOT_PROVIDED, responseDto);
+        }
+
+        return responseDto;
     }
 }

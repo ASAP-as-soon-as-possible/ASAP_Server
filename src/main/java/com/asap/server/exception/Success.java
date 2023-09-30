@@ -25,6 +25,7 @@ public enum Success {
     CREATE_MEETING_SUCCESS(HttpStatus.CREATED, "회의가 성공적으로 생성되었습니다."),
     CREATE_MEETING_TIME_SUCCESS(HttpStatus.CREATED, "참여자 회의 가능 시간 입력을 성공하였습니다."),
     CREATE_HOST_TIME_SUCCESS(HttpStatus.CREATED, "방장의 회의 가능 시간이 성공적으로 입력되었습니다.");
+
     private final HttpStatus httpStatus;
     private final String message;
 
