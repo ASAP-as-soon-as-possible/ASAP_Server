@@ -6,6 +6,7 @@ import com.asap.server.controller.dto.request.HostLoginRequestDto;
 import com.asap.server.controller.dto.request.UserMeetingTimeSaveRequestDto;
 import com.asap.server.controller.dto.request.UserRequestDto;
 import com.asap.server.controller.dto.response.HostLoginResponseDto;
+import com.asap.server.controller.dto.response.HostLoginStatusDto;
 import com.asap.server.controller.dto.response.UserMeetingTimeResponseDto;
 import com.asap.server.controller.dto.response.UserTimeResponseDto;
 import com.asap.server.domain.AvailableDate;
@@ -22,6 +23,7 @@ import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.MeetingRepository;
 import com.asap.server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -153,7 +155,7 @@ public class UserService {
     }
 
     @Transactional
-    public HostLoginResponseDto loginByHost(
+    public HostLoginStatusDto loginByHost(
             final Long meetingId,
             final HostLoginRequestDto requestDto
     ) {
@@ -166,12 +168,21 @@ public class UserService {
         if (!passwordEncoder.matches(requestDto.getPassword(), meeting.getPassword()))
             throw new UnauthorizedException(Error.INVALID_HOST_ID_PASSWORD_EXCEPTION);
 
-        if (timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost()))
-            throw new ForbiddenException(Error.HOST_MEETING_TIME_NOT_PROVIDED);
-
-        return HostLoginResponseDto
+        HostLoginResponseDto responseDto = HostLoginResponseDto
                 .builder()
                 .accessToken(jwtService.issuedToken(meeting.getHost().getId().toString()))
+                .build();
+
+        if (timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost())) {
+            return HostLoginStatusDto.builder()
+                    .httpStatus(HttpStatus.FORBIDDEN)
+                    .hostLoginResponseDto(responseDto)
+                    .build();
+        }
+
+        return HostLoginStatusDto.builder()
+                .httpStatus(HttpStatus.OK)
+                .hostLoginResponseDto(responseDto)
                 .build();
     }
 }
