@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Tag(name = "사용자", description = "사용자 관련 로그인 및 가능 시간 입력 API 입니다.")
@@ -57,7 +58,7 @@ public class UserController {
     @PostMapping("/host/{meetingId}/time")
     public SuccessResponse createHostTime(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @MeetingPathVariable final Long meetingId,
-            @RequestBody final List<@Valid UserMeetingTimeSaveRequestDto> requestDtoList,
+            @RequestBody final List<@Valid @NotNull UserMeetingTimeSaveRequestDto> requestDtoList,
             @UserId @Parameter(hidden = true) final Long userId
     ) {
         return SuccessResponse.success(Success.CREATE_HOST_TIME_SUCCESS, userService.createHostTime(meetingId, userId, requestDtoList));
