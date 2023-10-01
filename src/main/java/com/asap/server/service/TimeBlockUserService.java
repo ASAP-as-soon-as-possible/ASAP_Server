@@ -47,4 +47,9 @@ public class TimeBlockUserService {
         List<TimeBlockUser> hostTimeBlocks = timeBlockUserRepository.findAllByUser(user);
         return hostTimeBlocks.isEmpty();
     }
+
+    public void deleteTimeBlockUsers(final List<TimeBlock> timeBlocks) {
+        timeBlockUserRepository.deleteByTimeBlocksIn(timeBlocks);
+    }
+
 }

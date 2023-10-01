@@ -42,4 +42,8 @@ public class PreferTimeService {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    public void deletePreferTimes(final Meeting meeting) {
+        preferTimeRepository.deleteByMeeting(meeting);
+    }
 }

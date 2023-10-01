@@ -108,6 +108,13 @@ public class MeetingService {
         LocalDateTime fixedEndDateTime = LocalDateTime.of(fixedDate, endTime);
 
         meeting.setConfirmedDateTime(fixedStartDateTime, fixedEndDateTime);
+
+        deleteMeetingTimes(meeting);
+    }
+
+    private void deleteMeetingTimes(final Meeting meeting) {
+        availableDateService.deleteUserTimes(meeting);
+        preferTimeService.deletePreferTimes(meeting);
     }
 
     @Transactional(readOnly = true)
