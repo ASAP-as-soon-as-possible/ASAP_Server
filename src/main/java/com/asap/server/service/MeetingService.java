@@ -97,7 +97,7 @@ public class MeetingService {
         if (!meeting.authenticateHost(userId))
             throw new UnauthorizedException(INVALID_MEETING_HOST_EXCEPTION);
 
-        userService.setFixedUsers(meetingConfirmRequestDto.getUsers());
+        userService.setFixedUsers(meeting, meetingConfirmRequestDto.getUsers());
 
         LocalDate fixedDate = DateUtil.transformLocalDate(meetingConfirmRequestDto.getMonth(), meetingConfirmRequestDto.getDay());
 
