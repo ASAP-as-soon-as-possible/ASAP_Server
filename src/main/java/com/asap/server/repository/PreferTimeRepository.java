@@ -16,7 +16,7 @@ public interface PreferTimeRepository extends Repository<PreferTime, Long> {
     List<PreferTime> findByMeeting(final Meeting meeting);
 
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("delete from PreferTime p where p.meeting = :meeting")
     void deleteByMeeting(@Param("meeting") final Meeting meeting);
 }

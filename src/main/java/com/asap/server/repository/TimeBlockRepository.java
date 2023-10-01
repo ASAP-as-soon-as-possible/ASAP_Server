@@ -21,7 +21,7 @@ public interface TimeBlockRepository extends Repository<TimeBlock, Long> {
 
     List<TimeBlock> findByAvailableDateIn(final List<AvailableDate> availableDates);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("delete from TimeBlock t where t.availableDate in :availableDates")
     void deleteByAvailableDatesIn(@Param("availableDates") final List<AvailableDate> availableDates);
 }

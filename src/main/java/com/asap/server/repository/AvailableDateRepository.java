@@ -18,7 +18,7 @@ public interface AvailableDateRepository extends Repository<AvailableDate, Long>
 
     Optional<AvailableDate> findByMeetingAndDate(final Meeting meeting, final LocalDate date);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("delete from AvailableDate a where a.meeting = :meeting")
     void deleteByMeeting(@Param("meeting") final Meeting meeting);
 }
