@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface UserRepository extends Repository<User, Long> {
     User save(final User user);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("update User u set u.isFixed = true where u.meeting = :meeting and u.id in :userIds")
     void updateUserIsFixedByMeeting(@Param("meeting") final Meeting meeting, @Param("userIds") final List<Long> users);
 
