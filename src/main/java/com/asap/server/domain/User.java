@@ -42,8 +42,4 @@ public class User extends AuditingTimeEntity {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private Role role;
-
-    public void setIsFixed(final Boolean isFixed) {
-        this.isFixed = isFixed;
-    }
 }

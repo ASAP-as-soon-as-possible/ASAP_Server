@@ -139,13 +139,12 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public void setFixedUsers(final List<UserRequestDto> users) {
-        users.forEach(user -> {
-            User fixedUser = userRepository
-                    .findById(user.getId())
-                    .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION));
-            fixedUser.setIsFixed(true);
-        });
+    public void setFixedUsers(final Meeting meeting, final List<UserRequestDto> users) {
+        List<Long> userIds = users.stream()
+                .mapToLong(UserRequestDto::getId)
+                .boxed()
+                .collect(Collectors.toList());
+        userRepository.updateUserIsFixedByMeeting(meeting, userIds);
     }
 
     public int getMeetingUserCount(final Meeting meeting) {
