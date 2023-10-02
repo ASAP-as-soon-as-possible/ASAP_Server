@@ -56,7 +56,6 @@ public class PreferTimeService {
         List<TimeSlot> timeSlots = requestDtos.stream()
                 .flatMap(requestDto -> TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal()).stream())
                 .collect(Collectors.toList());
-        System.out.println(timeSlots);
         return timeSlots.size() != timeSlots.stream().distinct().count();
     }
 }
