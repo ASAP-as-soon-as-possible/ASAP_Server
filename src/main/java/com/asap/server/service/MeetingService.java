@@ -5,6 +5,7 @@ import com.asap.server.common.utils.DateUtil;
 import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
+import com.asap.server.controller.dto.request.PreferTimeSaveRequestDto;
 import com.asap.server.controller.dto.response.AvailableDatesDto;
 import com.asap.server.controller.dto.response.BestMeetingTimeResponseDto;
 import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
@@ -17,7 +18,9 @@ import com.asap.server.domain.Meeting;
 import com.asap.server.domain.Place;
 import com.asap.server.domain.User;
 import com.asap.server.domain.enums.Role;
+import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.exception.Error;
+import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.ForbiddenException;
 import com.asap.server.exception.model.NotFoundException;
@@ -54,7 +57,9 @@ public class MeetingService {
     @Transactional
     public MeetingSaveResponseDto create(final MeetingSaveRequestDto meetingSaveRequestDto) {
         String encryptedPassword = passwordEncoder.encode(meetingSaveRequestDto.getPassword());
-
+        if (isPreferTimesDuplicated(meetingSaveRequestDto.getPreferTimes())) {
+            throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
+        }
         Meeting meeting = Meeting.builder()
                 .title(meetingSaveRequestDto.getTitle())
                 .password(encryptedPassword)
@@ -206,4 +211,10 @@ public class MeetingService {
         return BestMeetingTimeResponseDto.of(userCount, bestMeetingTimes);
     }
 
+    private boolean isPreferTimesDuplicated(List<PreferTimeSaveRequestDto> preferTimeSaveRequestDtos) {
+        List<TimeSlot> startTimes = preferTimeSaveRequestDtos.stream()
+                .map(PreferTimeSaveRequestDto::getStartTime)
+                .collect(Collectors.toList());
+        return startTimes.size() != startTimes.stream().distinct().count();
+    }
 }
