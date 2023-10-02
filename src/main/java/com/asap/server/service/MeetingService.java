@@ -206,11 +206,5 @@ public class MeetingService {
         List<BestMeetingTimeVo> bestMeetingTimes = bestMeetingUtil.getBestMeetingTime(availableDates, meeting.getDuration(), userCount);
         return BestMeetingTimeResponseDto.of(userCount, bestMeetingTimes);
     }
-
-    private boolean isPreferTimesDuplicated(List<PreferTimeSaveRequestDto> preferTimeSaveRequestDtos) {
-        List<TimeSlot> startTimes = preferTimeSaveRequestDtos.stream()
-                .map(PreferTimeSaveRequestDto::getStartTime)
-                .collect(Collectors.toList());
-        return startTimes.size() != startTimes.stream().distinct().count();
-    }
+    
 }
