@@ -54,7 +54,6 @@ public class MeetingService {
     @Transactional
     public MeetingSaveResponseDto create(final MeetingSaveRequestDto meetingSaveRequestDto) {
         String encryptedPassword = passwordEncoder.encode(meetingSaveRequestDto.getPassword());
-
         Meeting meeting = Meeting.builder()
                 .title(meetingSaveRequestDto.getTitle())
                 .password(encryptedPassword)
