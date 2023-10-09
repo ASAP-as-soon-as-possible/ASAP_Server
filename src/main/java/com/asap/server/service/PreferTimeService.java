@@ -23,7 +23,7 @@ public class PreferTimeService {
 
     public void create(final Meeting meeting,
                        final List<PreferTimeSaveRequestDto> saveRequestDtos) {
-        if(isPreferTimeDuplicated(saveRequestDtos)){
+        if (isPreferTimeDuplicated(saveRequestDtos)) {
             throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
         }
         saveRequestDtos.stream()
@@ -54,7 +54,7 @@ public class PreferTimeService {
 
     private boolean isPreferTimeDuplicated(List<PreferTimeSaveRequestDto> requestDtos) {
         List<TimeSlot> timeSlots = requestDtos.stream()
-                .flatMap(requestDto -> TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal()).stream())
+                .flatMap(requestDto -> TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal() - 1).stream())
                 .collect(Collectors.toList());
         return timeSlots.size() != timeSlots.stream().distinct().count();
     }
