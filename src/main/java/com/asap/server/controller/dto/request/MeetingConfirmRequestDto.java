@@ -4,11 +4,15 @@ import com.asap.server.domain.enums.TimeSlot;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class MeetingConfirmRequestDto {
     @NotNull(message = "회의 진행 월이 입력되지 않았습니다.")
     private String month;
