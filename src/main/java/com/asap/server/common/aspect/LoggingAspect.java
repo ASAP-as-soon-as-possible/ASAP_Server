@@ -34,13 +34,15 @@ public class LoggingAspect {
         long startAt = System.currentTimeMillis();
         Object returnValue = proceedingJoinPoint.proceed(proceedingJoinPoint.getArgs());
         long endAt = System.currentTimeMillis();
-        log.info("====> Request: {} {} ({}ms)\n *Header = {}\n", request.getMethod(), request.getRequestURL(), endAt - startAt, getHeaders(request));
+        log.info("================================================NEW===============================================");
+        log.info("====> Request: {} {} ({}ms)\n *Header = {}", request.getMethod(), request.getRequestURL(), endAt - startAt, getHeaders(request));
         if ("POST".equalsIgnoreCase(request.getMethod())) {
             log.info("====> Body: {}", objectMapper.readTree(cachingRequest.getContentAsByteArray()));
         }
         if (returnValue != null) {
-            log.info("====> Response: {}\n", returnValue);
+            log.info("====> Response: {}", returnValue);
         }
+        log.info("================================================END===============================================");
         return returnValue;
     }
 
