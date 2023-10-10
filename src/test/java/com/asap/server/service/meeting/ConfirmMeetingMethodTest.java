@@ -9,7 +9,6 @@ import com.asap.server.domain.enums.Duration;
 import com.asap.server.domain.enums.PlaceType;
 import com.asap.server.domain.enums.Role;
 import com.asap.server.domain.enums.TimeSlot;
-import com.asap.server.repository.MeetingRepository;
 import com.asap.server.service.MeetingService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,8 +26,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class ConfirmMeetingMethodTest {
     @Autowired
     private MeetingService meetingService;
-    @Autowired
-    private MeetingRepository meetingRepository;
     @Autowired
     private EntityManager em;
 
@@ -76,7 +73,7 @@ public class ConfirmMeetingMethodTest {
         meetingService.confirmMeeting(body, meeting.getId(), user.getId());
 
         // then
-        final Meeting result = meetingRepository.findById(meeting.getId()).get();
+        final Meeting result = em.find(Meeting.class, meeting.getId());
         assertThat(result.isConfirmedMeeting()).isTrue();
     }
 
