@@ -98,17 +98,17 @@ public class MeetingService {
 
         userService.setFixedUsers(meeting, meetingConfirmRequestDto.getUsers());
 
-        LocalDate fixedDate = DateUtil.transformLocalDate(meetingConfirmRequestDto.getMonth(), meetingConfirmRequestDto.getDay());
+        deleteMeetingTimes(meeting);
 
+        LocalDate fixedDate = DateUtil.transformLocalDate(meetingConfirmRequestDto.getMonth(), meetingConfirmRequestDto.getDay());
         LocalTime startTime = DateUtil.parseLocalTime(meetingConfirmRequestDto.getStartTime().getTime());
         LocalTime endTime = DateUtil.parseLocalTime(meetingConfirmRequestDto.getEndTime().getTime());
 
         LocalDateTime fixedStartDateTime = LocalDateTime.of(fixedDate, startTime);
         LocalDateTime fixedEndDateTime = LocalDateTime.of(fixedDate, endTime);
-
         meeting.setConfirmedDateTime(fixedStartDateTime, fixedEndDateTime);
 
-        deleteMeetingTimes(meeting);
+        meetingRepository.save(meeting);
     }
 
     private void deleteMeetingTimes(final Meeting meeting) {
