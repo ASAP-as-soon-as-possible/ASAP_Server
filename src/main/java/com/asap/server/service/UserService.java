@@ -156,7 +156,7 @@ public class UserService {
             final Long meetingId,
             final HostLoginRequestDto requestDto
     ) {
-        Meeting meeting = meetingRepository.findById(meetingId)
+        Meeting meeting = meetingRepository.findByIdWithHost(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
         if (!meeting.checkHostName(requestDto.getName()))
