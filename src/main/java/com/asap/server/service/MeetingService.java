@@ -96,8 +96,6 @@ public class MeetingService {
         if (!meeting.authenticateHost(userId))
             throw new UnauthorizedException(INVALID_MEETING_HOST_EXCEPTION);
 
-        userService.setFixedUsers(meeting, meetingConfirmRequestDto.getUsers());
-
         LocalDate fixedDate = DateUtil.transformLocalDate(meetingConfirmRequestDto.getMonth(), meetingConfirmRequestDto.getDay());
         LocalTime startTime = DateUtil.parseLocalTime(meetingConfirmRequestDto.getStartTime().getTime());
         LocalTime endTime = DateUtil.parseLocalTime(meetingConfirmRequestDto.getEndTime().getTime());
@@ -106,7 +104,9 @@ public class MeetingService {
         LocalDateTime fixedEndDateTime = LocalDateTime.of(fixedDate, endTime);
         meeting.setConfirmedDateTime(fixedStartDateTime, fixedEndDateTime);
 
-        meetingRepository.save(meeting);
+        meetingRepository.saveAndFlush(meeting);
+
+        userService.setFixedUsers(meeting, meetingConfirmRequestDto.getUsers());
     }
 
     @Transactional(readOnly = true)

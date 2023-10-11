@@ -13,6 +13,8 @@ public interface MeetingRepository extends Repository<Meeting, Long> {
 
     Meeting save(final Meeting meeting);
 
+    void saveAndFlush(final Meeting meeting);
+
     @EntityGraph(attributePaths = {"host"})
     @Query("select m from Meeting m where m.id = :id")
     Optional<Meeting> findByIdWithHost(@Param("id") final Long id);
