@@ -88,7 +88,7 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
         User user = createUser(meeting, requestDto.getName(), Role.MEMBER);
-
+        isDuplicatedDate(requestDto.getAvailableTimes());
         requestDto.getAvailableTimes().forEach(availableTime -> createUserTimeBlock(meeting, user, availableTime));
 
         return UserTimeResponseDto.builder()
