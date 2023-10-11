@@ -44,7 +44,7 @@ public class UserController {
     @Operation(summary = "[회의 가능 시간 입력 뷰 - 방장] 방장 가능 시간 입력 API")
     @SecurityRequirement(name = "JWT Auth")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "방장의 회의 가능 시간이 성공적으로 입력되었습니다."),
+            @ApiResponse(responseCode = "201", description = "방장의 회의 가능 시간이 성공적으로 입력되었습니다."),
             @ApiResponse(responseCode = "400",
                     description = "1. 시간 형식이 잘못되었습니다. [YYYY/MM/DD HH:MM]\n"
                             + "2. 중복 입력된 시간이 있습니다.\n"
@@ -70,7 +70,7 @@ public class UserController {
 
     @Operation(summary = "[회의 가능 시간 입력 뷰 - 참여자] 참여자 정보 및 가능 시간 입력 API")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "참여자 회의 가능 시간 입력을 성공하였습니다."),
+            @ApiResponse(responseCode = "201", description = "참여자 회의 가능 시간 입력을 성공하였습니다."),
             @ApiResponse(responseCode = "400",
                     description = "1. 시간 형식이 잘못되었습니다. [YYYY/MM/DD HH:MM]\n"
                             + "2. 중복 입력된 시간이 있습니다.\n"

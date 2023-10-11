@@ -6,7 +6,6 @@ import com.asap.server.controller.dto.response.AvailableDatesDto;
 import com.asap.server.controller.dto.response.TimeSlotDto;
 import com.asap.server.domain.AvailableDate;
 import com.asap.server.domain.Meeting;
-import com.asap.server.domain.TimeBlock;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.NotFoundException;
@@ -114,14 +113,5 @@ public class AvailableDateService {
 
     private boolean isDuplicatedDate(final List<String> availableDates) {
         return availableDates.size() != availableDates.stream().distinct().count();
-    }
-
-    public void deleteUserTimes(final Meeting meeting) {
-        List<AvailableDate> availableDates = availableDateRepository.findByMeeting(meeting);
-        List<TimeBlock> timeBlocks = timeBlockService.findByAvailableDateIn(availableDates);
-
-        timeBlockUserService.deleteTimeBlockUsers(timeBlocks);
-        timeBlockService.deleteTimeBlocks(availableDates);
-        availableDateRepository.deleteByMeeting(meeting);
     }
 }
