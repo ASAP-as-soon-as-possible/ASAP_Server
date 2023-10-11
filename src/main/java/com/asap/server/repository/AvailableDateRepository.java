@@ -2,10 +2,7 @@ package com.asap.server.repository;
 
 import com.asap.server.domain.AvailableDate;
 import com.asap.server.domain.Meeting;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
-import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,8 +14,4 @@ public interface AvailableDateRepository extends Repository<AvailableDate, Long>
     List<AvailableDate> findByMeeting(final Meeting meeting);
 
     Optional<AvailableDate> findByMeetingAndDate(final Meeting meeting, final LocalDate date);
-
-    @Modifying(clearAutomatically = true)
-    @Query("delete from AvailableDate a where a.meeting = :meeting")
-    void deleteByMeeting(@Param("meeting") final Meeting meeting);
 }

@@ -48,8 +48,4 @@ public class TimeBlockUserService {
         return hostTimeBlocks.isEmpty();
     }
 
-    public void deleteTimeBlockUsers(final List<TimeBlock> timeBlocks) {
-        timeBlockUserRepository.deleteByTimeBlocksIn(timeBlocks);
-    }
-
 }

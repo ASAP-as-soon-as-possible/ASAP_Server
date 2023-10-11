@@ -48,10 +48,6 @@ public class PreferTimeService {
                 .collect(Collectors.toList());
     }
 
-    public void deletePreferTimes(final Meeting meeting) {
-        preferTimeRepository.deleteByMeeting(meeting);
-    }
-
     private boolean isPreferTimeDuplicated(List<PreferTimeSaveRequestDto> requestDtos) {
         List<TimeSlot> timeSlots = requestDtos.stream()
                 .flatMap(requestDto -> TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal() - 1).stream())

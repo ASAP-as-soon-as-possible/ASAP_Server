@@ -17,8 +17,4 @@ public interface TimeBlockUserRepository extends Repository<TimeBlockUser, Long>
     List<TimeBlockUser> findAllByUser(final User user);
 
     List<TimeBlockUser> findByTimeBlock(final TimeBlock timeBlock);
-
-    @Modifying(clearAutomatically = true)
-    @Query("delete from TimeBlockUser t where t.timeBlock in :timeblocks")
-    void deleteByTimeBlocksIn(@Param("timeblocks") final List<TimeBlock> timeBlocks);
 }

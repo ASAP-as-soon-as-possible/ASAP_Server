@@ -51,12 +51,4 @@ public class TimeBlockService {
     public List<TimeBlock> getTimeBlocksByAvailableDate(final AvailableDate availableDate) {
         return timeBlockRepository.findByAvailableDate(availableDate);
     }
-
-    public List<TimeBlock> findByAvailableDateIn(final List<AvailableDate> availableDates) {
-        return timeBlockRepository.findByAvailableDateIn(availableDates);
-    }
-
-    public void deleteTimeBlocks(final List<AvailableDate> availableDates) {
-        timeBlockRepository.deleteByAvailableDatesIn(availableDates);
-    }
 }
