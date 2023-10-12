@@ -6,7 +6,12 @@ import com.asap.server.common.utils.SlackUtil;
 import com.asap.server.controller.dto.response.HostLoginResponseDto;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.AsapException;
+import com.asap.server.exception.model.BadRequestException;
+import com.asap.server.exception.model.ConflictException;
+import com.asap.server.exception.model.ForbiddenException;
 import com.asap.server.exception.model.HostTimeForbiddenException;
+import com.asap.server.exception.model.NotFoundException;
+import com.asap.server.exception.model.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -50,12 +55,6 @@ public class ControllerExceptionAdvice {
         else return ErrorResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION, fieldError.getDefaultMessage());
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public ErrorResponse handleNotFoundException(NoHandlerFoundException exception) {
-        return ErrorResponse.error(Error.URI_NOT_FOUND_EXCEPTION);
-    }
-
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     protected ErrorResponse handleJsonParseException(final HttpMessageNotReadableException e) {
@@ -66,6 +65,52 @@ public class ControllerExceptionAdvice {
     @ExceptionHandler(ConstraintViolationException.class)
     protected ErrorResponse handleValidationException(final ConstraintViolationException e) {
         return ErrorResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION);
+    }
+
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadRequestException.class)
+    protected ErrorResponse handleBadRequestException(final BadRequestException e) {
+        return ErrorResponse.error(e.getError());
+    }
+
+    /**
+     * 401 UnAuthorization
+     */
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UnauthorizedException.class)
+    protected ErrorResponse handleUnAuthorizedException(final UnauthorizedException e) {
+        return ErrorResponse.error(e.getError());
+    }
+
+    /**
+     * 403 Forbidden
+     */
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(ForbiddenException.class)
+    protected ErrorResponse handleForbiddenException(final ForbiddenException e) {
+        return ErrorResponse.error(e.getError());
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(HostTimeForbiddenException.class)
+    protected ErrorDataResponse<HostLoginResponseDto> handleForbiddenException(final HostTimeForbiddenException e) {
+        return ErrorDataResponse.error(e.getError(), e.getMessage(), e.getData());
+    }
+
+    /**
+     * 404 Not Found
+     */
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    protected ErrorResponse handleNotFoundException(final NotFoundException e) {
+        return ErrorResponse.error(e.getError());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ErrorResponse handleNotFoundException(NoHandlerFoundException exception) {
+        return ErrorResponse.error(Error.URI_NOT_FOUND_EXCEPTION);
     }
 
     /**
@@ -79,50 +124,14 @@ public class ControllerExceptionAdvice {
         return ErrorResponse.error(METHOD_NOT_ALLOWED_EXCEPTION);
     }
 
-//    /**
-//     * 401 UnAuthorization
-//     */
-//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-//    @ExceptionHandler(UnauthorizedException.class)
-//    protected ErrorResponse handleUnAuthorizedException(final UnauthorizedException e) {
-//        return ErrorResponse.error(e.getError());
-//    }
-//
-//    /**
-//     * 403 Forbidden
-//     */
-//    @ResponseStatus(HttpStatus.FORBIDDEN)
-//    @ExceptionHandler(ForbiddenException.class)
-//    protected ErrorResponse handleForbiddenException(final ForbiddenException e) {
-//        return ErrorResponse.error(e.getError());
-//    }
-
-    /**
-     * 403 Forbidden
-     */
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler(HostTimeForbiddenException.class)
-    protected ErrorDataResponse<HostLoginResponseDto> handleForbiddenException(final HostTimeForbiddenException e) {
-        return ErrorDataResponse.error(e.getError(), e.getMessage(), e.getData());
-    }
-
-//    /**
-//     * 404 Not Found
-//     */
-//    @ResponseStatus(HttpStatus.NOT_FOUND)
-//    @ExceptionHandler(NotFoundException.class)
-//    protected ErrorResponse handleNotFoundException(final NotFoundException e) {
-//        return ErrorResponse.error(e.getError());
-//    }
-
     /**
      * 409 Conflict
      */
-//    @ResponseStatus(HttpStatus.CONFLICT)
-//    @ExceptionHandler(ConflictException.class)
-//    protected ErrorResponse handleConflictException(final ConflictException e) {
-//        return ErrorResponse.error(e.getError());
-//    }
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(ConflictException.class)
+    protected ErrorResponse handleConflictException(final ConflictException e) {
+        return ErrorResponse.error(e.getError());
+    }
 
     /**
      * 500 Internal Server
