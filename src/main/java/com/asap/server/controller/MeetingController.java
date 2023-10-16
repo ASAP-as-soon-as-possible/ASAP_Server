@@ -138,7 +138,9 @@ public class MeetingController {
                                     + "2. 해당 유저는 존재하지 않습니다.\n"
                                     + "3. 회의 가능 일자가 존재하지 않습니다.\n"
                                     + "4. 해당 회의의 가능 시간을 입력한 유저가 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "이미 확정된 회의입니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public SuccessResponse<TimeTableResponseDto> getTimeTable(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @MeetingPathVariable final Long meetingId,

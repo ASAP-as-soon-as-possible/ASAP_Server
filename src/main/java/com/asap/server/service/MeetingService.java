@@ -160,6 +160,9 @@ public class MeetingService {
         if (!meeting.authenticateHost(userId))
             throw new UnauthorizedException(INVALID_MEETING_HOST_EXCEPTION);
 
+        if (meeting.isConfirmedMeeting())
+            throw new ConflictException(MEETING_VALIDATION_FAILED_EXCEPTION);
+
         List<String> memberNames = userService.findUserNameByMeeting(meeting);
 
         List<AvailableDatesDto> availableDatesDtos = availableDateService.findAvailableDateByMeeting(meeting).stream()
