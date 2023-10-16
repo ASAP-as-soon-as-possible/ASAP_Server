@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.asap.server.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
+import static com.asap.server.exception.Error.MEETING_VALIDATION_FAILED_EXCEPTION;
 import static com.asap.server.exception.Error.USER_NOT_FOUND_EXCEPTION;
 
 
@@ -164,6 +165,9 @@ public class UserService {
 
         if (!passwordEncoder.matches(requestDto.getPassword(), meeting.getPassword()))
             throw new UnauthorizedException(Error.INVALID_HOST_ID_PASSWORD_EXCEPTION);
+
+        if (meeting.isConfirmedMeeting())
+            throw new ConflictException(MEETING_VALIDATION_FAILED_EXCEPTION);
 
         HostLoginResponseDto responseDto = HostLoginResponseDto
                 .builder()
