@@ -175,6 +175,7 @@ public class MeetingController {
                     description = "1. 해당 회의는 존재하지 않습니다.\n"
                             + "2. 회의 가능 일자가 존재하지 않습니다."
                     , content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "이미 확정된 회의입니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/{meetingId}/details")

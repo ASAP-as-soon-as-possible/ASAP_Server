@@ -193,6 +193,7 @@ public class MeetingService {
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
         if (!meeting.authenticateHost(userId)) throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
+        if (meeting.isConfirmedMeeting()) throw new ConflictException(MEETING_VALIDATION_FAILED_EXCEPTION);
 
         int userCount = userService.getMeetingUserCount(meeting);
         List<TimeBlocksByDateVo> availableDates = availableDateService.getAvailableDateVos(meeting);
