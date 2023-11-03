@@ -16,7 +16,7 @@ import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
-import com.asap.server.exception.model.ForbiddenException;
+import com.asap.server.exception.model.HostTimeForbiddenException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.MeetingRepository;
@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.asap.server.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
+import static com.asap.server.exception.Error.MEETING_VALIDATION_FAILED_EXCEPTION;
 import static com.asap.server.exception.Error.USER_NOT_FOUND_EXCEPTION;
 
 
@@ -88,7 +89,7 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
         User user = createUser(meeting, requestDto.getName(), Role.MEMBER);
-
+        isDuplicatedDate(requestDto.getAvailableTimes());
         requestDto.getAvailableTimes().forEach(availableTime -> createUserTimeBlock(meeting, user, availableTime));
 
         return UserTimeResponseDto.builder()
@@ -139,13 +140,12 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public void setFixedUsers(final List<UserRequestDto> users) {
-        users.forEach(user -> {
-            User fixedUser = userRepository
-                    .findById(user.getId())
-                    .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION));
-            fixedUser.setIsFixed(true);
-        });
+    public void setFixedUsers(final Meeting meeting, final List<UserRequestDto> users) {
+        List<Long> userIds = users.stream()
+                .mapToLong(UserRequestDto::getId)
+                .boxed()
+                .collect(Collectors.toList());
+        userRepository.updateUserIsFixedByMeeting(meeting, userIds);
     }
 
     public int getMeetingUserCount(final Meeting meeting) {
@@ -157,7 +157,7 @@ public class UserService {
             final Long meetingId,
             final HostLoginRequestDto requestDto
     ) {
-        Meeting meeting = meetingRepository.findById(meetingId)
+        Meeting meeting = meetingRepository.findByIdWithHost(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
         if (!meeting.checkHostName(requestDto.getName()))
@@ -166,12 +166,17 @@ public class UserService {
         if (!passwordEncoder.matches(requestDto.getPassword(), meeting.getPassword()))
             throw new UnauthorizedException(Error.INVALID_HOST_ID_PASSWORD_EXCEPTION);
 
-        if (timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost()))
-            throw new ForbiddenException(Error.HOST_MEETING_TIME_NOT_PROVIDED);
+        if (meeting.isConfirmedMeeting())
+            throw new ConflictException(MEETING_VALIDATION_FAILED_EXCEPTION);
 
-        return HostLoginResponseDto
+        HostLoginResponseDto responseDto = HostLoginResponseDto
                 .builder()
                 .accessToken(jwtService.issuedToken(meeting.getHost().getId().toString()))
                 .build();
+        if (timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost())) {
+            throw new HostTimeForbiddenException(Error.HOST_MEETING_TIME_NOT_PROVIDED, responseDto);
+        }
+
+        return responseDto;
     }
 }

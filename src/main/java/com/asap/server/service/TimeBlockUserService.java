@@ -47,4 +47,5 @@ public class TimeBlockUserService {
         List<TimeBlockUser> hostTimeBlocks = timeBlockUserRepository.findAllByUser(user);
         return hostTimeBlocks.isEmpty();
     }
+
 }

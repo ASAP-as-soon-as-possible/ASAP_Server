@@ -54,7 +54,6 @@ public class MeetingService {
     @Transactional
     public MeetingSaveResponseDto create(final MeetingSaveRequestDto meetingSaveRequestDto) {
         String encryptedPassword = passwordEncoder.encode(meetingSaveRequestDto.getPassword());
-
         Meeting meeting = Meeting.builder()
                 .title(meetingSaveRequestDto.getTitle())
                 .password(encryptedPassword)
@@ -97,17 +96,17 @@ public class MeetingService {
         if (!meeting.authenticateHost(userId))
             throw new UnauthorizedException(INVALID_MEETING_HOST_EXCEPTION);
 
-        userService.setFixedUsers(meetingConfirmRequestDto.getUsers());
-
         LocalDate fixedDate = DateUtil.transformLocalDate(meetingConfirmRequestDto.getMonth(), meetingConfirmRequestDto.getDay());
-
         LocalTime startTime = DateUtil.parseLocalTime(meetingConfirmRequestDto.getStartTime().getTime());
         LocalTime endTime = DateUtil.parseLocalTime(meetingConfirmRequestDto.getEndTime().getTime());
 
         LocalDateTime fixedStartDateTime = LocalDateTime.of(fixedDate, startTime);
         LocalDateTime fixedEndDateTime = LocalDateTime.of(fixedDate, endTime);
-
         meeting.setConfirmedDateTime(fixedStartDateTime, fixedEndDateTime);
+
+        meetingRepository.saveAndFlush(meeting);
+
+        userService.setFixedUsers(meeting, meetingConfirmRequestDto.getUsers());
     }
 
     @Transactional(readOnly = true)
@@ -161,6 +160,9 @@ public class MeetingService {
         if (!meeting.authenticateHost(userId))
             throw new UnauthorizedException(INVALID_MEETING_HOST_EXCEPTION);
 
+        if (meeting.isConfirmedMeeting())
+            throw new ConflictException(MEETING_VALIDATION_FAILED_EXCEPTION);
+
         List<String> memberNames = userService.findUserNameByMeeting(meeting);
 
         List<AvailableDatesDto> availableDatesDtos = availableDateService.findAvailableDateByMeeting(meeting).stream()
@@ -191,6 +193,7 @@ public class MeetingService {
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
         if (!meeting.authenticateHost(userId)) throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
+        if (meeting.isConfirmedMeeting()) throw new ConflictException(MEETING_VALIDATION_FAILED_EXCEPTION);
 
         int userCount = userService.getMeetingUserCount(meeting);
         List<TimeBlocksByDateVo> availableDates = availableDateService.getAvailableDateVos(meeting);

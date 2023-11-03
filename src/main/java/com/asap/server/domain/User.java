@@ -23,7 +23,7 @@ import javax.persistence.ManyToOne;
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class User extends AuditingTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,8 +42,4 @@ public class User extends AuditingTimeEntity {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private Role role;
-
-    public void setIsFixed(final Boolean isFixed) {
-        this.isFixed = isFixed;
-    }
 }
