@@ -1,6 +1,7 @@
-package com.asap.server.common.utils;
+package com.asap.server.common.utils.strategy;
 
 import com.asap.server.common.utils.strategy.impl.FindOptimalMeetingTimeCasesStrategyImpl;
+import com.asap.server.common.utils.strategy.impl.FindOptimalMeetingTimeStrategyImpl;
 import com.asap.server.domain.enums.Duration;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.TimeBlockVo;
@@ -28,13 +29,14 @@ import static com.asap.server.domain.enums.TimeSlot.SLOT_20_30;
 import static com.asap.server.domain.enums.TimeSlot.SLOT_21_00;
 import static com.asap.server.domain.enums.TimeSlot.SLOT_21_30;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class SearchBestMeetingTest {
-    private BestMeetingUtil bestMeetingUtil;
+class FindOptimalMeetingTimeStrategyTest {
+    private FindOptimalMeetingTimeStrategy strategy;
 
     @BeforeEach
     void setUp() {
-        bestMeetingUtil = new BestMeetingUtil(new FindOptimalMeetingTimeCasesStrategyImpl());
+        strategy = new FindOptimalMeetingTimeStrategyImpl();
     }
 
     @Test
@@ -64,7 +66,7 @@ public class SearchBestMeetingTest {
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>(List.of(bestMeetingTime, bestMeetingTime2, bestMeetingTime3, bestMeetingTime4));
 
         // when
-        List<BestMeetingTimeVo> result = bestMeetingUtil.searchBestMeetingTime(availableDate, Duration.TWO_HOUR.getNeedBlock(), 2);
+        List<BestMeetingTimeVo> result = strategy.findOptimalMeetingTime(availableDate, Duration.TWO_HOUR.getNeedBlock(), 2);
 
         // then
         assertThat(result).isEqualTo(bestMeetingTimes);
@@ -101,7 +103,7 @@ public class SearchBestMeetingTest {
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>(List.of(bestMeetingTime, bestMeetingTime2, bestMeetingTime3, bestMeetingTime4));
 
         // when
-        List<BestMeetingTimeVo> result = bestMeetingUtil.searchBestMeetingTime(availableDate, Duration.HOUR.getNeedBlock(), 2);
+        List<BestMeetingTimeVo> result = strategy.findOptimalMeetingTime(availableDate, Duration.HOUR.getNeedBlock(), 2);
 
         // then
         assertThat(result).isEqualTo(bestMeetingTimes);
