@@ -5,6 +5,6 @@ import com.asap.server.service.vo.PossibleTimeCaseVo;
 
 import java.util.List;
 
-public interface FindOptimalMeetingTimeCasesStrategy {
-    List<PossibleTimeCaseVo> findOptimalMeetingTimeCases(final Duration duration, final int userCount);
+public interface FindBestMeetingTimeCasesStrategy {
+    List<PossibleTimeCaseVo> find(final Duration duration, final int userCount);
 }

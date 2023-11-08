@@ -1,6 +1,6 @@
 package com.asap.server.common.utils.strategy;
 
-import com.asap.server.common.utils.strategy.impl.FindOptimalMeetingTimeCasesStrategyImpl;
+import com.asap.server.common.utils.strategy.impl.FindBestMeetingTimeCasesStrategyImpl;
 import com.asap.server.domain.enums.Duration;
 import com.asap.server.service.vo.PossibleTimeCaseVo;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,12 +15,12 @@ import static com.asap.server.domain.enums.Duration.HOUR_HALF;
 import static com.asap.server.domain.enums.Duration.TWO_HOUR;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class FindOptimalMeetingTimeCasesStrategyTest {
-    private FindOptimalMeetingTimeCasesStrategy strategy;
+class FindBestMeetingTimeCasesStrategyTest {
+    private FindBestMeetingTimeCasesStrategy strategy;
 
     @BeforeEach
     void setUp() {
-        strategy = new FindOptimalMeetingTimeCasesStrategyImpl();
+        strategy = new FindBestMeetingTimeCasesStrategyImpl();
     }
 
     @DisplayName("회의 진행 시간이 2시간이고, 회의 참여 인원이 6명일 때 24개의 경우의 수가 나온다.")
@@ -57,7 +57,7 @@ class FindOptimalMeetingTimeCasesStrategyTest {
         );
 
         // when
-        List<PossibleTimeCaseVo> result = strategy.findOptimalMeetingTimeCases(duration, userCount);
+        List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
 
         // then
         assertThat(result.size()).isEqualTo(response.size());

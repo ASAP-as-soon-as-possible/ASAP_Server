@@ -1,6 +1,6 @@
 package com.asap.server.common.utils.strategy.impl;
 
-import com.asap.server.common.utils.strategy.FindOptimalMeetingTimeCasesStrategy;
+import com.asap.server.common.utils.strategy.FindBestMeetingTimeCasesStrategy;
 import com.asap.server.domain.enums.Duration;
 import com.asap.server.service.vo.PossibleTimeCaseVo;
 import org.springframework.stereotype.Component;
@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class FindOptimalMeetingTimeCasesStrategyImpl implements FindOptimalMeetingTimeCasesStrategy {
+public class FindBestMeetingTimeCasesStrategyImpl implements FindBestMeetingTimeCasesStrategy {
     @Override
-    public List<PossibleTimeCaseVo> findOptimalMeetingTimeCases(final Duration duration, int userCount) {
+    public List<PossibleTimeCaseVo> find(final Duration duration, int userCount) {
         Duration[] durations = Duration.values();
         List<PossibleTimeCaseVo> timeCases = new ArrayList<>();
         while (userCount > 0) {

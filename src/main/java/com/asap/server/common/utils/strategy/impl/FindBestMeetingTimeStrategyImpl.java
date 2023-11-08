@@ -1,6 +1,6 @@
 package com.asap.server.common.utils.strategy.impl;
 
-import com.asap.server.common.utils.strategy.FindOptimalMeetingTimeStrategy;
+import com.asap.server.common.utils.strategy.FindBestMeetingTimeStrategy;
 import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.TimeBlockVo;
@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class FindOptimalMeetingTimeStrategyImpl implements FindOptimalMeetingTimeStrategy {
+public class FindBestMeetingTimeStrategyImpl implements FindBestMeetingTimeStrategy {
     @Override
-    public List<BestMeetingTimeVo> findOptimalMeetingTime(final TimeBlocksByDateVo timeBlocksByDate, final int needTimeBlockCount, final int userCount) {
+    public List<BestMeetingTimeVo> find(final TimeBlocksByDateVo timeBlocksByDate, final int needTimeBlockCount, final int userCount) {
         List<TimeBlockVo> sortedTimeBlocks = filterByUserCountAndSortByTime(timeBlocksByDate.getTimeBlocks(), userCount);
 
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>();
