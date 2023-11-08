@@ -1,5 +1,7 @@
 package com.asap.server.common.utils;
 
+import com.asap.server.common.utils.strategy.impl.FindBestMeetingTimeCasesStrategyImpl;
+import com.asap.server.common.utils.strategy.impl.FindBestMeetingTimeStrategyImpl;
 import com.asap.server.domain.enums.Duration;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.TimeBlockVo;
@@ -27,7 +29,10 @@ public class GetBestMeetingTimeTest {
 
     @BeforeEach
     public void setUp() {
-        bestMeetingUtil = new BestMeetingUtil();
+        bestMeetingUtil = new BestMeetingUtil(
+                new FindBestMeetingTimeCasesStrategyImpl(),
+                new FindBestMeetingTimeStrategyImpl()
+        );
     }
 
     @Test

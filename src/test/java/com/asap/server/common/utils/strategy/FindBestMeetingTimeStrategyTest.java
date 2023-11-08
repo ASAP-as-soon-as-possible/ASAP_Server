@@ -1,5 +1,6 @@
-package com.asap.server.common.utils;
+package com.asap.server.common.utils.strategy;
 
+import com.asap.server.common.utils.strategy.impl.FindBestMeetingTimeStrategyImpl;
 import com.asap.server.domain.enums.Duration;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.TimeBlockVo;
@@ -28,12 +29,12 @@ import static com.asap.server.domain.enums.TimeSlot.SLOT_21_00;
 import static com.asap.server.domain.enums.TimeSlot.SLOT_21_30;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class SearchBestMeetingTest {
-    private BestMeetingUtil bestMeetingUtil;
+class FindBestMeetingTimeStrategyTest {
+    private FindBestMeetingTimeStrategy strategy;
 
     @BeforeEach
     void setUp() {
-        bestMeetingUtil = new BestMeetingUtil();
+        strategy = new FindBestMeetingTimeStrategyImpl();
     }
 
     @Test
@@ -63,7 +64,7 @@ public class SearchBestMeetingTest {
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>(List.of(bestMeetingTime, bestMeetingTime2, bestMeetingTime3, bestMeetingTime4));
 
         // when
-        List<BestMeetingTimeVo> result = bestMeetingUtil.searchBestMeetingTime(availableDate, Duration.TWO_HOUR.getNeedBlock(), 2);
+        List<BestMeetingTimeVo> result = strategy.find(availableDate, Duration.TWO_HOUR.getNeedBlock(), 2);
 
         // then
         assertThat(result).isEqualTo(bestMeetingTimes);
@@ -100,7 +101,7 @@ public class SearchBestMeetingTest {
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>(List.of(bestMeetingTime, bestMeetingTime2, bestMeetingTime3, bestMeetingTime4));
 
         // when
-        List<BestMeetingTimeVo> result = bestMeetingUtil.searchBestMeetingTime(availableDate, Duration.HOUR.getNeedBlock(), 2);
+        List<BestMeetingTimeVo> result = strategy.find(availableDate, Duration.HOUR.getNeedBlock(), 2);
 
         // then
         assertThat(result).isEqualTo(bestMeetingTimes);
