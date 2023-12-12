@@ -19,7 +19,7 @@ import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.HostTimeForbiddenException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
-import com.asap.server.repository.MeetingRepository;
+import com.asap.server.repository.meeting.MeetingRepository;
 import com.asap.server.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

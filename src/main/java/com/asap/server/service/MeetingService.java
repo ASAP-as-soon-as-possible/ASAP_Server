@@ -22,7 +22,7 @@ import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.ForbiddenException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
-import com.asap.server.repository.MeetingRepository;
+import com.asap.server.repository.meeting.MeetingRepository;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.TimeBlocksByDateVo;
 import lombok.RequiredArgsConstructor;
