@@ -104,8 +104,6 @@ public class MeetingService {
         LocalDateTime fixedEndDateTime = LocalDateTime.of(fixedDate, endTime);
         meeting.setConfirmedDateTime(fixedStartDateTime, fixedEndDateTime);
 
-        meetingRepository.saveAndFlush(meeting);
-
         userService.setFixedUsers(meeting, meetingConfirmRequestDto.getUsers());
     }
 
