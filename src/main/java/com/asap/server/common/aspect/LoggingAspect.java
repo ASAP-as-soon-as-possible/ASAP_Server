@@ -23,17 +23,22 @@ public class LoggingAspect {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Pointcut("execution(* com.asap.server.controller..*(..)) || execution(* com.asap.server.common.advice..*(..))")
-    public void controllerExecute() {
+    @Pointcut("execution(* com.asap.server.controller..*(..)) || ( execution(* com.asap.server.common.advice..*(..)) && !execution(* com.asap.server.common.advice.ControllerExceptionAdvice.handleException*(..)))")
+    public void controllerInfoLevelExecute() {
     }
 
-    @Around("com.asap.server.common.aspect.LoggingAspect.controllerExecute()")
-    public Object requestLogging(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+    @Pointcut("execution(* com.asap.server.common.advice.ControllerExceptionAdvice.handleException*(..))")
+    public void controllerErrorLevelExecute() {
+    }
+
+    @Around("com.asap.server.common.aspect.LoggingAspect.controllerInfoLevelExecute()")
+    public Object requestInfoLevelLogging(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         final ContentCachingRequestWrapper cachingRequest = (ContentCachingRequestWrapper) request;
         long startAt = System.currentTimeMillis();
         Object returnValue = proceedingJoinPoint.proceed(proceedingJoinPoint.getArgs());
         long endAt = System.currentTimeMillis();
+
         log.info("================================================NEW===============================================");
         log.info("====> Request: {} {} ({}ms)\n *Header = {}", request.getMethod(), request.getRequestURL(), endAt - startAt, getHeaders(request));
         if ("POST".equalsIgnoreCase(request.getMethod())) {
@@ -43,6 +48,25 @@ public class LoggingAspect {
             log.info("====> Response: {}", returnValue);
         }
         log.info("================================================END===============================================");
+        return returnValue;
+    }
+
+    @Around("com.asap.server.common.aspect.LoggingAspect.controllerErrorLevelExecute()")
+    public Object requestErrorLevelLogging(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        final ContentCachingRequestWrapper cachingRequest = (ContentCachingRequestWrapper) request;
+        long startAt = System.currentTimeMillis();
+        Object returnValue = proceedingJoinPoint.proceed(proceedingJoinPoint.getArgs());
+        long endAt = System.currentTimeMillis();
+
+        log.error("====> Request: {} {} ({}ms)\n *Header = {}", request.getMethod(), request.getRequestURL(), endAt - startAt, getHeaders(request));
+        if ("POST".equalsIgnoreCase(request.getMethod())) {
+            log.error("====> Body: {}", objectMapper.readTree(cachingRequest.getContentAsByteArray()));
+        }
+        if (returnValue != null) {
+            log.error("====> Response: {}", returnValue);
+        }
+        log.error("================================================END===============================================");
         return returnValue;
     }
 
