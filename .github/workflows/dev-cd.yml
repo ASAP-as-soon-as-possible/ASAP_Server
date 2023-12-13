@@ -82,15 +82,15 @@ jobs:
     - name: Upload to S3
       run: aws s3 cp --region ap-northeast-2 ./asap_dev_server.zip s3://$S3_BUCKET_NAME/
       
-    # Deploy
-    - name: Deploy
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
-      run:
-        aws deploy create-deployment 
-        --application-name asap-dev-codedeploy
-        --deployment-group-name asap-dev-codedeploy-group
-        --file-exists-behavior OVERWRITE 
-        --s3-location bucket=asap-develop-bucket,bundleType=zip,key=asap_dev_server.zip
-        --region ap-northeast-2
+#    # Deploy
+#    - name: Deploy
+#      env:
+#        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+#        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+#      run:
+#        aws deploy create-deployment
+#        --application-name asap-dev-codedeploy
+#        --deployment-group-name asap-dev-codedeploy-group
+#        --file-exists-behavior OVERWRITE
+#        --s3-location bucket=asap-develop-bucket,bundleType=zip,key=asap_dev_server.zip
+#        --region ap-northeast-2
