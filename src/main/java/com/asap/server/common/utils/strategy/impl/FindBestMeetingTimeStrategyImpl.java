@@ -5,7 +5,6 @@ import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.TimeBlockVo;
 import com.asap.server.service.vo.TimeBlocksByDateVo;
-import com.asap.server.service.vo.UserVo;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -46,18 +45,18 @@ public class FindBestMeetingTimeStrategyImpl implements FindBestMeetingTimeStrat
 
     private List<TimeBlockVo> filterByUserCountAndSortByTime(final List<TimeBlockVo> timeBlocks, final int userCount) {
         return timeBlocks.stream()
-                .filter(timeBlockVo -> timeBlockVo.getUsers().size() == userCount)
+                .filter(timeBlockVo -> timeBlockVo.userCount() == userCount)
                 .sorted(TimeBlockVo::compareTo)
                 .collect(Collectors.toList());
     }
 
     private boolean isBestMeetingTime(final List<TimeBlockVo> timeBlocks, final int timeBlockIdx, final int endIdx) {
         boolean isBestMeetingTime = true;
-        TimeSlot nextTime = timeBlocks.get(timeBlockIdx).getTimeSlot();
+        TimeSlot nextTime = timeBlocks.get(timeBlockIdx).timeSlot();
         for (int i = timeBlockIdx + 1; i < endIdx; i++) {
-            if (nextTime.ordinal() + 1 != timeBlocks.get(i).getTimeSlot().ordinal()) return false;
+            if (nextTime.ordinal() + 1 != timeBlocks.get(i).timeSlot().ordinal()) return false;
 
-            nextTime = timeBlocks.get(i).getTimeSlot();
+            nextTime = timeBlocks.get(i).timeSlot();
         }
         return isBestMeetingTime;
     }
@@ -66,7 +65,7 @@ public class FindBestMeetingTimeStrategyImpl implements FindBestMeetingTimeStrat
         return timeBlocks
                 .subList(startIdx, endIdx)
                 .stream()
-                .map(TimeBlockVo::getWeight)
+                .map(TimeBlockVo::weight)
                 .reduce(0, Integer::sum);
     }
 
@@ -77,15 +76,13 @@ public class FindBestMeetingTimeStrategyImpl implements FindBestMeetingTimeStrat
             final int needTimeBlockCount,
             final int sumWeight
     ) {
-        TimeSlot startTime = timeBlocks.get(timeBlockIdx).getTimeSlot();
+        TimeSlot startTime = timeBlocks.get(timeBlockIdx).timeSlot();
         TimeSlot endTime = TimeSlot.getTimeSlot(startTime.ordinal() + needTimeBlockCount);
-        List<UserVo> users = timeBlocks.get(timeBlockIdx).getUsers();
 
         return new BestMeetingTimeVo(
                 date,
                 startTime,
                 endTime,
-                users,
                 sumWeight
         );
     }
