@@ -42,7 +42,7 @@ public class GetBestMeetingTimeTest {
         UserVo userVo = new UserVo(1L, "강원용");
         List<UserVo> users = List.of(userVo);
 
-        TimeBlockVo timeBlockByMeetingDate = new TimeBlockVo(1L, 0, SLOT_12_00, users);
+        TimeBlockVo timeBlockByMeetingDate = new TimeBlockVo(0, SLOT_12_00, users);
         List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate));
 
         LocalDate meetingDate = LocalDate.of(2023, 7, 10);
@@ -69,10 +69,10 @@ public class GetBestMeetingTimeTest {
         LocalDate meetingDate = LocalDate.of(2023, 7, 10);
         LocalDate meetingDate2 = LocalDate.of(2023, 7, 11);
 
-        TimeBlockVo timeBlockByMeetingDate = new TimeBlockVo(1L, 0, SLOT_12_00, users);
+        TimeBlockVo timeBlockByMeetingDate = new TimeBlockVo(0, SLOT_12_00, users);
         List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate));
 
-        TimeBlockVo timeBlockByMeetingDate2 = new TimeBlockVo(1L, 0, SLOT_12_30, users);
+        TimeBlockVo timeBlockByMeetingDate2 = new TimeBlockVo(0, SLOT_12_30, users);
         List<TimeBlockVo> timeBlocks2 = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate2));
 
         TimeBlocksByDateVo timeBlocksByDate = new TimeBlocksByDateVo(1L, meetingDate, timeBlocks);
@@ -100,12 +100,12 @@ public class GetBestMeetingTimeTest {
         LocalDate meetingDate = LocalDate.of(2023, 7, 10);
         LocalDate meetingDate2 = LocalDate.of(2023, 7, 11);
 
-        TimeBlockVo timeBlockByMeetingDate = new TimeBlockVo(1L, 0, SLOT_12_00, users);
-        TimeBlockVo timeBlock2ByMeetingDate = new TimeBlockVo(1L, 0, SLOT_12_30, users);
+        TimeBlockVo timeBlockByMeetingDate = new TimeBlockVo(0, SLOT_12_00, users);
+        TimeBlockVo timeBlock2ByMeetingDate = new TimeBlockVo(0, SLOT_12_30, users);
         List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate, timeBlock2ByMeetingDate));
 
-        TimeBlockVo timeBlockByMeetingDate2 = new TimeBlockVo(1L, 0, SLOT_12_30, users);
-        TimeBlockVo timeBlock2ByMeetingDate2 = new TimeBlockVo(1L, 0, SLOT_13_00, users);
+        TimeBlockVo timeBlockByMeetingDate2 = new TimeBlockVo(0, SLOT_12_30, users);
+        TimeBlockVo timeBlock2ByMeetingDate2 = new TimeBlockVo(0, SLOT_13_00, users);
         List<TimeBlockVo> timeBlocks2 = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate2, timeBlock2ByMeetingDate2));
 
         TimeBlocksByDateVo timeBlocksByDate = new TimeBlocksByDateVo(1L, meetingDate, timeBlocks);
@@ -134,12 +134,12 @@ public class GetBestMeetingTimeTest {
         LocalDate meetingDate = LocalDate.of(2023, 7, 10);
         LocalDate meetingDate2 = LocalDate.of(2023, 7, 11);
 
-        TimeBlockVo timeBlockByMeetingDate = new TimeBlockVo(1L, 0, SLOT_12_00, users);
-        TimeBlockVo timeBlock2ByMeetingDate = new TimeBlockVo(1L, 0, SLOT_12_30, users);
+        TimeBlockVo timeBlockByMeetingDate = new TimeBlockVo(0, SLOT_12_00, users);
+        TimeBlockVo timeBlock2ByMeetingDate = new TimeBlockVo(0, SLOT_12_30, users);
         List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate, timeBlock2ByMeetingDate));
 
-        TimeBlockVo timeBlockByMeetingDate2 = new TimeBlockVo(1L, 0, SLOT_12_30, users);
-        TimeBlockVo timeBlock2ByMeetingDate2 = new TimeBlockVo(1L, 0, SLOT_13_00, users);
+        TimeBlockVo timeBlockByMeetingDate2 = new TimeBlockVo(0, SLOT_12_30, users);
+        TimeBlockVo timeBlock2ByMeetingDate2 = new TimeBlockVo(0, SLOT_13_00, users);
         List<TimeBlockVo> timeBlocks2 = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate2, timeBlock2ByMeetingDate2));
 
         TimeBlocksByDateVo timeBlocksByDate = new TimeBlocksByDateVo(1L, meetingDate, timeBlocks);
@@ -168,16 +168,16 @@ public class GetBestMeetingTimeTest {
         LocalDate meetingDate = LocalDate.of(2023, 7, 10);
         LocalDate meetingDate2 = LocalDate.of(2023, 7, 11);
 
-        TimeBlockVo timeBlockByMeetingDate = new TimeBlockVo(1L, 0, SLOT_12_00, users);
-        TimeBlockVo timeBlock2ByMeetingDate = new TimeBlockVo(1L, 0, SLOT_12_30, users);
-        TimeBlockVo timeBlock3ByMeetingDate = new TimeBlockVo(1L, 0, SLOT_13_00, users);
-        TimeBlockVo timeBlock4ByMeetingDate = new TimeBlockVo(1L, 0, SLOT_13_30, users);
+        TimeBlockVo timeBlockByMeetingDate = new TimeBlockVo(0, SLOT_12_00, users);
+        TimeBlockVo timeBlock2ByMeetingDate = new TimeBlockVo(0, SLOT_12_30, users);
+        TimeBlockVo timeBlock3ByMeetingDate = new TimeBlockVo(0, SLOT_13_00, users);
+        TimeBlockVo timeBlock4ByMeetingDate = new TimeBlockVo(0, SLOT_13_30, users);
         List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate, timeBlock2ByMeetingDate, timeBlock3ByMeetingDate, timeBlock4ByMeetingDate));
 
-        TimeBlockVo timeBlockByMeetingDate2 = new TimeBlockVo(1L, 0, SLOT_12_30, users);
-        TimeBlockVo timeBlock2ByMeetingDate2 = new TimeBlockVo(1L, 6, SLOT_13_00, users);
-        TimeBlockVo timeBlock3ByMeetingDate2 = new TimeBlockVo(1L, 6, SLOT_13_30, users);
-        TimeBlockVo timeBlock4ByMeetingDate2 = new TimeBlockVo(1L, 6, SLOT_14_00, users);
+        TimeBlockVo timeBlockByMeetingDate2 = new TimeBlockVo(0, SLOT_12_30, users);
+        TimeBlockVo timeBlock2ByMeetingDate2 = new TimeBlockVo(6, SLOT_13_00, users);
+        TimeBlockVo timeBlock3ByMeetingDate2 = new TimeBlockVo(6, SLOT_13_30, users);
+        TimeBlockVo timeBlock4ByMeetingDate2 = new TimeBlockVo(6, SLOT_14_00, users);
         List<TimeBlockVo> timeBlocks2 = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate2, timeBlock2ByMeetingDate2, timeBlock3ByMeetingDate2, timeBlock4ByMeetingDate2));
 
         TimeBlocksByDateVo timeBlocksByDate = new TimeBlocksByDateVo(1L, meetingDate, timeBlocks);
@@ -204,7 +204,7 @@ public class GetBestMeetingTimeTest {
 
         LocalDate meetingDate = LocalDate.of(2023, 7, 10);
 
-        TimeBlockVo timeBlockByMeetingDate = new TimeBlockVo(1L, 0, SLOT_12_00, users);
+        TimeBlockVo timeBlockByMeetingDate = new TimeBlockVo(0, SLOT_12_00, users);
         List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate));
 
         TimeBlocksByDateVo timeBlocksByDate = new TimeBlocksByDateVo(1L, meetingDate, timeBlocks);

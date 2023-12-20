@@ -15,14 +15,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @ToString
 public class TimeBlockVo implements Comparable<TimeBlockVo> {
-    private Long id;
     private int weight;
     private TimeSlot timeSlot;
     private List<UserVo> users;
 
     public static TimeBlockVo of(TimeBlock timeBlock) {
         return new TimeBlockVo(
-                timeBlock.getId(),
                 timeBlock.getWeight(),
                 timeBlock.getTimeSlot(),
                 timeBlock.getTimeBlockUsers()

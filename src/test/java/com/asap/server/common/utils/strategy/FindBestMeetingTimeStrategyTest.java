@@ -45,13 +45,13 @@ class FindBestMeetingTimeStrategyTest {
         UserVo dsy = new UserVo(1L, "DSY");
         List<UserVo> users = List.of(kwy, dsy);
 
-        TimeBlockVo timeBlock = new TimeBlockVo(1L, 0, SLOT_11_00, users);
-        TimeBlockVo timeBlock2 = new TimeBlockVo(1L, 0, SLOT_11_30, users);
-        TimeBlockVo timeBlock3 = new TimeBlockVo(1L, 0, SLOT_12_00, users);
-        TimeBlockVo timeBlock4 = new TimeBlockVo(1L, 0, SLOT_12_30, users);
-        TimeBlockVo timeBlock5 = new TimeBlockVo(1L, 0, SLOT_13_00, users);
-        TimeBlockVo timeBlock6 = new TimeBlockVo(1L, 0, SLOT_13_30, users);
-        TimeBlockVo timeBlock7 = new TimeBlockVo(1L, 0, SLOT_14_00, users);
+        TimeBlockVo timeBlock = new TimeBlockVo(0, SLOT_11_00, users);
+        TimeBlockVo timeBlock2 = new TimeBlockVo(0, SLOT_11_30, users);
+        TimeBlockVo timeBlock3 = new TimeBlockVo(0, SLOT_12_00, users);
+        TimeBlockVo timeBlock4 = new TimeBlockVo(0, SLOT_12_30, users);
+        TimeBlockVo timeBlock5 = new TimeBlockVo(0, SLOT_13_00, users);
+        TimeBlockVo timeBlock6 = new TimeBlockVo(0, SLOT_13_30, users);
+        TimeBlockVo timeBlock7 = new TimeBlockVo(0, SLOT_14_00, users);
         List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlock, timeBlock2, timeBlock3, timeBlock4, timeBlock5, timeBlock6, timeBlock7));
 
         LocalDate meetingDate = LocalDate.of(2023, 9, 8);
@@ -78,17 +78,17 @@ class FindBestMeetingTimeStrategyTest {
         UserVo dsy = new UserVo(1L, "DSY");
         List<UserVo> users = List.of(kwy, dsy);
 
-        TimeBlockVo timeBlock = new TimeBlockVo(1L, 0, SLOT_11_00, users);
-        TimeBlockVo timeBlock2 = new TimeBlockVo(1L, 0, SLOT_11_30, users);
-        TimeBlockVo timeBlock3 = new TimeBlockVo(1L, 0, SLOT_12_00, users);
+        TimeBlockVo timeBlock = new TimeBlockVo(0, SLOT_11_00, users);
+        TimeBlockVo timeBlock2 = new TimeBlockVo(0, SLOT_11_30, users);
+        TimeBlockVo timeBlock3 = new TimeBlockVo(0, SLOT_12_00, users);
 
-        TimeBlockVo timeBlock4 = new TimeBlockVo(1L, 0, SLOT_12_30, List.of(kwy));
-        TimeBlockVo timeBlock5 = new TimeBlockVo(1L, 0, SLOT_13_00, List.of(kwy));
-        TimeBlockVo timeBlock6 = new TimeBlockVo(1L, 0, SLOT_13_30, List.of(kwy));
+        TimeBlockVo timeBlock4 = new TimeBlockVo(0, SLOT_12_30, List.of(kwy));
+        TimeBlockVo timeBlock5 = new TimeBlockVo(0, SLOT_13_00, List.of(kwy));
+        TimeBlockVo timeBlock6 = new TimeBlockVo(0, SLOT_13_30, List.of(kwy));
 
-        TimeBlockVo timeBlock7 = new TimeBlockVo(1L, 0, SLOT_20_00, users);
-        TimeBlockVo timeBlock8 = new TimeBlockVo(1L, 0, SLOT_20_30, users);
-        TimeBlockVo timeBlock9 = new TimeBlockVo(1L, 0, SLOT_21_00, users);
+        TimeBlockVo timeBlock7 = new TimeBlockVo(0, SLOT_20_00, users);
+        TimeBlockVo timeBlock8 = new TimeBlockVo(0, SLOT_20_30, users);
+        TimeBlockVo timeBlock9 = new TimeBlockVo(0, SLOT_21_00, users);
         List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlock, timeBlock2, timeBlock3, timeBlock4, timeBlock5, timeBlock6, timeBlock7, timeBlock8, timeBlock9));
 
         LocalDate meetingDate = LocalDate.of(2023, 9, 8);
