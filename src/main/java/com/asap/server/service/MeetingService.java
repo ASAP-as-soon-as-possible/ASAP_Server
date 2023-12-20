@@ -29,11 +29,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,7 +76,7 @@ public class MeetingService {
         meeting.setHost(host);
 
         String accessToken = jwtService.issuedToken(host.getId().toString());
-        meeting.setUrl(Base64Utils.encodeToUrlSafeString(meeting.getId().toString().getBytes()));
+        meeting.setUrl(Base64.getUrlEncoder().encodeToString(meeting.getId().toString().getBytes()));
 
         return MeetingSaveResponseDto.builder()
                 .url(meeting.getUrl())

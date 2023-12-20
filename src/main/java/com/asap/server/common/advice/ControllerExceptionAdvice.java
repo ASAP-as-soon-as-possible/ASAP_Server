@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
 import java.io.IOException;
 
 import static com.asap.server.exception.Error.METHOD_NOT_ALLOWED_EXCEPTION;
