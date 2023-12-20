@@ -21,6 +21,9 @@ import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.meeting.MeetingRepository;
 import com.asap.server.repository.user.UserRepository;
+import com.asap.server.service.vo.BestMeetingTimeVo;
+import com.asap.server.service.vo.BestMeetingTimeWithUsersVo;
+import com.asap.server.service.vo.UserVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -178,5 +181,18 @@ public class UserService {
         }
 
         return responseDto;
+    }
+
+    public List<BestMeetingTimeWithUsersVo> getBestMeetingInUsers(List<BestMeetingTimeVo> bestMeetingTimes) {
+        return bestMeetingTimes.stream()
+                .map(this::getBestMeetingTimeInUsers)
+                .collect(Collectors.toList());
+    }
+
+    private BestMeetingTimeWithUsersVo getBestMeetingTimeInUsers(final BestMeetingTimeVo bestMeetingTime) {
+        if (bestMeetingTime == null) return null;
+        List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(bestMeetingTime.startTime().ordinal(), bestMeetingTime.endTime().ordinal());
+        List<UserVo> users = userRepository.findByAvailableDateAndTimeSlots(bestMeetingTime.availableDateId(), timeSlots);
+        return BestMeetingTimeWithUsersVo.of(bestMeetingTime, users);
     }
 }

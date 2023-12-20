@@ -1,6 +1,7 @@
 package com.asap.server.controller.dto.response;
 
 import com.asap.server.service.vo.BestMeetingTimeVo;
+import com.asap.server.service.vo.BestMeetingTimeWithUsersVo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -20,7 +21,7 @@ public class BestMeetingTimeResponseDto {
     private static final int SECOND_BEST_MEETING_INDEX = 1;
     private static final int THIRD_BEST_MEETING_INDEX = 2;
 
-    public static BestMeetingTimeResponseDto of(int memberCount, List<BestMeetingTimeVo> bestMeetingTimes) {
+    public static BestMeetingTimeResponseDto of(int memberCount, List<BestMeetingTimeWithUsersVo> bestMeetingTimes) {
         return new BestMeetingTimeResponseDto(
                 memberCount,
                 MeetingTimeResponseDto.of(bestMeetingTimes.get(FIRST_BEST_MEETING_INDEX)),

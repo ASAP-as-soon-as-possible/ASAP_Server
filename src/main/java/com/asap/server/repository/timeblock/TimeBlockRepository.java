@@ -1,4 +1,4 @@
-package com.asap.server.repository;
+package com.asap.server.repository.timeblock;
 
 import com.asap.server.domain.AvailableDate;
 import com.asap.server.domain.TimeBlock;
@@ -8,7 +8,7 @@ import org.springframework.data.repository.Repository;
 import java.util.List;
 import java.util.Optional;
 
-public interface TimeBlockRepository extends Repository<TimeBlock, Long> {
+public interface TimeBlockRepository extends Repository<TimeBlock, Long>, TimeBlockRepositoryCustom {
 
     void save(final TimeBlock timeBlock);
 

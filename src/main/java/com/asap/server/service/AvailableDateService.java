@@ -81,10 +81,7 @@ public class AvailableDateService {
         return availableDates.stream()
                 .map(availableDate -> {
                     List<TimeBlockVo> timeBlocks = timeBlockService
-                            .getTimeBlocksByAvailableDate(availableDate)
-                            .stream()
-                            .map(TimeBlockVo::of)
-                            .collect(Collectors.toList());
+                            .getTimeBlocksByAvailableDate(availableDate.getId());
 
                     return TimeBlocksByDateVo.of(availableDate, timeBlocks);
                 }).collect(Collectors.toList());

@@ -62,7 +62,7 @@ public class BestMeetingUtil {
 
     private List<BestMeetingTimeVo> findTop3BestMeetingTimesSortByWeight(final List<BestMeetingTimeVo> bestMeetingTimes) {
         return bestMeetingTimes.stream()
-                .sorted(Comparator.comparing(BestMeetingTimeVo::getWeight, Comparator.reverseOrder()))
+                .sorted(Comparator.comparing(BestMeetingTimeVo::weight, Comparator.reverseOrder()))
                 .limit(BEST_MEETING_TIME_SIZE)
                 .collect(Collectors.toList());
     }
