@@ -218,4 +218,31 @@ public class GetBestMeetingTimeTest {
         // then
         assertThat(bestMeetingTimes).isEqualTo(Arrays.asList(result, null, null));
     }
+
+    @Test
+    @DisplayName("가중치가 3인 최적의 회의 시간이 1개이고, 가중치가 4인 차선의 회의 시간이 4개일 때 (최적의 회의 시간 , 차선의 회의 시간 2개) 순으로 반환한다.")
+    public void getBestMeetingTime7() {
+        // given
+        LocalDate meetingDate = LocalDate.of(2023, 7, 10);
+
+        TimeBlockVo timeBlockByMeetingDate = new TimeBlockVo(3, SLOT_12_00, 3L);
+        TimeBlockVo timeBlock2ByMeetingDate = new TimeBlockVo(4, SLOT_12_30, 2L);
+        TimeBlockVo timeBlock3ByMeetingDate = new TimeBlockVo(4, SLOT_13_00, 2L);
+        TimeBlockVo timeBlock4ByMeetingDate = new TimeBlockVo(4, SLOT_13_30, 2L);
+        TimeBlockVo timeBlock5ByMeetingDate = new TimeBlockVo(4, SLOT_14_00, 2L);
+        List<TimeBlockVo> timeBlocks = new ArrayList<>(Arrays.asList(timeBlockByMeetingDate, timeBlock2ByMeetingDate, timeBlock3ByMeetingDate, timeBlock4ByMeetingDate, timeBlock5ByMeetingDate));
+
+        TimeBlocksByDateVo timeBlocksByDate = new TimeBlocksByDateVo(1L, meetingDate, timeBlocks);
+        List<TimeBlocksByDateVo> timeBlocksByDates = Arrays.asList(timeBlocksByDate);
+
+        BestMeetingTimeVo result = new BestMeetingTimeVo(1L, meetingDate, SLOT_12_00, SLOT_12_30, 3);
+        BestMeetingTimeVo result2 = new BestMeetingTimeVo(1L, meetingDate, SLOT_12_30, SLOT_13_00, 4);
+        BestMeetingTimeVo result3 = new BestMeetingTimeVo(1L, meetingDate, SLOT_13_00, SLOT_13_30, 4);
+
+        // when
+        List<BestMeetingTimeVo> bestMeetingTimes = bestMeetingUtil.getBestMeetingTime(timeBlocksByDates, Duration.HALF, 3);
+
+        // then
+        assertThat(bestMeetingTimes).isEqualTo(Arrays.asList(result, result2, result3));
+    }
 }

@@ -40,7 +40,10 @@ public class BestMeetingUtil {
     private List<BestMeetingTimeVo> findAllBestMeetingTimes(final List<TimeBlocksByDateVo> timeBlocksByDates, final List<PossibleTimeCaseVo> timeCases) {
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>();
         for (PossibleTimeCaseVo timeCase : timeCases) {
-            List<BestMeetingTimeVo> bestMeetingTimesWithTimeCase = findBestMeetingTimesWithTimeCase(timeCase, timeBlocksByDates);
+            List<BestMeetingTimeVo> bestMeetingTimesWithTimeCase =
+                    findBestMeetingTimesWithTimeCase(timeCase, timeBlocksByDates).stream()
+                            .sorted(Comparator.comparing(BestMeetingTimeVo::weight, Comparator.reverseOrder()))
+                            .toList();
             bestMeetingTimes.addAll(bestMeetingTimesWithTimeCase);
 
             if (bestMeetingTimes.size() < BEST_MEETING_TIME_SIZE) continue;
@@ -62,7 +65,6 @@ public class BestMeetingUtil {
 
     private List<BestMeetingTimeVo> findTop3BestMeetingTimesSortByWeight(final List<BestMeetingTimeVo> bestMeetingTimes) {
         return bestMeetingTimes.stream()
-                .sorted(Comparator.comparing(BestMeetingTimeVo::weight, Comparator.reverseOrder()))
                 .limit(BEST_MEETING_TIME_SIZE)
                 .collect(Collectors.toList());
     }
