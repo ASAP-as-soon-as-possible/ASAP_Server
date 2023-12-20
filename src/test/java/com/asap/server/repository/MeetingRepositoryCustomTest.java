@@ -23,46 +23,46 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @Import(QueryDslConfig.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class MeetingRepositoryCustomTest {
-//    @Autowired
-//    private MeetingRepository meetingRepository;
-//
-//    @Autowired
-//    private EntityManager em;
-//
-//    @Test
-//    @DisplayName("방장이 로그인을 할 때, 방장 정보도 함께 불러온다.")
-//    void fetchJoinTest() {
-//        final Place place = Place.builder()
-//                .placeType(PlaceType.OFFLINE)
-//                .build();
-//
-//        final Meeting meeting = Meeting.builder()
-//                .title("회의 테스트")
-//                .password("0000")
-//                .additionalInfo("")
-//                .duration(Duration.HALF)
-//                .place(place)
-//                .build();
-//
-//        final User user = User.builder()
-//                .meeting(meeting)
-//                .name("강원용")
-//                .role(Role.HOST)
-//                .isFixed(false)
-//                .build();
-//        meeting.setHost(user);
-//
-//        em.persist(meeting);
-//        em.persist(user);
-//        em.flush();
-//        em.clear();
-//
-//        // when
-//        Meeting result = meetingRepository.findByIdWithHost(meeting.getId()).get();
-//        User host = result.getHost();
-//
-//        // then
-//        assertThat(host).isNotNull();
-//    }
+    @Autowired
+    private MeetingRepository meetingRepository;
+
+    @Autowired
+    private EntityManager em;
+
+    @Test
+    @DisplayName("방장이 로그인을 할 때, 방장 정보도 함께 불러온다.")
+    void fetchJoinTest() {
+        final Place place = Place.builder()
+                .placeType(PlaceType.OFFLINE)
+                .build();
+
+        final Meeting meeting = Meeting.builder()
+                .title("회의 테스트")
+                .password("0000")
+                .additionalInfo("")
+                .duration(Duration.HALF)
+                .place(place)
+                .build();
+
+        final User user = User.builder()
+                .meeting(meeting)
+                .name("강원용")
+                .role(Role.HOST)
+                .isFixed(false)
+                .build();
+        meeting.setHost(user);
+
+        em.persist(meeting);
+        em.persist(user);
+        em.flush();
+        em.clear();
+
+        // when
+        Meeting result = meetingRepository.findByIdWithHost(meeting.getId()).get();
+        User host = result.getHost();
+
+        // then
+        assertThat(host).isNotNull();
+    }
 
 }
