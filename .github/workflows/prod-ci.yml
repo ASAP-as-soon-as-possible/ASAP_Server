@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: mirromutth/mysql-action@v1.1
+      - name: Setup MySQL
+        uses: samin/mysql-action@v1
         with:
-          host port: 3306
-          container port: 3306
+          character set server: 'utf8'
           mysql database: 'asap_dev'
           mysql user: 'asap_dev_admin'
           mysql password: ${{ secrets.DatabasePassword }}
