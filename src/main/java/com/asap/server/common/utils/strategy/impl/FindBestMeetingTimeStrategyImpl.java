@@ -7,7 +7,6 @@ import com.asap.server.service.vo.TimeBlockVo;
 import com.asap.server.service.vo.TimeBlocksByDateVo;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,10 +16,10 @@ public class FindBestMeetingTimeStrategyImpl implements FindBestMeetingTimeStrat
     @Override
     public List<BestMeetingTimeVo> find(final TimeBlocksByDateVo timeBlocksByDate, final int needTimeBlockCount, final int userCount) {
         List<TimeBlockVo> sortedTimeBlocks = filterByUserCountAndSortByTime(timeBlocksByDate.getTimeBlocks(), userCount);
-        return findBestMeetingTime(sortedTimeBlocks, timeBlocksByDate.getDate(), needTimeBlockCount);
+        return findBestMeetingTime(sortedTimeBlocks, timeBlocksByDate, needTimeBlockCount);
     }
 
-    private List<BestMeetingTimeVo> findBestMeetingTime(final List<TimeBlockVo> timeBlocks, final LocalDate date, final int needTimeBlockCount) {
+    private List<BestMeetingTimeVo> findBestMeetingTime(final List<TimeBlockVo> timeBlocks, final TimeBlocksByDateVo timeBlocksByDate, final int needTimeBlockCount) {
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>();
 
         int endIndex = timeBlocks.size() - needTimeBlockCount + 1;
@@ -32,7 +31,7 @@ public class FindBestMeetingTimeStrategyImpl implements FindBestMeetingTimeStrat
 
             BestMeetingTimeVo bestMeetingTime = getBestMeetingTime(
                     timeBlocks,
-                    date,
+                    timeBlocksByDate,
                     timeBlockIdx,
                     needTimeBlockCount,
                     sumWeight
@@ -71,7 +70,7 @@ public class FindBestMeetingTimeStrategyImpl implements FindBestMeetingTimeStrat
 
     private BestMeetingTimeVo getBestMeetingTime(
             final List<TimeBlockVo> timeBlocks,
-            final LocalDate date,
+            final TimeBlocksByDateVo timeBlocksByDate,
             final int timeBlockIdx,
             final int needTimeBlockCount,
             final int sumWeight
@@ -80,7 +79,8 @@ public class FindBestMeetingTimeStrategyImpl implements FindBestMeetingTimeStrat
         TimeSlot endTime = TimeSlot.getTimeSlot(startTime.ordinal() + needTimeBlockCount);
 
         return new BestMeetingTimeVo(
-                date,
+                timeBlocksByDate.getId(),
+                timeBlocksByDate.getDate(),
                 startTime,
                 endTime,
                 sumWeight

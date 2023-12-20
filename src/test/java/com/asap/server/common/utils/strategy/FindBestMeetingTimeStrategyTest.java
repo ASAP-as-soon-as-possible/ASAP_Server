@@ -57,10 +57,10 @@ class FindBestMeetingTimeStrategyTest {
         LocalDate meetingDate = LocalDate.of(2023, 9, 8);
         TimeBlocksByDateVo availableDate = new TimeBlocksByDateVo(1L, meetingDate, timeBlocks);
 
-        BestMeetingTimeVo bestMeetingTime = new BestMeetingTimeVo(meetingDate, SLOT_11_00, SLOT_13_00, 0);
-        BestMeetingTimeVo bestMeetingTime2 = new BestMeetingTimeVo(meetingDate, SLOT_11_30, SLOT_13_30, 0);
-        BestMeetingTimeVo bestMeetingTime3 = new BestMeetingTimeVo(meetingDate, SLOT_12_00, SLOT_14_00, 0);
-        BestMeetingTimeVo bestMeetingTime4 = new BestMeetingTimeVo(meetingDate, SLOT_12_30, SLOT_14_30, 0);
+        BestMeetingTimeVo bestMeetingTime = new BestMeetingTimeVo(1L,meetingDate, SLOT_11_00, SLOT_13_00, 0);
+        BestMeetingTimeVo bestMeetingTime2 = new BestMeetingTimeVo(1L,meetingDate, SLOT_11_30, SLOT_13_30, 0);
+        BestMeetingTimeVo bestMeetingTime3 = new BestMeetingTimeVo(1L,meetingDate, SLOT_12_00, SLOT_14_00, 0);
+        BestMeetingTimeVo bestMeetingTime4 = new BestMeetingTimeVo(1L,meetingDate, SLOT_12_30, SLOT_14_30, 0);
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>(List.of(bestMeetingTime, bestMeetingTime2, bestMeetingTime3, bestMeetingTime4));
 
         // when
@@ -94,10 +94,10 @@ class FindBestMeetingTimeStrategyTest {
         LocalDate meetingDate = LocalDate.of(2023, 9, 8);
         TimeBlocksByDateVo availableDate = new TimeBlocksByDateVo(1L, meetingDate, timeBlocks);
 
-        BestMeetingTimeVo bestMeetingTime = new BestMeetingTimeVo(meetingDate, SLOT_11_00, SLOT_12_00, 0);
-        BestMeetingTimeVo bestMeetingTime2 = new BestMeetingTimeVo(meetingDate, SLOT_11_30, SLOT_12_30, 0);
-        BestMeetingTimeVo bestMeetingTime3 = new BestMeetingTimeVo(meetingDate, SLOT_20_00, SLOT_21_00, 0);
-        BestMeetingTimeVo bestMeetingTime4 = new BestMeetingTimeVo(meetingDate, SLOT_20_30, SLOT_21_30, 0);
+        BestMeetingTimeVo bestMeetingTime = new BestMeetingTimeVo(1L,meetingDate, SLOT_11_00, SLOT_12_00, 0);
+        BestMeetingTimeVo bestMeetingTime2 = new BestMeetingTimeVo(1L,meetingDate, SLOT_11_30, SLOT_12_30, 0);
+        BestMeetingTimeVo bestMeetingTime3 = new BestMeetingTimeVo(1L,meetingDate, SLOT_20_00, SLOT_21_00, 0);
+        BestMeetingTimeVo bestMeetingTime4 = new BestMeetingTimeVo(1L,meetingDate, SLOT_20_30, SLOT_21_30, 0);
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>(List.of(bestMeetingTime, bestMeetingTime2, bestMeetingTime3, bestMeetingTime4));
 
         // when
