@@ -23,10 +23,10 @@ jobs:
       uses: actions/checkout@v3
     
     # 2) JDK 11버전 설치, 다른 JDK 버전을 사용하다면 수정
-    - name: Set up JDK 11
+    - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
-        java-version: '11'
+        java-version: '17'
         distribution: 'temurin'
     
     # 3) 환경변수 파일 생성

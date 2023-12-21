@@ -1,6 +1,6 @@
 package com.asap.server.config;
 
-import com.asap.server.config.resolver.meeting.MeetingPathResolver;
+import com.asap.server.config.resolver.meeting.MeetingPathVariableResolver;
 import com.asap.server.config.resolver.user.UserIdResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +17,7 @@ import java.util.List;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     private final UserIdResolver userIdResolver;
-    private final MeetingPathResolver meetingPathResolver;
+    private final MeetingPathVariableResolver meetingPathVariableResolver;
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
@@ -35,7 +35,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(userIdResolver);
-        resolvers.add(meetingPathResolver);
-
+        resolvers.add(meetingPathVariableResolver);
     }
 }

@@ -2,7 +2,7 @@ package com.asap.server.controller.dto.request;
 
 import com.asap.server.domain.enums.TimeSlot;
 import java.util.List;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -22,18 +22,19 @@ import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.ForbiddenException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
-import com.asap.server.repository.MeetingRepository;
+import com.asap.server.repository.meeting.MeetingRepository;
 import com.asap.server.service.vo.BestMeetingTimeVo;
+import com.asap.server.service.vo.BestMeetingTimeWithUsersVo;
 import com.asap.server.service.vo.TimeBlocksByDateVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,7 +77,7 @@ public class MeetingService {
         meeting.setHost(host);
 
         String accessToken = jwtService.issuedToken(host.getId().toString());
-        meeting.setUrl(Base64Utils.encodeToUrlSafeString(meeting.getId().toString().getBytes()));
+        meeting.setUrl(Base64.getUrlEncoder().encodeToString(meeting.getId().toString().getBytes()));
 
         return MeetingSaveResponseDto.builder()
                 .url(meeting.getUrl())
@@ -103,8 +104,6 @@ public class MeetingService {
         LocalDateTime fixedStartDateTime = LocalDateTime.of(fixedDate, startTime);
         LocalDateTime fixedEndDateTime = LocalDateTime.of(fixedDate, endTime);
         meeting.setConfirmedDateTime(fixedStartDateTime, fixedEndDateTime);
-
-        meetingRepository.saveAndFlush(meeting);
 
         userService.setFixedUsers(meeting, meetingConfirmRequestDto.getUsers());
     }
@@ -199,7 +198,8 @@ public class MeetingService {
         List<TimeBlocksByDateVo> availableDates = availableDateService.getAvailableDateVos(meeting);
 
         List<BestMeetingTimeVo> bestMeetingTimes = bestMeetingUtil.getBestMeetingTime(availableDates, meeting.getDuration(), userCount);
-        return BestMeetingTimeResponseDto.of(userCount, bestMeetingTimes);
+        List<BestMeetingTimeWithUsersVo> bestMeetingTimeWithUsers = userService.getBestMeetingInUsers(bestMeetingTimes);
+        return BestMeetingTimeResponseDto.of(userCount, bestMeetingTimeWithUsers);
     }
 
 }
