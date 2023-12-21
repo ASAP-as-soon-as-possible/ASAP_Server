@@ -13,14 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup MySQL
-        uses: samin/mysql-action@v1
-        with:
-          character set server: 'utf8'
-          mysql database: 'asap_server'
-          mysql user: 'asap_admin'
-          mysql password: ${{ secrets.DatabasePassword }}
-
       - uses: actions/checkout@v3
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -50,4 +42,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle # 실제 application build
-        run: ./gradlew build
+        run: ./gradlew build -x test
+
+      - name: Build with Test # 실제 application build
+        run: ./gradlew test
