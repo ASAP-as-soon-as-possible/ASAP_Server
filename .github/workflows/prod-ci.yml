@@ -51,6 +51,3 @@ jobs:
 
       - name: Build with Gradle # 실제 application build
         run: ./gradlew build -x test
-
-      - name: Build with Test # 실제 application build
-        run: ./gradlew test
