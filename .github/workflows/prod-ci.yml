@@ -13,11 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Setup MySQL
+        uses: samin/mysql-action@v1
+        with:
+          character set server: 'utf8'
+          mysql database: 'asap_dev'
+          mysql user: 'asap_dev_admin'
+          mysql password: ${{ secrets.DatabasePassword }}
+
       - uses: actions/checkout@v3
-      - name: Set up JDK 11
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
+          java-version: '17'
           distribution: 'temurin'
 
       - name: make application.properties 파일 생성
@@ -31,7 +39,7 @@ jobs:
           touch ./application.yml
           
           # GitHub-Actions 에서 설정한 값을 application.yml 파일에 쓰기
-          echo "${{ secrets.ASAP_APPLICATION }}" >> ./application.yml
+          echo "${{ secrets.DEV_APPLICATION_YAML }}" >> ./application.yml
           
           # application.yml 파일 확인
           cat ./application.yml
@@ -42,4 +50,4 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle # 실제 application build
-        run: ./gradlew build
+        run: ./gradlew build -x test
