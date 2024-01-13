@@ -89,8 +89,8 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
       run:
         aws deploy create-deployment 
-        --application-name asap-server-codedeploy
-        --deployment-group-name asap-server-codedeploy-group
+        --application-name asap-prod-code-deploy
+        --deployment-group-name asap-prod-server
         --file-exists-behavior OVERWRITE 
         --s3-location bucket=asap-server,bundleType=zip,key=asap_server.zip
         --region ap-northeast-2
