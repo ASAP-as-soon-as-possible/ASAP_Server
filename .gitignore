@@ -21,6 +21,8 @@ output/
 # either the 3rd party diff or IDEA:
 *.java.orig
 
+/src/main/resources/application.yml
+
 # Package Files
 **/build/libs/*.jar
 *.war
