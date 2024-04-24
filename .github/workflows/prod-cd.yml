@@ -90,7 +90,7 @@ jobs:
       run:
         aws deploy create-deployment 
         --application-name asap-prod-code-deploy
-        --deployment-group-name asap-prod-server
+        --deployment-group-name asap-prod-code-deploy-group
         --file-exists-behavior OVERWRITE 
-        --s3-location bucket=asap-server,bundleType=zip,key=asap_server.zip
+        --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=asap_server.zip
         --region ap-northeast-2
