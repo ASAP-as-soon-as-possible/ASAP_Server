@@ -44,6 +44,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry interceptorRegistry) {
         interceptorRegistry.addInterceptor(duplicatedInterceptor)
-                .addPathPatterns("/meeting", "/user/{meetingId}/time", "user/host/{meetingId}/time");
+                .addPathPatterns("/meeting", "/user/{meetingId}/time", "/user/host/{meetingId}/time");
     }
 }
