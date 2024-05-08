@@ -10,8 +10,12 @@ import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.ConflictException;
 import com.asap.server.exception.model.ForbiddenException;
 import com.asap.server.exception.model.HostTimeForbiddenException;
+import com.asap.server.exception.model.InternalErrorException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,9 +28,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.ValidationException;
 import java.io.IOException;
 
 import static com.asap.server.exception.Error.METHOD_NOT_ALLOWED_EXCEPTION;
@@ -133,9 +134,17 @@ public class ControllerExceptionAdvice {
         return ErrorResponse.error(e.getError());
     }
 
+
     /**
      * 500 Internal Server
      */
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(InternalErrorException.class)
+    protected ErrorResponse handleInternalErrorException(final InternalErrorException e) {
+        return ErrorResponse.error(e.getError());
+    }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     protected ErrorResponse handleException(final Exception error, final HttpServletRequest request) throws IOException {
