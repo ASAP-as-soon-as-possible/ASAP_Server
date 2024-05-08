@@ -1,49 +1,52 @@
 package com.asap.server.common.interceptor;
 
 
+import com.asap.server.common.filter.CustomHttpServletRequestWrapper;
 import com.asap.server.exception.Error;
-import com.asap.server.exception.model.InternalErrorException;
 import com.asap.server.exception.model.TooManyRequestException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.redisson.api.RLock;
+import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.util.ContentCachingRequestWrapper;
-
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import org.springframework.web.servlet.ModelAndView;
 
 @Component
 @RequiredArgsConstructor
 public class DuplicatedInterceptor implements HandlerInterceptor {
-
+    private static final String REDIS_KEY = "ASAP_REDIS";
+    private static final String RMAP_VALUE = "ASAP";
     private final RedissonClient redissonClient;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        final ContentCachingRequestWrapper cachingRequest = (ContentCachingRequestWrapper) request;
-        final String lockKey = (cachingRequest.getHeader("Host") + objectMapper.readTree(cachingRequest.getContentAsByteArray()));
-        RLock lock = redissonClient.getLock(lockKey);
-        boolean isLock = false;
-        try {
-            isLock = lock.tryLock(0, 0, TimeUnit.SECONDS);
-            if (!isLock) throw new TooManyRequestException(Error.TOO_MANY_REQUEST_EXCEPTION);
-        } catch (InterruptedException e) {
-            throw new InternalErrorException(Error.INTERNAL_SERVER_ERROR);
-        }
-        return true;
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        if (lock(request)) return true;
+        throw new TooManyRequestException(Error.TOO_MANY_REQUEST_EXCEPTION);
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        unLock(request);
+        HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        final ContentCachingRequestWrapper cachingRequest = (ContentCachingRequestWrapper) request;
-        final String lockKey = (cachingRequest.getHeader("Host") + objectMapper.readTree(cachingRequest.getContentAsByteArray()));
-        RLock lock = redissonClient.getLock(lockKey);
-        lock.unlock();
+        unLock(request);
+        HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+    }
+
+    private boolean lock(HttpServletRequest request) {
+        final String rmapKey = ((CustomHttpServletRequestWrapper) request).getBody();
+        RMap<String, String> redissonClientMap = redissonClient.getMap(REDIS_KEY);
+        return redissonClientMap.putIfAbsent(rmapKey, RMAP_VALUE) == null;
+    }
+
+    private void unLock(HttpServletRequest request) {
+        final String rmapKey = ((CustomHttpServletRequestWrapper) request).getBody();
+        RMap<String, String> redissonClientMap = redissonClient.getMap(REDIS_KEY);
+        redissonClientMap.remove(rmapKey);
     }
 }
