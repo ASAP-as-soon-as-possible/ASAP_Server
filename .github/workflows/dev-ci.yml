@@ -19,9 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Setup MySQL
-      uses: mirromutth/mysql-action@v1.1
+      uses: samin/mysql-action@v1
       with:
-        character set server: 'utf8'
         mysql root password: 'asap'
         mysql user: 'asap'
         mysql password: 'asap'
