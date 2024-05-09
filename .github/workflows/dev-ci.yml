@@ -30,12 +30,6 @@ jobs:
         mysql user: 'asapuser'
         mysql password: $MYSQL_ROOT_PASSWORD
         mysql root password: $MYSQL_ROOT_PASSWORD
-
-    - name: Wait for MySQL
-      run: |
-        while ! mysqladmin ping --host=127.0.0.1 --password=$MYSQL_ROOT_PASSWORD --silent; do
-          sleep 1
-        done
         
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -65,6 +59,12 @@ jobs:
     # 이 워크플로우는 gradle build
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-      
+
+    - name: Wait for MySQL
+      run: |
+        while ! mysqladmin ping --host=127.0.0.1 --password=$MYSQL_ROOT_PASSWORD --silent; do
+          sleep 1
+        done      
+    
     - name: Build with Gradle # 실제 application build
       run: ./gradlew build
