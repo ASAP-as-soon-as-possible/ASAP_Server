@@ -60,4 +60,4 @@ jobs:
         done      
 
     - name: Build with Gradle # 실제 application build
-      run: ./gradlew build
+      run: ./gradlew clean build
