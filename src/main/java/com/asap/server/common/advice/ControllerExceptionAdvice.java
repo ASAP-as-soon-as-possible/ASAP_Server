@@ -12,6 +12,7 @@ import com.asap.server.exception.model.ForbiddenException;
 import com.asap.server.exception.model.HostTimeForbiddenException;
 import com.asap.server.exception.model.InternalErrorException;
 import com.asap.server.exception.model.NotFoundException;
+import com.asap.server.exception.model.TooManyRequestException;
 import com.asap.server.exception.model.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -134,6 +135,14 @@ public class ControllerExceptionAdvice {
         return ErrorResponse.error(e.getError());
     }
 
+    /*
+     * 429 Too Many Requests
+     */
+    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+    @ExceptionHandler(TooManyRequestException.class)
+    protected ErrorResponse handleTooManyConflictException(final TooManyRequestException e) {
+        return ErrorResponse.error(e.getError());
+    }
 
     /**
      * 500 Internal Server
