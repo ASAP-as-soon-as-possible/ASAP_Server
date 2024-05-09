@@ -16,6 +16,8 @@ permissions:
 
 jobs:
   build:
+    env:
+      MYSQL_ROOT_PASSWORD: ${{ secrets.DATABASEPASSWORD }}
 
     runs-on: ubuntu-latest
 
@@ -26,10 +28,13 @@ jobs:
         character set server: 'utf8'
         mysql database: 'asap'
         mysql user: 'asapuser'
-        mysql password: ${{ secrets.DATABASEPASSWORD }}
-        
+        mysql password: $MYSQL_ROOT_PASSWORD
+
     - name: Wait for MySQL
-      run: sleep 15
+      run: |
+        while ! mysqladmin ping --host=127.0.0.1 --password=$MYSQL_ROOT_PASSWORD --silent; do
+          sleep 1
+        done
         
     - uses: actions/checkout@v3
     - name: Set up JDK 17
