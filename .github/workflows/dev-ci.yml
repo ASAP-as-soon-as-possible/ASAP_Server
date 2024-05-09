@@ -50,6 +50,7 @@ jobs:
         
         # application.yml 파일 확인
         cat ./application.yml
+        echo ./application.yml
       shell: bash
         
     # 이 워크플로우는 gradle build
