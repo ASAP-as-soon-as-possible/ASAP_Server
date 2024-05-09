@@ -25,7 +25,7 @@ jobs:
       with:
         character set server: 'utf8'
         mysql database: 'asap'
-        mysql user: 'asap'
+        mysql user: 'asapuser'
         mysql password: ${{ secrets.DATABASEPASSWORD }}
         
     - uses: actions/checkout@v3
