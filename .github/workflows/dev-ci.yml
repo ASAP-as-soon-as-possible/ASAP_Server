@@ -23,6 +23,8 @@ jobs:
       uses: mirromutth/mysql-action@v1.1
       with:
         mysql root password: 'asap'
+        mysql user: 'asap'
+        mysql password: 'asap'
         
     - uses: actions/checkout@v3
     - name: Set up JDK 17
