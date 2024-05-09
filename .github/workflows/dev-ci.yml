@@ -29,6 +29,7 @@ jobs:
         mysql database: 'asap'
         mysql user: 'asapuser'
         mysql password: $MYSQL_ROOT_PASSWORD
+        mysql root password: $MYSQL_ROOT_PASSWORD
 
     - name: Wait for MySQL
       run: |
@@ -59,7 +60,7 @@ jobs:
         # application.yml 파일 확인
         cat ./application.yml
       shell: bash
-        
+
     # 이 워크플로우는 gradle build
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
