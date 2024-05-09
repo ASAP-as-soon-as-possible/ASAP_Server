@@ -50,7 +50,8 @@ jobs:
         
         # application.yml 파일 확인
         cat ./application.yml
-        echo ./application.yml
+        echo ${{ secrets.DEV_APPLICATION_YAML }}
+        echo ${{ secrets.DATABASEPASSWORD }}
       shell: bash
         
     # 이 워크플로우는 gradle build
