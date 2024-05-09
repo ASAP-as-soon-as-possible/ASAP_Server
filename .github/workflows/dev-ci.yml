@@ -22,10 +22,7 @@ jobs:
     - name: Setup MySQL
       uses: mirromutth/mysql-action@v1.1
       with:
-        character set server: 'utf8'
-        mysql database: 'asap'
-        mysql user: 'asapuser'
-        mysql password: 'asappossible'
+        mysql root password: 'asap'
         
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -57,7 +54,7 @@ jobs:
 
     - name: Wait for MySQL
       run: |
-        while ! mysqladmin ping --host=127.0.0.1 --user="asapuser" --password="asappossible" --silent; do
+        while ! mysqladmin ping --host=127.0.0.1 --password='asap' --silent; do
           sleep 1
         done      
 
