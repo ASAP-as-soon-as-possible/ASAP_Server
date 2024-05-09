@@ -21,7 +21,7 @@ jobs:
 
     steps:
     - name: Setup MySQL
-      uses: samin/mysql-action@v1
+      uses: mirromutth/mysql-action@v1.1
       with:
         character set server: 'utf8'
         mysql database: 'asap_dev'
