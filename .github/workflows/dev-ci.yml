@@ -46,7 +46,7 @@ jobs:
         touch ./application.yml
 
         # GitHub-Actions 에서 설정한 값을 application.yml 파일에 쓰기
-        echo "${{ secrets.DEV_APPLICATION_YAML }}" >> ./application.yml
+        echo "${{ secrets.DEV_APPLICATION_YAML }}" > ./application.yml
         
         # application.yml 파일 확인
         cat ./application.yml
