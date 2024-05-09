@@ -57,4 +57,4 @@ jobs:
       run: chmod +x gradlew
       
     - name: Build with Gradle # 실제 application build
-      run: ./gradlew build -PactiveProfiles=local
+      run: ./gradlew build
