@@ -24,9 +24,9 @@ jobs:
       uses: mirromutth/mysql-action@v1.1
       with:
         character set server: 'utf8'
-        mysql database: 'asap_dev'
-        mysql user: 'asap_dev_admin'
-        mysql password: 'asappossible'
+        mysql database: 'asap'
+        mysql user: 'asap'
+        mysql password: ${{ secrets.DATABASEPASSWORD }}
         
     - uses: actions/checkout@v3
     - name: Set up JDK 17
