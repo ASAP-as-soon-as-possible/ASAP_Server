@@ -28,6 +28,9 @@ jobs:
         mysql user: 'asapuser'
         mysql password: ${{ secrets.DATABASEPASSWORD }}
         
+    - name: Wait for MySQL
+      run: sleep 15
+        
     - uses: actions/checkout@v3
     - name: Set up JDK 17
       uses: actions/setup-java@v3
