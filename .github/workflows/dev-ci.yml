@@ -34,7 +34,7 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        
+
     - name: make application.properties 파일 생성
       run: |
         ## create application.yml
@@ -50,9 +50,6 @@ jobs:
         
         # application.yml 파일 확인
         cat ./application.yml
-        cat "${{ secrets.DATABASEPASSWORD }}"
-        cat ${{ secrets.DATABASEPASSWORD }}
-        cat "${{ secrets.DEV_APPLICATION_YAML }}"
       shell: bash
         
     # 이 워크플로우는 gradle build
