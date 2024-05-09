@@ -16,9 +16,6 @@ permissions:
 
 jobs:
   build:
-    env:
-      MYSQL_ROOT_PASSWORD: ${{ secrets.DATABASEPASSWORD }}
-
     runs-on: ubuntu-latest
 
     steps:
@@ -28,8 +25,8 @@ jobs:
         character set server: 'utf8'
         mysql database: 'asap'
         mysql user: 'asapuser'
-        mysql password: $MYSQL_ROOT_PASSWORD
-        mysql root password: $MYSQL_ROOT_PASSWORD
+        mysql password: 'asappossible'
+        mysql root password: 'asappossible'
         
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -62,9 +59,9 @@ jobs:
 
     - name: Wait for MySQL
       run: |
-        while ! mysqladmin ping --host=127.0.0.1 --password=$MYSQL_ROOT_PASSWORD --silent; do
+        while ! mysqladmin ping --host=127.0.0.1 --password='asappossible' --silent; do
           sleep 1
         done      
-    
+
     - name: Build with Gradle # 실제 application build
       run: ./gradlew build
