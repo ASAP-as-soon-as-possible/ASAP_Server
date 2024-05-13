@@ -17,6 +17,11 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+        redis-version: [6, 7]
+        
     steps:
     - name: Setup MySQL
       uses: samin/mysql-action@v1
@@ -24,6 +29,11 @@ jobs:
         mysql root password: 'asap'
         mysql user: 'asap'
         mysql password: 'asap'
+
+    - name: Set up redis
+      uses: supercharge/redis-github-action@1.7.0
+      with:
+        node-version: ${{ matrix.node-version }}
 
     - uses: actions/checkout@v3
     - name: Set up JDK 17
