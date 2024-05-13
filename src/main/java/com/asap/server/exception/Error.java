@@ -53,6 +53,10 @@ public enum Error {
      */
     MEETING_VALIDATION_FAILED_EXCEPTION(HttpStatus.CONFLICT, "이미 확정된 회의입니다."),
     HOST_TIME_EXIST_EXCEPTION(HttpStatus.CONFLICT, "이미 방장의 회의 가능시간이 이미 존재합니다."),
+    /*
+    * 429 TOO MANY REQUEST
+     */
+    TOO_MANY_REQUEST_EXCEPTION(HttpStatus.TOO_MANY_REQUESTS, "중복된 요청입니다."),
     /**
      * 500 INTERNAL SERVER ERROR
      */

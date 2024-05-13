@@ -37,3 +37,5 @@ output/
 *.log.gz
 *.log-*.gz
 logs/
+
+/src/main/resources/application.yml
