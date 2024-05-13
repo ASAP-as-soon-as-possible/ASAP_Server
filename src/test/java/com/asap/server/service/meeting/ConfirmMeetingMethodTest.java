@@ -21,60 +21,60 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-//@SpringBootTest
-//@Transactional
-//public class ConfirmMeetingMethodTest {
-//    @Autowired
-//    private MeetingService meetingService;
-//    @Autowired
-//    private EntityManager em;
-//
-//    @Test
-//    @DisplayName("회의 확정시 ConfirmedDateTime 은 Update 된다.")
-//    void setConfirmDateTimeTest() {
-//        // given
-//        final Place place = Place.builder()
-//                .placeType(PlaceType.OFFLINE)
-//                .build();
-//        final Meeting meeting = Meeting.builder()
-//                .title("회의 테스트")
-//                .password("0000")
-//                .additionalInfo("")
-//                .duration(Duration.HALF)
-//                .place(place)
-//                .build();
-//        final User user = User.builder()
-//                .meeting(meeting)
-//                .name("강원용")
-//                .role(Role.HOST)
-//                .isFixed(false)
-//                .build();
-//        meeting.setHost(user);
-//
-//        em.persist(meeting);
-//        em.persist(user);
-//        em.flush();
-//        em.clear();
-//
-//        final UserRequestDto userDto = UserRequestDto.builder()
-//                .id(user.getId())
-//                .name(user.getName())
-//                .build();
-//        final MeetingConfirmRequestDto body = MeetingConfirmRequestDto.builder()
-//                .month("09")
-//                .day("07")
-//                .dayOfWeek("월")
-//                .startTime(TimeSlot.SLOT_6_00)
-//                .endTime(TimeSlot.SLOT_6_30)
-//                .users(List.of(userDto))
-//                .build();
-//
-//        // when
-//        meetingService.confirmMeeting(body, meeting.getId(), user.getId());
-//
-//        // then
-//        final Meeting result = em.find(Meeting.class, meeting.getId());
-//        assertThat(result.isConfirmedMeeting()).isTrue();
-//    }
-//
-//}
+@SpringBootTest
+@Transactional
+public class ConfirmMeetingMethodTest {
+    @Autowired
+    private MeetingService meetingService;
+    @Autowired
+    private EntityManager em;
+
+    @Test
+    @DisplayName("회의 확정시 ConfirmedDateTime 은 Update 된다.")
+    void setConfirmDateTimeTest() {
+        // given
+        final Place place = Place.builder()
+                .placeType(PlaceType.OFFLINE)
+                .build();
+        final Meeting meeting = Meeting.builder()
+                .title("회의 테스트")
+                .password("0000")
+                .additionalInfo("")
+                .duration(Duration.HALF)
+                .place(place)
+                .build();
+        final User user = User.builder()
+                .meeting(meeting)
+                .name("강원용")
+                .role(Role.HOST)
+                .isFixed(false)
+                .build();
+        meeting.setHost(user);
+
+        em.persist(meeting);
+        em.persist(user);
+        em.flush();
+        em.clear();
+
+        final UserRequestDto userDto = UserRequestDto.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .build();
+        final MeetingConfirmRequestDto body = MeetingConfirmRequestDto.builder()
+                .month("09")
+                .day("07")
+                .dayOfWeek("월")
+                .startTime(TimeSlot.SLOT_6_00)
+                .endTime(TimeSlot.SLOT_6_30)
+                .users(List.of(userDto))
+                .build();
+
+        // when
+        meetingService.confirmMeeting(body, meeting.getId(), user.getId());
+
+        // then
+        final Meeting result = em.find(Meeting.class, meeting.getId());
+        assertThat(result.isConfirmedMeeting()).isTrue();
+    }
+
+}
