@@ -24,11 +24,13 @@ jobs:
         
     steps:
     - name: Setup MySQL
-      uses: samin/mysql-action@v1
+      uses: mirromutth/mysql-action@v1
       with:
         mysql root password: 'asap'
         mysql user: 'asap'
         mysql password: 'asap'
+        host port: 3306
+        container port: 3306
 
     - name: Set up redis
       uses: supercharge/redis-github-action@1.7.0
