@@ -54,25 +54,25 @@ public class MeetingService {
 
     @Transactional
     public MeetingSaveResponseDto create(final MeetingSaveRequestDto meetingSaveRequestDto) {
-        String encryptedPassword = passwordEncoder.encode(meetingSaveRequestDto.getPassword());
+        String encryptedPassword = passwordEncoder.encode(meetingSaveRequestDto.password());
         Meeting meeting = Meeting.builder()
-                .title(meetingSaveRequestDto.getTitle())
+                .title(meetingSaveRequestDto.title())
                 .password(encryptedPassword)
-                .additionalInfo(meetingSaveRequestDto.getAdditionalInfo())
-                .duration(meetingSaveRequestDto.getDuration())
+                .additionalInfo(meetingSaveRequestDto.additionalInfo())
+                .duration(meetingSaveRequestDto.duration())
                 .place(
                         Place.builder()
-                                .placeType(meetingSaveRequestDto.getPlace())
-                                .placeDetail(meetingSaveRequestDto.getPlaceDetail())
+                                .placeType(meetingSaveRequestDto.place())
+                                .placeDetail(meetingSaveRequestDto.placeDetail())
                                 .build())
                 .build();
 
         meetingRepository.save(meeting);
 
-        User host = userService.createUser(meeting, meetingSaveRequestDto.getName(), Role.HOST);
+        User host = userService.createUser(meeting, meetingSaveRequestDto.name(), Role.HOST);
 
-        preferTimeService.create(meeting, meetingSaveRequestDto.getPreferTimes());
-        availableDateService.create(meeting, meetingSaveRequestDto.getAvailableDates());
+        preferTimeService.create(meeting, meetingSaveRequestDto.preferTimes());
+        availableDateService.create(meeting, meetingSaveRequestDto.availableDates());
 
         meeting.setHost(host);
 

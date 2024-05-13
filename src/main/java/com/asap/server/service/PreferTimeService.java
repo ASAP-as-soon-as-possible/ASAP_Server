@@ -27,12 +27,12 @@ public class PreferTimeService {
             throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
         }
         saveRequestDtos.stream()
-                .sorted(Comparator.comparing(preferTime -> preferTime.getStartTime().getTime()))
+                .sorted(Comparator.comparing(preferTime -> preferTime.startTime().getTime()))
                 .map(preferTime -> preferTimeRepository.save(
                         PreferTime.builder()
                                 .meeting(meeting)
-                                .startTime(preferTime.getStartTime())
-                                .endTime(preferTime.getEndTime()).build()))
+                                .startTime(preferTime.startTime())
+                                .endTime(preferTime.endTime()).build()))
                 .collect(Collectors.toList());
     }
 
@@ -50,7 +50,7 @@ public class PreferTimeService {
 
     private boolean isPreferTimeDuplicated(List<PreferTimeSaveRequestDto> requestDtos) {
         List<TimeSlot> timeSlots = requestDtos.stream()
-                .flatMap(requestDto -> TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal() - 1).stream())
+                .flatMap(requestDto -> TimeSlot.getTimeSlots(requestDto.startTime().ordinal(), requestDto.endTime().ordinal() - 1).stream())
                 .collect(Collectors.toList());
         return timeSlots.size() != timeSlots.stream().distinct().count();
     }
