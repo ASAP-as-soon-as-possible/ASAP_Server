@@ -26,9 +26,9 @@ jobs:
     - name: Setup MySQL
       uses: mirromutth/mysql-action@v1
       with:
-        mysql root password: asap
-        mysql user: asap
-        mysql password: asap
+        mysql root password: 'asap'
+        mysql user: 'asap'
+        mysql password: 'asap'
         host port: 3306
         container port: 3306
 
