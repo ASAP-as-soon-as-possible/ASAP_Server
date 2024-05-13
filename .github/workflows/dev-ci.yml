@@ -72,4 +72,4 @@ jobs:
         done      
 
     - name: Build with Gradle # 실제 application build
-      run: ./gradlew clean build
+      run: ./gradlew clean --stacktrace --info build
