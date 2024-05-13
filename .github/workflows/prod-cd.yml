@@ -7,7 +7,7 @@ on:
     branches: [ "main" ] # main branch로 push 될 때 실행됩니다.
 
 env:
-  S3_BUCKET_NAME: asap-server
+  S3_BUCKET_NAME: asap-prod
 
 jobs:
   build:
