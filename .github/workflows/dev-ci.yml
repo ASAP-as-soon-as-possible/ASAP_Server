@@ -16,25 +16,34 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+        redis-version: [6, 7]
 
     steps:
     - name: Setup MySQL
-      uses: samin/mysql-action@v1
+      uses: mirromutth/mysql-action@v1
       with:
-        character set server: 'utf8'
-        mysql database: 'asap_dev'
-        mysql user: 'asap_dev_admin'
-        mysql password: ${{ secrets.DatabasePassword }}
-        
+        mysql root password: 'asap'
+        mysql user: 'asap'
+        mysql password: 'asap'
+        host port: 3306
+        container port: 3306
+
+    - name: Set up redis
+      uses: supercharge/redis-github-action@1.7.0
+      with:
+        node-version: ${{ matrix.node-version }}
+
     - uses: actions/checkout@v3
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
-        
+
     - name: make application.properties 파일 생성
       run: |
         ## create application.yml
@@ -51,10 +60,16 @@ jobs:
         # application.yml 파일 확인
         cat ./application.yml
       shell: bash
-        
+
     # 이 워크플로우는 gradle build
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-      
+
+    - name: Wait for MySQL
+      run: |
+        while ! mysqladmin ping --host=127.0.0.1 --password='asap' --silent; do
+          sleep 1
+        done      
+
     - name: Build with Gradle # 실제 application build
-      run: ./gradlew build -PactiveProfiles=local
+      run: ./gradlew clean --stacktrace --info build
