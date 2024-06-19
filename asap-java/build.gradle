@@ -9,6 +9,7 @@ configurations {
 }
 
 dependencies {
+    implementation project(':presentation')
     implementation "org.redisson:redisson:3.29.0"
 
     // QueryDSL Implementation
