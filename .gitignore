@@ -36,4 +36,4 @@ output/
 *.log-*.gz
 logs/
 
-/src/main/resources/application.yml
+asap-java/src/main/resources/application.yml
