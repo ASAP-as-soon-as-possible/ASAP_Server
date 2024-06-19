@@ -1,6 +1,4 @@
 plugins {
-    kotlin("plugin.spring") version "1.9.23"
-    kotlin("plugin.jpa") version "1.9.23"
     kotlin("kapt")
 }
 
