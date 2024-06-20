@@ -1,4 +1,4 @@
-package com.asap.server.domain.meeting
+package com.asap.server.domain.common
 
 enum class TimeSlot(time: String) {
     SLOT_6_00("06:00"),
