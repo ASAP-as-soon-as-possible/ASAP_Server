@@ -1,5 +1,6 @@
 package com.asap.server.domain.meeting
 
+import com.asap.server.domain.common.AuditingTimeEntity
 import com.asap.server.domain.common.TimeSlot
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -19,7 +20,7 @@ class PreferTime(
     meeting: Meeting,
     startTime: TimeSlot,
     endTime: TimeSlot,
-) {
+) : AuditingTimeEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = id

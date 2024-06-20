@@ -1,5 +1,6 @@
 package com.asap.server.domain.user
 
+import com.asap.server.domain.common.AuditingTimeEntity
 import jakarta.persistence.*
 
 @Entity
@@ -9,7 +10,7 @@ class User(
         name: String,
         isFixed: Boolean,
         role: Role
-) {
+) : AuditingTimeEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = id

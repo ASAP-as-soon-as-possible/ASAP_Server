@@ -1,5 +1,6 @@
 package com.asap.server.domain.timeblock
 
+import com.asap.server.domain.common.AuditingTimeEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -14,7 +15,7 @@ class TimeBlockUser(
     id: Long? = null,
     userId: Long,
     timeBlock: TimeBlock
-) {
+) : AuditingTimeEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = id

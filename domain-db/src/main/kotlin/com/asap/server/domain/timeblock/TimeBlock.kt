@@ -1,5 +1,6 @@
 package com.asap.server.domain.timeblock
 
+import com.asap.server.domain.common.AuditingTimeEntity
 import com.asap.server.domain.common.TimeSlot
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -8,7 +9,6 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
 import org.hibernate.annotations.ColumnDefault
 
 @Entity
@@ -16,9 +16,8 @@ class TimeBlock(
     id: Long? = null,
     weight: Int = 0,
     availableDateId: Long,
-    timeSlot: TimeSlot,
+    timeSlot: TimeSlot
 ) : AuditingTimeEntity() {
-) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = id

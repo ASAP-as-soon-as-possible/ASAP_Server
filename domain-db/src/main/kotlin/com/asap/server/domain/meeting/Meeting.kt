@@ -1,18 +1,19 @@
 package com.asap.server.domain.meeting
 
+import com.asap.server.domain.common.AuditingTimeEntity
 import jakarta.persistence.*
 
 @Table(name = "meeting")
 @Entity
 class Meeting(
-        id: Long? = null,
-        title: String,
-        password: String,
-        additionalInfo: String,
-        duration: Duration,
-        place: Place,
-        confirmedDateTime: ConfirmedDateTime
-) {
+    id: Long? = null,
+    title: String,
+    password: String,
+    additionalInfo: String,
+    duration: Duration,
+    place: Place,
+    confirmedDateTime: ConfirmedDateTime
+) : AuditingTimeEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = id
