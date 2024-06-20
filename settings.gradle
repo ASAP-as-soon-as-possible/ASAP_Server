@@ -6,4 +6,5 @@ include 'asap-java'
 include 'domain-db'
 include 'domain-service'
 include 'presentation'
+include 'common'
 
