@@ -17,7 +17,7 @@ class TimeBlock(
     weight: Int = 0,
     availableDateId: Long,
     timeSlot: TimeSlot,
-    timeBlockUsers: MutableList<TimeBlockUser> = mutableListOf()
+) : AuditingTimeEntity() {
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,17 +35,6 @@ class TimeBlock(
     @Enumerated(value = EnumType.STRING)
     var timeSlot = timeSlot
         protected set
-
-    @OneToMany(mappedBy = "timeBlock")
-    var timeBlockUsers = timeBlockUsers
-        protected set
-
-    fun addTimeBlockUsers(timeBlockUser: TimeBlockUser) {
-        if (timeBlockUsers.isEmpty()) {
-            timeBlockUsers = mutableListOf(timeBlockUser)
-        }
-        timeBlockUsers.add(timeBlockUser)
-    }
 
     fun addWeight(weight: Int) {
         this.weight += weight
