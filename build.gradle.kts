@@ -26,6 +26,9 @@ subprojects {
         // test
         testImplementation("org.jetbrains.kotlin:kotlin-test")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+        // kotest
+        testImplementation("io.kotest:kotest-property:5.9.0")
     }
 
     tasks.withType<Test> {
