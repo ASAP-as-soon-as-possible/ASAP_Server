@@ -6,9 +6,9 @@ import java.time.LocalDate
 
 @Entity
 class AvailableDate(
-        id: Long? = null,
-        meeting: Meeting,
-        date: LocalDate,
+    id: Long? = null,
+    meeting: Meeting,
+    date: LocalDate,
 ) : AuditingTimeEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

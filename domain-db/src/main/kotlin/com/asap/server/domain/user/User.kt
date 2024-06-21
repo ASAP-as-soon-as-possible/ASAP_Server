@@ -5,11 +5,11 @@ import jakarta.persistence.*
 
 @Entity
 class User(
-        id: Long? = null,
-        meetingId: Long,
-        name: String,
-        isFixed: Boolean,
-        role: Role
+    id: Long? = null,
+    meetingId: Long,
+    name: String,
+    isFixed: Boolean,
+    role: Role
 ) : AuditingTimeEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

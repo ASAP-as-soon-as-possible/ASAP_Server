@@ -7,9 +7,9 @@ import jakarta.persistence.Enumerated
 
 @Embeddable
 data class Place(
-        @Column(nullable = false, name = "place_type")
-        @Enumerated(value = EnumType.STRING)
-        val type: PlaceType,
-        @Column(nullable = false, name = "place_detail")
-        val detail: String
+    @Column(nullable = false, name = "place_type")
+    @Enumerated(value = EnumType.STRING)
+    val type: PlaceType,
+    @Column(nullable = false, name = "place_detail")
+    val detail: String
 )
