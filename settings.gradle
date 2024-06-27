@@ -1,1 +1,10 @@
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.5.0'
+}
 rootProject.name = 'server'
+include 'asap-java'
+include 'domain-db'
+include 'domain-service'
+include 'presentation'
+include 'common'
+
