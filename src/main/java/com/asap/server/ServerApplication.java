@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @EnableJpaAuditing
 @EnableAspectJAutoProxy
-@SpringBootApplication(scanBasePackages = "com.asap.server")
+@SpringBootApplication
 public class ServerApplication {
 
     public static void main(String[] args) {
