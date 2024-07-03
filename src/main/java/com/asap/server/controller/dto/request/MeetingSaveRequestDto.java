@@ -16,8 +16,8 @@ public record MeetingSaveRequestDto(
         @Size(max = 15, message = "제목의 최대 입력 길이(15자)를 초과했습니다.")
         @Schema(description = "회의 주제")
         String title,
-        @Schema(description = "회의 가능 날짜", example = "[\"2024/07/09/MON\"]")
-        List<@Pattern(regexp = "\\d\\d\\d\\d/\\d\\d/\\d\\d/[a-zA-Z][a-zA-Z][a-zA-Z]", message = "회의 가능 날짜 형식은 YYYY/mm/dd/ddd 입니다.") String> availableDates,
+        @Schema(description = "회의 가능 날짜", example = "[\"2024/7/9/MON\"]")
+        List<String> availableDates,
         @Schema(description = "회의 선호 시간")
         List<PreferTimeSaveRequestDto> preferTimes,
         @NotNull(message = "회의 형식이 입력되지 않았습니다.")
