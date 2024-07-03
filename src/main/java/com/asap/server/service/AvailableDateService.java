@@ -95,19 +95,18 @@ public class AvailableDateService {
 
     public void create(final Meeting meeting, final List<String> availableDates) {
         if (isDuplicatedDate(availableDates)) throw new BadRequestException(Error.DUPLICATED_DATE_EXCEPTION);
-        availableDates
-                .stream()
+
+        availableDates.stream()
                 .sorted()
-                .map(dateFormat -> createAvailableDate(dateFormat, meeting))
-                .collect(Collectors.toList());
+                .forEach(dateFormat -> createAvailableDate(dateFormat, meeting));
     }
 
-    private AvailableDate createAvailableDate(final String dateFormat, final Meeting meeting) {
+    private void createAvailableDate(final String dateFormat, final Meeting meeting) {
         String[] dateElements = dateFormat.split(DATE_SEPARATOR);
         String month = dateElements[MONTH_ELEMENT_INDEX];
         String day = dateElements[DAY_ELEMENT_INDEX];
 
-        return availableDateRepository.save(
+        availableDateRepository.save(
                 AvailableDate.builder()
                         .meeting(meeting)
                         .date(DateUtil.transformLocalDate(month, day))
