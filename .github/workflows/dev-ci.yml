@@ -47,9 +47,9 @@ jobs:
     - name: make application.properties 파일 생성
       run: |
         ## create application.yml
-        rm -r ./asap-java/src/main/resources
-        mkdir ./asap-java/src/main/resources
-        cd ./asap-java/src/main/resources
+        rm -r ./src/main/resources
+        mkdir ./src/main/resources
+        cd ./src/main/resources
 
         # application.yml 파일 생성
         touch ./application.yml
@@ -72,4 +72,4 @@ jobs:
         done      
 
     - name: Build with Gradle # 실제 application build
-      run: ./gradlew :asap-java:build
+      run: ./gradlew clean build

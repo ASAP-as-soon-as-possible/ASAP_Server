@@ -1,3 +1,12 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.1.2'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.asap'
+version = '0.0.1-SNAPSHOT'
+
 java {
     sourceCompatibility = '17'
 }
@@ -8,8 +17,11 @@ configurations {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
-    implementation project(':presentation')
     implementation "org.redisson:redisson:3.29.0"
 
     // QueryDSL Implementation
@@ -24,6 +36,7 @@ dependencies {
     implementation 'org.springframework.security:spring-security-crypto:5.7.9'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // VALIDATION
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -50,12 +63,4 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
-}
-
-jar {
-    enabled = false
-}
-
-bootJar {
-    enabled = true
 }
