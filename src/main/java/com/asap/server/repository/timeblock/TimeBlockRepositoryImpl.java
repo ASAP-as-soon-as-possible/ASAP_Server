@@ -1,18 +1,14 @@
 package com.asap.server.repository.timeblock;
 
-import com.asap.server.repository.timeblock.dto.QTimeBlockDto;
-import com.asap.server.repository.timeblock.dto.TimeBlockDto;
-import com.asap.server.service.vo.QTimeBlockVo;
-import com.asap.server.service.vo.TimeBlockVo;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
-
-import java.util.List;
-
 import static com.asap.server.domain.QAvailableDate.availableDate;
 import static com.asap.server.domain.QTimeBlock.timeBlock;
 import static com.asap.server.domain.QTimeBlockUser.timeBlockUser;
-import static com.asap.server.domain.QUser.user;
+
+import com.asap.server.repository.timeblock.dto.QTimeBlockDto;
+import com.asap.server.repository.timeblock.dto.TimeBlockDto;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class TimeBlockRepositoryImpl implements TimeBlockRepositoryCustom {

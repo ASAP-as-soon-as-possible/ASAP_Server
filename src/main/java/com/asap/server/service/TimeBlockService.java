@@ -7,12 +7,10 @@ import com.asap.server.domain.enums.TimeSlot;
 import com.asap.server.exception.Error;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.repository.timeblock.TimeBlockRepository;
-import com.asap.server.service.vo.TimeBlockVo;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -51,9 +49,5 @@ public class TimeBlockService {
 
     public List<TimeBlock> getTimeBlocksByAvailableDate(final AvailableDate availableDate) {
         return timeBlockRepository.findByAvailableDate(availableDate);
-    }
-
-    public List<TimeBlockVo> getTimeBlocksByAvailableDate(final Long availableDateId) {
-        return timeBlockRepository.findByAvailableDate(availableDateId);
     }
 }
