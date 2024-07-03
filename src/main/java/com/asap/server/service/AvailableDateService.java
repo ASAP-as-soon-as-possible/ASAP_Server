@@ -15,21 +15,20 @@ import com.asap.server.service.vo.TimeBlocksByDateVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AvailableDateService {
+    private static final String DATE_SEPARATOR = "/";
+    private static final int MONTH_ELEMENT_INDEX = 1;
+    private static final int DAY_ELEMENT_INDEX = 2;
+
     private final AvailableDateRepository availableDateRepository;
     private final TimeBlockService timeBlockService;
     private final TimeBlockUserService timeBlockUserService;
 
-    private LocalDate dateFormatter(final String stringOfDate) {
-        return LocalDate.parse(stringOfDate, DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-    }
 
     public List<AvailableDateResponseDto> getAvailableDates(final Meeting meeting) {
         List<AvailableDate> availableDates = findAvailableDates(meeting);
@@ -96,16 +95,23 @@ public class AvailableDateService {
 
     public void create(final Meeting meeting, final List<String> availableDates) {
         if (isDuplicatedDate(availableDates)) throw new BadRequestException(Error.DUPLICATED_DATE_EXCEPTION);
-        availableDates
-                .stream()
+
+        availableDates.stream()
                 .sorted()
-                .map(s -> availableDateRepository.save(
-                        AvailableDate.builder()
-                                .meeting(meeting)
-                                .date(dateFormatter(s.substring(0, 10)))
-                                .build()
-                ))
-                .collect(Collectors.toList());
+                .forEach(dateFormat -> createAvailableDate(dateFormat, meeting));
+    }
+
+    private void createAvailableDate(final String dateFormat, final Meeting meeting) {
+        String[] dateElements = dateFormat.split(DATE_SEPARATOR);
+        String month = dateElements[MONTH_ELEMENT_INDEX];
+        String day = dateElements[DAY_ELEMENT_INDEX];
+
+        availableDateRepository.save(
+                AvailableDate.builder()
+                        .meeting(meeting)
+                        .date(DateUtil.transformLocalDate(month, day))
+                        .build()
+        );
     }
 
     private boolean isDuplicatedDate(final List<String> availableDates) {
