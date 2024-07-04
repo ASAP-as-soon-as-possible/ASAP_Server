@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.io.IOException;
+import java.time.DateTimeException;
 
 import static com.asap.server.exception.Error.METHOD_NOT_ALLOWED_EXCEPTION;
 
@@ -47,6 +48,12 @@ public class ControllerExceptionAdvice {
     @ExceptionHandler(ValidationException.class)
     protected ErrorResponse handleValidException(final ValidationException e) {
         return ErrorResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DateTimeException.class)
+    protected ErrorResponse handleDateTimeException(final DateTimeException e) {
+        return ErrorResponse.error(Error.INVALID_DATE_FORMAT_EXCEPTION);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

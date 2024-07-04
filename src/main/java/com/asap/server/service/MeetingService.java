@@ -1,6 +1,8 @@
 package com.asap.server.service;
 
-import com.asap.server.common.utils.BestMeetingUtil;
+import static com.asap.server.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
+import static com.asap.server.exception.Error.MEETING_VALIDATION_FAILED_EXCEPTION;
+
 import com.asap.server.common.utils.DateUtil;
 import com.asap.server.config.jwt.JwtService;
 import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
@@ -23,23 +25,21 @@ import com.asap.server.exception.model.ForbiddenException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.exception.model.UnauthorizedException;
 import com.asap.server.repository.meeting.MeetingRepository;
+import com.asap.server.repository.timeblock.TimeBlockRepository;
+import com.asap.server.repository.timeblock.dto.TimeBlockDto;
+import com.asap.server.service.meeting.MeetingTimeRecommendService;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.BestMeetingTimeWithUsersVo;
-import com.asap.server.service.vo.TimeBlocksByDateVo;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.asap.server.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
-import static com.asap.server.exception.Error.MEETING_VALIDATION_FAILED_EXCEPTION;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +49,8 @@ public class MeetingService {
     private final AvailableDateService availableDateService;
     private final PreferTimeService preferTimeService;
     private final JwtService jwtService;
-    private final BestMeetingUtil bestMeetingUtil;
+    private final MeetingTimeRecommendService meetingTimeRecommendService;
+    private final TimeBlockRepository timeBlockRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
@@ -195,9 +196,9 @@ public class MeetingService {
         if (meeting.isConfirmedMeeting()) throw new ConflictException(MEETING_VALIDATION_FAILED_EXCEPTION);
 
         int userCount = userService.getMeetingUserCount(meeting);
-        List<TimeBlocksByDateVo> availableDates = availableDateService.getAvailableDateVos(meeting);
+        List<TimeBlockDto> timeBlocks = timeBlockRepository.findAllTimeBlockByMeeting(meetingId);
 
-        List<BestMeetingTimeVo> bestMeetingTimes = bestMeetingUtil.getBestMeetingTime(availableDates, meeting.getDuration(), userCount);
+        List<BestMeetingTimeVo> bestMeetingTimes = meetingTimeRecommendService.getBestMeetingTime(timeBlocks, meeting.getDuration(), userCount);
         List<BestMeetingTimeWithUsersVo> bestMeetingTimeWithUsers = userService.getBestMeetingInUsers(bestMeetingTimes);
         return BestMeetingTimeResponseDto.of(userCount, bestMeetingTimeWithUsers);
     }

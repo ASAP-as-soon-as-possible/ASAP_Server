@@ -113,18 +113,18 @@ public class UserService {
     private void createUserTimeBlock(final Meeting meeting,
                                      final User user,
                                      final UserMeetingTimeSaveRequestDto requestDto) {
-        AvailableDate availableDate = availableDateService.findByMeetingAndDate(meeting, requestDto.getMonth(), requestDto.getDay());
-        TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal() - 1)
+        AvailableDate availableDate = availableDateService.findByMeetingAndDate(meeting, requestDto.month(), requestDto.day());
+        TimeSlot.getTimeSlots(requestDto.startTime().ordinal(), requestDto.endTime().ordinal() - 1)
                 .stream()
-                .map(timeSlot -> timeBlockService.searchTimeBlock(timeSlot, availableDate, requestDto.getPriority())).collect(Collectors.toList())
+                .map(timeSlot -> timeBlockService.searchTimeBlock(timeSlot, availableDate, requestDto.priority())).collect(Collectors.toList())
                 .forEach(timeBlock -> timeBlock.addTimeBlockUsers(timeBlockUserService.create(timeBlock, user)));
     }
 
     private void isDuplicatedDate(final List<UserMeetingTimeSaveRequestDto> requestDtoList) {
         Map<String, List<TimeSlot>> meetingTimeAvailable = new HashMap<>();
         for (UserMeetingTimeSaveRequestDto requestDto : requestDtoList) {
-            String col = String.format("%s %s %s", requestDto.getMonth(), requestDto.getDay(), requestDto.getDayOfWeek());
-            List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(requestDto.getStartTime().ordinal(), requestDto.getEndTime().ordinal() - 1);
+            String col = String.format("%s %s", requestDto.month(), requestDto.day());
+            List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(requestDto.startTime().ordinal(), requestDto.endTime().ordinal() - 1);
             if (meetingTimeAvailable.containsKey(col)) {
                 if (meetingTimeAvailable.get(col).stream().anyMatch(timeSlots::contains)) {
                     throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
@@ -192,7 +192,7 @@ public class UserService {
     private BestMeetingTimeWithUsersVo getBestMeetingTimeInUsers(final BestMeetingTimeVo bestMeetingTime) {
         if (bestMeetingTime == null) return null;
         List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(bestMeetingTime.startTime().ordinal(), bestMeetingTime.endTime().ordinal() - 1);
-        List<UserVo> users = userRepository.findByAvailableDateAndTimeSlots(bestMeetingTime.availableDateId(), timeSlots);
+        List<UserVo> users = userRepository.findByAvailableDateAndTimeSlots(bestMeetingTime.date(), timeSlots);
         return BestMeetingTimeWithUsersVo.of(bestMeetingTime, users);
     }
 }

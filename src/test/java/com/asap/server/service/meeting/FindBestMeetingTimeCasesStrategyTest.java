@@ -1,13 +1,4 @@
-package com.asap.server.common.utils.strategy;
-
-import com.asap.server.common.utils.strategy.impl.FindBestMeetingTimeCasesStrategyImpl;
-import com.asap.server.domain.enums.Duration;
-import com.asap.server.service.vo.PossibleTimeCaseVo;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
+package com.asap.server.service.meeting;
 
 import static com.asap.server.domain.enums.Duration.HALF;
 import static com.asap.server.domain.enums.Duration.HOUR;
@@ -15,12 +6,19 @@ import static com.asap.server.domain.enums.Duration.HOUR_HALF;
 import static com.asap.server.domain.enums.Duration.TWO_HOUR;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import com.asap.server.domain.enums.Duration;
+import com.asap.server.service.vo.PossibleTimeCaseVo;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 class FindBestMeetingTimeCasesStrategyTest {
     private FindBestMeetingTimeCasesStrategy strategy;
 
     @BeforeEach
     void setUp() {
-        strategy = new FindBestMeetingTimeCasesStrategyImpl();
+        strategy = new FindBestMeetingTimeCasesStrategy();
     }
 
     @DisplayName("회의 진행 시간이 2시간이고, 회의 참여 인원이 6명일 때 24개의 경우의 수가 나온다.")
