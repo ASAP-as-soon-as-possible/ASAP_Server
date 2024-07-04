@@ -30,7 +30,11 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<UserVo> findByAvailableDateAndTimeSlots(LocalDate date, List<TimeSlot> timeSlots) {
+    public List<UserVo> findByAvailableDateAndTimeSlots(
+            Long meetingId,
+            LocalDate date,
+            List<TimeSlot> timeSlots
+    ) {
         return queryFactory.select(
                         new QUserVo(
                                 user.id,
@@ -40,7 +44,11 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 .innerJoin(timeBlock).on(timeBlockUser.timeBlock.id.eq(timeBlock.id))
                 .innerJoin(user).on(timeBlockUser.user.id.eq(user.id))
                 .innerJoin(availableDate).on(timeBlock.availableDate.id.eq(availableDate.id))
-                .where(availableDate.date.eq(date).and(timeBlock.timeSlot.in(timeSlots)))
+                .where(
+                        availableDate.date.eq(date)
+                                .and(availableDate.meeting.id.eq(meetingId))
+                                .and(timeBlock.timeSlot.in(timeSlots))
+                )
                 .groupBy(user.id)
                 .fetch();
     }

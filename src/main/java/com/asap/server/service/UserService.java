@@ -183,16 +183,26 @@ public class UserService {
         return responseDto;
     }
 
-    public List<BestMeetingTimeWithUsersVo> getBestMeetingInUsers(List<BestMeetingTimeVo> bestMeetingTimes) {
+    public List<BestMeetingTimeWithUsersVo> getBestMeetingInUsers(
+            final Long meetingId,
+            final List<BestMeetingTimeVo> bestMeetingTimes
+    ) {
         return bestMeetingTimes.stream()
-                .map(this::getBestMeetingTimeInUsers)
+                .map(bestMeetingTime -> getBestMeetingTimeInUsers(meetingId, bestMeetingTime))
                 .collect(Collectors.toList());
     }
 
-    private BestMeetingTimeWithUsersVo getBestMeetingTimeInUsers(final BestMeetingTimeVo bestMeetingTime) {
-        if (bestMeetingTime == null) return null;
-        List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(bestMeetingTime.startTime().ordinal(), bestMeetingTime.endTime().ordinal() - 1);
-        List<UserVo> users = userRepository.findByAvailableDateAndTimeSlots(bestMeetingTime.date(), timeSlots);
+    private BestMeetingTimeWithUsersVo getBestMeetingTimeInUsers(
+            final Long meetingId,
+            final BestMeetingTimeVo bestMeetingTime
+    ) {
+        if (bestMeetingTime == null) {
+            return null;
+        }
+        List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(bestMeetingTime.startTime().ordinal(),
+                bestMeetingTime.endTime().ordinal() - 1);
+        List<UserVo> users = userRepository.findByAvailableDateAndTimeSlots(meetingId, bestMeetingTime.date(),
+                timeSlots);
         return BestMeetingTimeWithUsersVo.of(bestMeetingTime, users);
     }
 }

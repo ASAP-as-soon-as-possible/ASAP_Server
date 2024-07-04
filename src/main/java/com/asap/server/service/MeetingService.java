@@ -199,7 +199,7 @@ public class MeetingService {
         List<TimeBlockDto> timeBlocks = timeBlockRepository.findAllTimeBlockByMeeting(meetingId);
 
         List<BestMeetingTimeVo> bestMeetingTimes = meetingTimeRecommendService.getBestMeetingTime(timeBlocks, meeting.getDuration(), userCount);
-        List<BestMeetingTimeWithUsersVo> bestMeetingTimeWithUsers = userService.getBestMeetingInUsers(bestMeetingTimes);
+        List<BestMeetingTimeWithUsersVo> bestMeetingTimeWithUsers = userService.getBestMeetingInUsers(meetingId, bestMeetingTimes);
         return BestMeetingTimeResponseDto.of(userCount, bestMeetingTimeWithUsers);
     }
 
