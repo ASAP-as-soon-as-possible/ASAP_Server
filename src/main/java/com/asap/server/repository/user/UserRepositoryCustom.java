@@ -10,5 +10,5 @@ import java.util.List;
 public interface UserRepositoryCustom {
     void updateUserIsFixedByMeeting(final Meeting meeting, final List<Long> users);
 
-    List<UserVo> findByAvailableDateAndTimeSlots(LocalDate availableDate, List<TimeSlot> timeSlots);
+    List<UserVo> findByAvailableDateAndTimeSlots(Long meetingId, LocalDate availableDate, List<TimeSlot> timeSlots);
 }
