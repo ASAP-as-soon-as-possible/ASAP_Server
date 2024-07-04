@@ -192,7 +192,7 @@ public class UserService {
     private BestMeetingTimeWithUsersVo getBestMeetingTimeInUsers(final BestMeetingTimeVo bestMeetingTime) {
         if (bestMeetingTime == null) return null;
         List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(bestMeetingTime.startTime().ordinal(), bestMeetingTime.endTime().ordinal() - 1);
-        List<UserVo> users = userRepository.findByAvailableDateAndTimeSlots(bestMeetingTime.availableDateId(), timeSlots);
+        List<UserVo> users = userRepository.findByAvailableDateAndTimeSlots(bestMeetingTime.date(), timeSlots);
         return BestMeetingTimeWithUsersVo.of(bestMeetingTime, users);
     }
 }

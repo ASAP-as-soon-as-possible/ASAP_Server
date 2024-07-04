@@ -10,13 +10,10 @@ import com.asap.server.exception.Error;
 import com.asap.server.exception.model.BadRequestException;
 import com.asap.server.exception.model.NotFoundException;
 import com.asap.server.repository.AvailableDateRepository;
-import com.asap.server.service.vo.TimeBlockVo;
-import com.asap.server.service.vo.TimeBlocksByDateVo;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -72,18 +69,6 @@ public class AvailableDateService {
         return availableDateRepository.findByMeetingAndDate(meeting,
                         DateUtil.transformLocalDate(month, day))
                 .orElseThrow(() -> new NotFoundException(Error.AVAILABLE_DATE_NOT_FOUND_EXCEPTION));
-    }
-
-    public List<TimeBlocksByDateVo> getAvailableDateVos(final Meeting meeting) {
-        List<AvailableDate> availableDates = findAvailableDates(meeting);
-
-        return availableDates.stream()
-                .map(availableDate -> {
-                    List<TimeBlockVo> timeBlocks = timeBlockService
-                            .getTimeBlocksByAvailableDate(availableDate.getId());
-
-                    return TimeBlocksByDateVo.of(availableDate, timeBlocks);
-                }).collect(Collectors.toList());
     }
 
     private List<AvailableDate> findAvailableDates(final Meeting meeting) {

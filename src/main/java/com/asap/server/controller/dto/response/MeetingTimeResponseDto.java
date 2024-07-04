@@ -1,14 +1,12 @@
 package com.asap.server.controller.dto.response;
 
 import com.asap.server.common.utils.DateUtil;
-import com.asap.server.service.vo.AvailableMeetingTimeVo;
 import com.asap.server.service.vo.BestMeetingTimeWithUsersVo;
 import com.asap.server.service.vo.UserVo;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.util.List;
 
 @Getter
 @ToString
