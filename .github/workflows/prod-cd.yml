@@ -1,7 +1,7 @@
 name: ASAP-Server CD
 
 on:
-  push:
+  pull_request:
     branches: [ "feat/#277" ]
 
 jobs:
