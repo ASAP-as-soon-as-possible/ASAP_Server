@@ -29,7 +29,7 @@ jobs:
         touch ./application.yml
 
         # GitHub-Actions 에서 설정한 값을 application.yml 파일에 쓰기
-        echo "${{ secrets.ASAP_APPLICATION }}" >> ./application.yml
+        echo "${{ secrets.DOCKER_YAML }}" >> ./application.yml
         
         # application.yml 파일 확인
         cat ./application.yml
@@ -62,4 +62,4 @@ jobs:
         key: ${{ secrets.RELEASE_SERVER_KEY }}
         script: |
           cd ~
-          ./script/deploy.sh
+          ./deploy.sh
