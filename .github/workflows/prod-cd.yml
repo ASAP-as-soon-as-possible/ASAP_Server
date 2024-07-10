@@ -54,12 +54,12 @@ jobs:
         docker build --platform linux/amd64 -t ${{ secrets.DOCKERHUB_LOGIN_USERNAME }}/${{ secrets.DOCKERHUB_IMAGE_NAME }} .
         docker push ${{ secrets.DOCKERHUB_LOGIN_USERNAME }}/${{ secrets.DOCKERHUB_IMAGE_NAME }}
 
-    - name: 도커 컨테이너 실행
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.RELEASE_SERVER_IP }}
-        username: ${{ secrets.RELEASE_SERVER_USER }}
-        key: ${{ secrets.RELEASE_SERVER_KEY }}
-        script: |
-          cd ~
-          sudo ./deploy.sh
+#    - name: 도커 컨테이너 실행
+#      uses: appleboy/ssh-action@master
+#      with:
+#        host: ${{ secrets.RELEASE_SERVER_IP }}
+#        username: ${{ secrets.RELEASE_SERVER_USER }}
+#        key: ${{ secrets.RELEASE_SERVER_KEY }}
+#        script: |
+#          cd ~
+#          sudo ./deploy.sh

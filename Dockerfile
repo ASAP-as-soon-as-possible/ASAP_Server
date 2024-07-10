@@ -1,7 +1,5 @@
-FROM amd64/amazoncorretto:17
+FROM amd64/amazoncorretto:17-alpine
 
-WORKDIR /app
-
-COPY ./build/libs/server-0.0.1-SNAPSHOT.jar /app/asap-server.jar
+COPY ./build/libs/server-0.0.1-SNAPSHOT.jar /asap-server.jar
 
 CMD ["java", "-Duser.timezone=Asia/Seoul", "-jar", "-Dspring.profiles.active=local", "asap-server.jar"]
