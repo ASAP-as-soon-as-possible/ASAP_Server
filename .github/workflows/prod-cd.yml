@@ -59,7 +59,7 @@ jobs:
 
     - name: docker image 빌드 및 푸시
       run: |
-        docker build --platform linux/amd64 -t ${{ secrets.DOCKERHUB_LOGIN_USERNAME }}/${{ secrets.DOCKERHUB_IMAGE_NAME }} .
+        docker build --platform linux/amd64 -t ${{ secrets.DOCKERHUB_LOGIN_USERNAME }}/${{ secrets.DOCKERHUB_IMAGE_NAME }}:${{ steps.server_version.outputs.version }} .
         docker push ${{ secrets.DOCKERHUB_LOGIN_USERNAME }}/${{ secrets.DOCKERHUB_IMAGE_NAME }}:${{ steps.server_version.outputs.version }}
 
     - name: 도커 컨테이너 실행
