@@ -2,7 +2,7 @@ name: ASAP Prod CI
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: [ "feat/#277" ]
 
 permissions:
   contents: read
