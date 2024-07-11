@@ -5,10 +5,18 @@ plugins {
 }
 
 group = 'com.asap'
-version = '0.0.1-SNAPSHOT'
+version = '1.1.1'
 
 java {
     sourceCompatibility = '17'
+}
+
+jar {
+    enabled = false;
+}
+
+bootJar {
+    enabled = true;
 }
 
 configurations {

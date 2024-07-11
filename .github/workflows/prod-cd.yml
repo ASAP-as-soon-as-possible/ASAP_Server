@@ -49,10 +49,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_LOGIN_USERNAME }}
           password: ${{ secrets.DOCKERHUB_LOGIN_ACCESSTOKEN }}
 
+      - name: JAR file 로 부터 서버 버전 추출
+        id: server_version
+        run: |
+          jar_file=$(ls build/libs/server-*.jar | head -n 1)
+          version=$(echo $jar_file | grep -oP 'server-\K[^\-]+(?=\.jar)')
+          echo "Version: $version"
+          echo "::set-output name=version::$version"
+
       - name: docker image 빌드 및 푸시
         run: |
-          docker build --platform linux/amd64 -t ${{ secrets.DOCKERHUB_LOGIN_USERNAME }}/${{ secrets.DOCKERHUB_IMAGE_NAME }} .
-          docker push ${{ secrets.DOCKERHUB_LOGIN_USERNAME }}/${{ secrets.DOCKERHUB_IMAGE_NAME }}
+          docker build --platform linux/amd64 -t ${{ secrets.DOCKERHUB_LOGIN_USERNAME }}/${{ secrets.DOCKERHUB_IMAGE_NAME }}:${{ steps.server_version.outputs.version }} .
+          docker push ${{ secrets.DOCKERHUB_LOGIN_USERNAME }}/${{ secrets.DOCKERHUB_IMAGE_NAME }}:${{ steps.server_version.outputs.version }}
 
       - name: 도커 컨테이너 실행
         uses: appleboy/ssh-action@master
