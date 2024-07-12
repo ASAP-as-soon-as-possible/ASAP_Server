@@ -1,6 +1,6 @@
 <included>
     <appender name="FILE-INFO" class="ch.qos.logback.core.FileAppender">
-        <file>/home/ubuntu/app/logs/info/info-${BY_DATE}.log</file>
+        <file>/logs/info/info-${BY_DATE}.log</file>
         <append>true</append>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
