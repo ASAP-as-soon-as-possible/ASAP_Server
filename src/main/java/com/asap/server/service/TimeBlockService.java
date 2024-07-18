@@ -1,12 +1,12 @@
 package com.asap.server.service;
 
 
-import com.asap.server.domain.AvailableDate;
-import com.asap.server.domain.TimeBlock;
-import com.asap.server.domain.enums.TimeSlot;
-import com.asap.server.exception.Error;
-import com.asap.server.exception.model.NotFoundException;
-import com.asap.server.repository.timeblock.TimeBlockRepository;
+import com.asap.server.persistence.domain.AvailableDate;
+import com.asap.server.persistence.domain.TimeBlock;
+import com.asap.server.persistence.domain.enums.TimeSlot;
+import com.asap.server.common.exception.Error;
+import com.asap.server.common.exception.model.NotFoundException;
+import com.asap.server.persistence.repository.timeblock.TimeBlockRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

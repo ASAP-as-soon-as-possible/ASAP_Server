@@ -1,12 +1,12 @@
 package com.asap.server.service.meeting;
 
-import static com.asap.server.domain.enums.Duration.HALF;
-import static com.asap.server.domain.enums.Duration.HOUR;
-import static com.asap.server.domain.enums.Duration.HOUR_HALF;
-import static com.asap.server.domain.enums.Duration.TWO_HOUR;
+import static com.asap.server.persistence.domain.enums.Duration.HALF;
+import static com.asap.server.persistence.domain.enums.Duration.HOUR;
+import static com.asap.server.persistence.domain.enums.Duration.HOUR_HALF;
+import static com.asap.server.persistence.domain.enums.Duration.TWO_HOUR;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import com.asap.server.domain.enums.Duration;
+import com.asap.server.persistence.domain.enums.Duration;
 import com.asap.server.service.vo.PossibleTimeCaseVo;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
