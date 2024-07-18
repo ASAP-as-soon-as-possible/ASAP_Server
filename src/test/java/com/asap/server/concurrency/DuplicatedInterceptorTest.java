@@ -1,11 +1,10 @@
 package com.asap.server.concurrency;
 
-import com.asap.server.ServerApplication;
-import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
-import com.asap.server.controller.dto.request.PreferTimeSaveRequestDto;
-import com.asap.server.domain.enums.Duration;
-import com.asap.server.domain.enums.PlaceType;
-import com.asap.server.domain.enums.TimeSlot;
+import com.asap.server.presentation.controller.dto.request.MeetingSaveRequestDto;
+import com.asap.server.presentation.controller.dto.request.PreferTimeSaveRequestDto;
+import com.asap.server.persistence.domain.enums.Duration;
+import com.asap.server.persistence.domain.enums.PlaceType;
+import com.asap.server.persistence.domain.enums.TimeSlot;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
