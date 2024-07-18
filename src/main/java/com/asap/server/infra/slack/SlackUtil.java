@@ -1,4 +1,4 @@
-package com.asap.server.common.utils;
+package com.asap.server.infra.slack;
 
 import com.slack.api.Slack;
 import com.slack.api.model.block.Blocks;

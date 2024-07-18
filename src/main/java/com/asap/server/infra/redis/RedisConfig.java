@@ -1,4 +1,4 @@
-package com.asap.server.config.redis;
+package com.asap.server.infra.redis;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
