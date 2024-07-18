@@ -1,14 +1,14 @@
 package com.asap.server.service.meeting;
 
-import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
-import com.asap.server.controller.dto.request.UserRequestDto;
-import com.asap.server.domain.Meeting;
-import com.asap.server.domain.Place;
-import com.asap.server.domain.User;
-import com.asap.server.domain.enums.Duration;
-import com.asap.server.domain.enums.PlaceType;
-import com.asap.server.domain.enums.Role;
-import com.asap.server.domain.enums.TimeSlot;
+import com.asap.server.presentation.controller.dto.request.MeetingConfirmRequestDto;
+import com.asap.server.presentation.controller.dto.request.UserRequestDto;
+import com.asap.server.persistence.domain.Meeting;
+import com.asap.server.persistence.domain.Place;
+import com.asap.server.persistence.domain.User;
+import com.asap.server.persistence.domain.enums.Duration;
+import com.asap.server.persistence.domain.enums.PlaceType;
+import com.asap.server.persistence.domain.enums.Role;
+import com.asap.server.persistence.domain.enums.TimeSlot;
 import com.asap.server.service.MeetingService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;

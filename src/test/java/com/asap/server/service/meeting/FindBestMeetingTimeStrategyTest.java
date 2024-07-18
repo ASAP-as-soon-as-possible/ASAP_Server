@@ -1,8 +1,7 @@
 package com.asap.server.service.meeting;
 
-import com.asap.server.repository.timeblock.dto.TimeBlockDto;
-import com.asap.server.service.meeting.FindBestMeetingTimeStrategy;
-import com.asap.server.domain.enums.Duration;
+import com.asap.server.persistence.repository.timeblock.dto.TimeBlockDto;
+import com.asap.server.persistence.domain.enums.Duration;
 import com.asap.server.service.vo.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,18 +12,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.asap.server.domain.enums.TimeSlot.SLOT_11_00;
-import static com.asap.server.domain.enums.TimeSlot.SLOT_11_30;
-import static com.asap.server.domain.enums.TimeSlot.SLOT_12_00;
-import static com.asap.server.domain.enums.TimeSlot.SLOT_12_30;
-import static com.asap.server.domain.enums.TimeSlot.SLOT_13_00;
-import static com.asap.server.domain.enums.TimeSlot.SLOT_13_30;
-import static com.asap.server.domain.enums.TimeSlot.SLOT_14_00;
-import static com.asap.server.domain.enums.TimeSlot.SLOT_14_30;
-import static com.asap.server.domain.enums.TimeSlot.SLOT_20_00;
-import static com.asap.server.domain.enums.TimeSlot.SLOT_20_30;
-import static com.asap.server.domain.enums.TimeSlot.SLOT_21_00;
-import static com.asap.server.domain.enums.TimeSlot.SLOT_21_30;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_11_00;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_11_30;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_12_00;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_12_30;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_13_00;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_13_30;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_14_00;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_14_30;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_20_00;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_20_30;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_21_00;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_21_30;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class FindBestMeetingTimeStrategyTest {

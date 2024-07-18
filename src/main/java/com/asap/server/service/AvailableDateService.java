@@ -1,15 +1,15 @@
 package com.asap.server.service;
 
 import com.asap.server.common.utils.DateUtil;
-import com.asap.server.controller.dto.response.AvailableDateResponseDto;
-import com.asap.server.controller.dto.response.AvailableDatesDto;
-import com.asap.server.controller.dto.response.TimeSlotDto;
-import com.asap.server.domain.AvailableDate;
-import com.asap.server.domain.Meeting;
-import com.asap.server.exception.Error;
-import com.asap.server.exception.model.BadRequestException;
-import com.asap.server.exception.model.NotFoundException;
-import com.asap.server.repository.AvailableDateRepository;
+import com.asap.server.presentation.controller.dto.response.AvailableDateResponseDto;
+import com.asap.server.presentation.controller.dto.response.AvailableDatesDto;
+import com.asap.server.presentation.controller.dto.response.TimeSlotDto;
+import com.asap.server.persistence.domain.AvailableDate;
+import com.asap.server.persistence.domain.Meeting;
+import com.asap.server.common.exception.Error;
+import com.asap.server.common.exception.model.BadRequestException;
+import com.asap.server.common.exception.model.NotFoundException;
+import com.asap.server.persistence.repository.AvailableDateRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;

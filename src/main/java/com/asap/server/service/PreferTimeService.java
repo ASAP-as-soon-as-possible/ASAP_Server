@@ -1,14 +1,14 @@
 package com.asap.server.service;
 
-import com.asap.server.controller.dto.request.PreferTimeSaveRequestDto;
-import com.asap.server.controller.dto.response.PreferTimeResponseDto;
-import com.asap.server.domain.Meeting;
-import com.asap.server.domain.PreferTime;
-import com.asap.server.domain.enums.TimeSlot;
-import com.asap.server.exception.Error;
-import com.asap.server.exception.model.BadRequestException;
-import com.asap.server.exception.model.NotFoundException;
-import com.asap.server.repository.PreferTimeRepository;
+import com.asap.server.presentation.controller.dto.request.PreferTimeSaveRequestDto;
+import com.asap.server.presentation.controller.dto.response.PreferTimeResponseDto;
+import com.asap.server.persistence.domain.Meeting;
+import com.asap.server.persistence.domain.PreferTime;
+import com.asap.server.persistence.domain.enums.TimeSlot;
+import com.asap.server.common.exception.Error;
+import com.asap.server.common.exception.model.BadRequestException;
+import com.asap.server.common.exception.model.NotFoundException;
+import com.asap.server.persistence.repository.PreferTimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
