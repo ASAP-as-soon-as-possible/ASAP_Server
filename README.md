@@ -1,42 +1,48 @@
-# 🔜 ASAP : AS SOON AS POSSIBLE
-최적의 회의시간대를 결정해 회의 이전 불필요한 시간적, 감정적 소비를 줄여주는 웹서비스
+### **💁‍♂️ Introduction**
 
-# 👨🏻‍💻 Contributors
-|  <div align = center>강원용 </div> | <div align = center> 도소현 </div> |
-|:----------|:----------|
-|<div align = center> <img src = "https://github.com/ASAP-as-soon-as-possible/ASAP_Server/assets/79795051/f3b50777-cc04-4245-af19-826b9054c53f.png" width = "17" height = "17"/> [KWY0218](https://github.com/KWY0218) </div> |<div align = center> <img src = "https://github.com/ASAP-as-soon-as-possible/ASAP_Server/assets/79795051/f3b50777-cc04-4245-af19-826b9054c53f.png" width = "17" height = "17"/> [sohyundoh](https://github.com/sohyundoh) </div>|
-| <img src = "https://github.com/ASAP-as-soon-as-possible/ASAP_Server/assets/79795051/08d4e1e6-9f8d-4607-9394-4f58259a6e49.png" width = "250" height = "380"/>| <img src = "https://github.com/ASAP-as-soon-as-possible/ASAP_Server/assets/79795051/5d82b08d-9970-418f-8f9a-70d634839e30.png" width = "250" height = "380"/> |
-| [참여자 : 회의 가능 시간 뷰] <br/> 참여자 정보 및 회의 가능 시간 입력 API    |[링크 입장 뷰] 유효한 회의 확인 API,<br/> 토큰 유효성 확인 API |
-| [방장으로 입장] 방장 정보 입력 API  | [방장 : 회의 가능 시간 뷰] <br/> 회의 가능 시간 입력 API|
-| [방장 뷰] 최적의 회의시간 API   | [방장 뷰] 종합 일정 시간표 API  |
-| [방장 뷰] 회의 시간 확정 API| [회의 생성 뷰] 회의 생성 API |
-| [방장 뷰] 큐카드 정보 불러오는 API  |[가능 시간 입력 뷰] 선택지 제공 |
+![image](https://github.com/user-attachments/assets/e9d91189-cecd-4f55-8a2b-9bbf4aa1045c)
+![image](https://github.com/user-attachments/assets/5ab65502-bdc4-4ab1-955b-9b23c9c5498f)
 
-# 💼 Server Architecture
-![image](https://github.com/ASAP-as-soon-as-possible/ASAP_Server/assets/79795051/d1aae75e-4ce9-4b1e-9b70-8a5ea07e37e2)
 
-# 🗂️ Directory
+ASAP은선호도 분석을 통해 최대 인원이 참석 가능한 회의시간을 자동으로 결정해 줌으로써, **다수가 시간을 조율하며 딜레이되는 시간을 줄여주는 서비스** 입니다.
+
+회의 관련 정보를 하나의 큐카드로 정리해 제공함으로써 회의 시간 외 추가 공지사항을 단톡방에 올리는 수고로움 또한 덜어주고자 합니다.
+
+한마디로 ASAP은 **회의를 진행하는 업무시간 외 일련의 사전작업들을 쉽고 빠르고 간편하게 처리해주는 웹서비스**입니다.
+
+### **🚎 Architecture**
+
+![image](https://github.com/user-attachments/assets/cae98903-bc3d-4e4c-b60f-b499747b227f)
+
+
+### **📈 DataBase Schema**
+
+![image](https://github.com/user-attachments/assets/abdca3ac-b608-44fe-aa9b-c623864b7bee)
+
+
+### **🗂️ Directory**
+
 ```
-├── java
-│   └── com
-│       └── asap
-│           └── server
-│               ├── common
-│               │   ├── advice
-│               │   ├── dto
-│               │   └── utils
-│               ├── config
-│               │   ├── jwt
-│               │   ├── resolver
-│               │   │   ├── meeting
-│               │   │   └── user
-│               │   └── swagger
-│               ├── controller
-│               ├── domain
-│               │   └── enums
-│               ├── exception
-│               │   └── model
-│               ├── repository
-│               └── service
-└── test
+├─common # 각 계층에서 공통으로 사용하는 유틸리티와 예외 처리 기능을 제공합니다.
+│  ├─exception
+│  ├─jwt
+│  └─utils
+├─infra # 외부 API 통합 및 외부 시스템과의 연동 설정을 담당합니다.
+│  ├─redis
+│  └─slack
+├─persistence # 데이터베이스와의 상호작용을 위한 영속성 관련 기능을 제공합니다.
+│  ├─config
+│  ├─domain
+│  └─repository
+├─presentation # 사용자의 요청을 처리하고 응답을 반환하는 UI 관련 기능을 제공합니다.
+│  ├─common
+│  ├─config
+│  └─controller
+└─service # 애플리케이션의 핵심 비즈니스 로직을 구현합니다.
 ```
+
+### **👥 Contributors**
+
+| 강원용| 도소현|
+|:-----:|:------:|
+| [KWY0218](https://github.com/KWY0218) | [sohyundoh](https://github.com/sohyundoh) |
