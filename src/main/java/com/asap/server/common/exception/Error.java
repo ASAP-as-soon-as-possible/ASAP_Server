@@ -1,4 +1,4 @@
-package com.asap.server.exception;
+package com.asap.server.common.exception;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

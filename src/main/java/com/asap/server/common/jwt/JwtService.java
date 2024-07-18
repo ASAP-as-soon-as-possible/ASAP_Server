@@ -1,7 +1,7 @@
-package com.asap.server.config.jwt;
+package com.asap.server.common.jwt;
 
-import com.asap.server.exception.model.UnauthorizedException;
-import com.asap.server.exception.Error;
+import com.asap.server.common.exception.model.UnauthorizedException;
+import com.asap.server.common.exception.Error;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;

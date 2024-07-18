@@ -1,7 +1,7 @@
-package com.asap.server.exception.model;
+package com.asap.server.common.exception.model;
 
-import com.asap.server.controller.dto.response.HostLoginResponseDto;
-import com.asap.server.exception.Error;
+import com.asap.server.presentation.controller.dto.response.HostLoginResponseDto;
+import com.asap.server.common.exception.Error;
 import lombok.Getter;
 
 @Getter
