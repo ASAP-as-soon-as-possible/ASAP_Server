@@ -47,7 +47,6 @@ public class MeetingService {
     private final MeetingRepository meetingRepository;
     private final UserService userService;
     private final AvailableDateService availableDateService;
-    private final PreferTimeService preferTimeService;
     private final JwtService jwtService;
     private final MeetingTimeRecommendService meetingTimeRecommendService;
     private final TimeBlockRepository timeBlockRepository;
@@ -72,7 +71,6 @@ public class MeetingService {
 
         User host = userService.createUser(meeting, meetingSaveRequestDto.name(), Role.HOST);
 
-        preferTimeService.create(meeting, meetingSaveRequestDto.preferTimes());
         availableDateService.create(meeting, meetingSaveRequestDto.availableDates());
 
         meeting.setHost(host);
@@ -122,7 +120,6 @@ public class MeetingService {
                 .place(meeting.getPlace().getPlaceType())
                 .placeDetail(meeting.getPlace().getPlaceDetail())
                 .availableDates(availableDateService.getAvailableDates(meeting))
-                .preferTimes(preferTimeService.getPreferTimes(meeting))
                 .build();
     }
 
