@@ -18,8 +18,6 @@ public record MeetingSaveRequestDto(
         String title,
         @Schema(description = "회의 가능 날짜", example = "[\"2024/7/9/MON\"]")
         List<String> availableDates,
-        @Schema(description = "회의 선호 시간")
-        List<PreferTimeSaveRequestDto> preferTimes,
         @NotNull(message = "회의 형식이 입력되지 않았습니다.")
         @Schema(description = "회의 방식", example = "ONLINE", allowableValues = {"ONLINE", "OFFLINE", "UNDEFINED"})
         PlaceType place,

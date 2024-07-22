@@ -18,5 +18,4 @@ public class MeetingScheduleResponseDto {
     private PlaceType place;
     private String placeDetail;
     private List<AvailableDateResponseDto> availableDates;
-    private List<PreferTimeResponseDto> preferTimes;
 }
