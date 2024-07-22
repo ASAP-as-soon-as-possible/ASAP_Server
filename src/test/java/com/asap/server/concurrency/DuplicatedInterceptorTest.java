@@ -1,7 +1,6 @@
 package com.asap.server.concurrency;
 
 import com.asap.server.presentation.controller.dto.request.MeetingSaveRequestDto;
-import com.asap.server.presentation.controller.dto.request.PreferTimeSaveRequestDto;
 import com.asap.server.persistence.domain.enums.Duration;
 import com.asap.server.persistence.domain.enums.PlaceType;
 import com.asap.server.persistence.domain.enums.TimeSlot;
@@ -45,7 +44,6 @@ public class DuplicatedInterceptorTest {
         MeetingSaveRequestDto bodyDto = new MeetingSaveRequestDto(
                 "title",
                 List.of("2024/07/09/MON", "2024/07/10/TUE"),
-                List.of(new PreferTimeSaveRequestDto(TimeSlot.SLOT_6_00, TimeSlot.SLOT_6_30)),
                 PlaceType.OFFLINE,
                 "회의 장소 설명",
                 Duration.HOUR,
