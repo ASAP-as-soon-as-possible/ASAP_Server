@@ -1,32 +1,32 @@
 package com.asap.server.service;
 
-import static com.asap.server.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
-import static com.asap.server.exception.Error.MEETING_VALIDATION_FAILED_EXCEPTION;
+import static com.asap.server.common.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
+import static com.asap.server.common.exception.Error.MEETING_VALIDATION_FAILED_EXCEPTION;
 
 import com.asap.server.common.utils.DateUtil;
-import com.asap.server.config.jwt.JwtService;
-import com.asap.server.controller.dto.request.MeetingConfirmRequestDto;
-import com.asap.server.controller.dto.request.MeetingSaveRequestDto;
-import com.asap.server.controller.dto.response.AvailableDatesDto;
-import com.asap.server.controller.dto.response.BestMeetingTimeResponseDto;
-import com.asap.server.controller.dto.response.FixedMeetingResponseDto;
-import com.asap.server.controller.dto.response.MeetingSaveResponseDto;
-import com.asap.server.controller.dto.response.MeetingScheduleResponseDto;
-import com.asap.server.controller.dto.response.MeetingTitleResponseDto;
-import com.asap.server.controller.dto.response.TimeTableResponseDto;
-import com.asap.server.domain.ConfirmedDateTime;
-import com.asap.server.domain.Meeting;
-import com.asap.server.domain.Place;
-import com.asap.server.domain.User;
-import com.asap.server.domain.enums.Role;
-import com.asap.server.exception.Error;
-import com.asap.server.exception.model.ConflictException;
-import com.asap.server.exception.model.ForbiddenException;
-import com.asap.server.exception.model.NotFoundException;
-import com.asap.server.exception.model.UnauthorizedException;
-import com.asap.server.repository.meeting.MeetingRepository;
-import com.asap.server.repository.timeblock.TimeBlockRepository;
-import com.asap.server.repository.timeblock.dto.TimeBlockDto;
+import com.asap.server.common.jwt.JwtService;
+import com.asap.server.presentation.controller.dto.request.MeetingConfirmRequestDto;
+import com.asap.server.presentation.controller.dto.request.MeetingSaveRequestDto;
+import com.asap.server.presentation.controller.dto.response.AvailableDatesDto;
+import com.asap.server.presentation.controller.dto.response.BestMeetingTimeResponseDto;
+import com.asap.server.presentation.controller.dto.response.FixedMeetingResponseDto;
+import com.asap.server.presentation.controller.dto.response.MeetingSaveResponseDto;
+import com.asap.server.presentation.controller.dto.response.MeetingScheduleResponseDto;
+import com.asap.server.presentation.controller.dto.response.MeetingTitleResponseDto;
+import com.asap.server.presentation.controller.dto.response.TimeTableResponseDto;
+import com.asap.server.persistence.domain.ConfirmedDateTime;
+import com.asap.server.persistence.domain.Meeting;
+import com.asap.server.persistence.domain.Place;
+import com.asap.server.persistence.domain.User;
+import com.asap.server.persistence.domain.enums.Role;
+import com.asap.server.common.exception.Error;
+import com.asap.server.common.exception.model.ConflictException;
+import com.asap.server.common.exception.model.ForbiddenException;
+import com.asap.server.common.exception.model.NotFoundException;
+import com.asap.server.common.exception.model.UnauthorizedException;
+import com.asap.server.persistence.repository.meeting.MeetingRepository;
+import com.asap.server.persistence.repository.timeblock.TimeBlockRepository;
+import com.asap.server.persistence.repository.timeblock.dto.TimeBlockDto;
 import com.asap.server.service.meeting.MeetingTimeRecommendService;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.BestMeetingTimeWithUsersVo;
@@ -47,7 +47,6 @@ public class MeetingService {
     private final MeetingRepository meetingRepository;
     private final UserService userService;
     private final AvailableDateService availableDateService;
-    private final PreferTimeService preferTimeService;
     private final JwtService jwtService;
     private final MeetingTimeRecommendService meetingTimeRecommendService;
     private final TimeBlockRepository timeBlockRepository;
@@ -72,7 +71,6 @@ public class MeetingService {
 
         User host = userService.createUser(meeting, meetingSaveRequestDto.name(), Role.HOST);
 
-        preferTimeService.create(meeting, meetingSaveRequestDto.preferTimes());
         availableDateService.create(meeting, meetingSaveRequestDto.availableDates());
 
         meeting.setHost(host);
@@ -122,7 +120,6 @@ public class MeetingService {
                 .place(meeting.getPlace().getPlaceType())
                 .placeDetail(meeting.getPlace().getPlaceDetail())
                 .availableDates(availableDateService.getAvailableDates(meeting))
-                .preferTimes(preferTimeService.getPreferTimes(meeting))
                 .build();
     }
 

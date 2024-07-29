@@ -1,6 +1,6 @@
 package com.asap.server.service.vo;
 
-import com.asap.server.domain.enums.Duration;
+import com.asap.server.persistence.domain.enums.Duration;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

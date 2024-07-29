@@ -1,6 +1,6 @@
 package com.asap.server.service.vo;
 
-import com.asap.server.domain.enums.TimeSlot;
+import com.asap.server.persistence.domain.enums.TimeSlot;
 
 import java.time.LocalDate;
 import java.util.List;

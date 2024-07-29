@@ -1,6 +1,6 @@
 package com.asap.server.service.meeting;
 
-import com.asap.server.domain.enums.Duration;
+import com.asap.server.persistence.domain.enums.Duration;
 import com.asap.server.service.vo.PossibleTimeCaseVo;
 import org.springframework.stereotype.Component;
 

@@ -1,7 +1,7 @@
 package com.asap.server.service.meeting;
 
-import com.asap.server.domain.enums.TimeSlot;
-import com.asap.server.repository.timeblock.dto.TimeBlockDto;
+import com.asap.server.persistence.domain.enums.TimeSlot;
+import com.asap.server.persistence.repository.timeblock.dto.TimeBlockDto;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.PossibleTimeCaseVo;
 import java.util.ArrayList;
