@@ -6,6 +6,7 @@ import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_13_00;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_14_00;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_14_30;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_16_00;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_16_30;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_17_00;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_18_00;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_20_00;
@@ -420,6 +421,34 @@ class ContinuousMeetingTimeStrategyImplTest {
 
             // then
             assertThat(response.isEmpty()).isTrue();
+        }
+    }
+
+    @DisplayName("가중치 테스트")
+    @Nested
+    class SumWeightTest {
+        @DisplayName("[(연속된 timeBlock의 가중치의 총 합) % (연속된 timeBlock의 수)]를 weight로 넣는다.")
+        @Test
+        void weightTest() {
+            // given
+            LocalDate availableDate = LocalDate.of(2023, 7, 10);
+            LocalDate availableDate2 = LocalDate.of(2023, 7, 11);
+            List<TimeBlockDto> tempTimeBlocks = TimeBlockDtoGenerator.generator(availableDate, SLOT_12_00, SLOT_14_00, 4, 2L);
+            List<TimeBlockDto> tempTimeBlocks2 = TimeBlockDtoGenerator.generator(availableDate2, SLOT_16_00, SLOT_16_30, 2, 2L);
+            List<TimeBlockDto> timeBlocks = new ArrayList<>() {{
+                addAll(tempTimeBlocks);
+                addAll(tempTimeBlocks2);
+            }};
+
+            BestMeetingTimeVo r1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_14_00, 4);
+            BestMeetingTimeVo r2 = new BestMeetingTimeVo(availableDate2, SLOT_16_00, SLOT_16_30, 2);
+            List<BestMeetingTimeVo> result = List.of(r1, r2);
+
+            // when
+            List<BestMeetingTimeVo> response = continuousMeetingTimeStrategy.find(timeBlocks, Duration.HALF);
+
+            // then
+            assertThat(response).isEqualTo(result);
         }
     }
 }
