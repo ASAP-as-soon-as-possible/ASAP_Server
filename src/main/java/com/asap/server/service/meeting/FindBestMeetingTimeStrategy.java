@@ -16,8 +16,8 @@ public class FindBestMeetingTimeStrategy {
             final List<TimeBlockDto> timeBlocks,
             final PossibleTimeCaseVo timeCase
     ) {
-        int needBlock = timeCase.getDuration().getNeedBlock();
-        int userCount = timeCase.getMemberCnt();
+        int needBlock = timeCase.duration().getNeedBlock();
+        int userCount = timeCase.memberCnt();
 
         List<TimeBlockDto> sortedTimeBlocks = timeBlocks.stream()
                 .filter(timeBlock -> timeBlock.userCount() == userCount)
