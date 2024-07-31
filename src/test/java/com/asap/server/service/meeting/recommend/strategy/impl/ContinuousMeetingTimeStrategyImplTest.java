@@ -92,4 +92,103 @@ class ContinuousMeetingTimeStrategyImplTest {
         }
     }
 
+    @DisplayName("timeBlocks 내에 12시부터 16시, 18시부터 20시까지 30분 간격으로 있고")
+    @Nested
+    class ReturnBestMeetingTimeVoByDuration {
+        // given
+        LocalDate availableDate = LocalDate.of(2023, 7, 10);
+        List<TimeBlockDto> tempTimeBlocks = TimeBlockDtoGenerator.generator(availableDate, SLOT_12_00, SLOT_16_00, 0, 2L);
+        List<TimeBlockDto> tempTimeBlocks2 = TimeBlockDtoGenerator.generator(availableDate, SLOT_18_00, SLOT_20_00, 0, 2L);
+        List<TimeBlockDto> timeBlocks = new ArrayList<>() {{
+            addAll(tempTimeBlocks);
+            addAll(tempTimeBlocks2);
+        }};
+
+        @DisplayName("회의 진행 시간이 30분일 때, 12시부터 16시까지인 BestMeetingTimeVo를 반환한다.")
+        @Test
+        void durationHalfTest() {
+            // given
+            BestMeetingTimeVo r1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_16_00, 0);
+            BestMeetingTimeVo r2 = new BestMeetingTimeVo(availableDate, SLOT_18_00, SLOT_20_00, 0);
+            List<BestMeetingTimeVo> result = List.of(r1, r2);
+
+            // when
+            List<BestMeetingTimeVo> response = continuousMeetingTimeStrategy.find(timeBlocks, Duration.HALF);
+
+            // then
+            assertThat(response).isEqualTo(result);
+        }
+
+        @DisplayName("회의 진행 시간이 1시간일 때, 12시부터 16시까지인 BestMeetingTimeVo를 반환한다.")
+        @Test
+        void durationHourTest() {
+            // given
+            BestMeetingTimeVo r1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_16_00, 0);
+            BestMeetingTimeVo r2 = new BestMeetingTimeVo(availableDate, SLOT_18_00, SLOT_20_00, 0);
+            List<BestMeetingTimeVo> result = List.of(r1, r2);
+
+            // when
+            List<BestMeetingTimeVo> response = continuousMeetingTimeStrategy.find(timeBlocks, Duration.HOUR);
+
+            // then
+            assertThat(response).isEqualTo(result);
+        }
+
+        @DisplayName("회의 진행 시간이 1시간 30분일 때, 12시부터 16시까지인 BestMeetingTimeVo를 반환한다.")
+        @Test
+        void durationHourHalfTest() {
+            // given
+            BestMeetingTimeVo r1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_16_00, 0);
+            BestMeetingTimeVo r2 = new BestMeetingTimeVo(availableDate, SLOT_18_00, SLOT_20_00, 0);
+            List<BestMeetingTimeVo> result = List.of(r1, r2);
+
+            // when
+            List<BestMeetingTimeVo> response = continuousMeetingTimeStrategy.find(timeBlocks, Duration.HOUR_HALF);
+
+            // then
+            assertThat(response).isEqualTo(result);
+        }
+
+        @DisplayName("회의 진행 시간이 2시간일 때, 12시부터 16시까지인 BestMeetingTimeVo를 반환한다.")
+        @Test
+        void durationTwoHourTest() {
+            // given
+            BestMeetingTimeVo r1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_16_00, 0);
+            BestMeetingTimeVo r2 = new BestMeetingTimeVo(availableDate, SLOT_18_00, SLOT_20_00, 0);
+            List<BestMeetingTimeVo> result = List.of(r1, r2);
+
+            // when
+            List<BestMeetingTimeVo> response = continuousMeetingTimeStrategy.find(timeBlocks, Duration.TWO_HOUR);
+
+            // then
+            assertThat(response).isEqualTo(result);
+        }
+
+        @DisplayName("회의 진행 시간이 2시간 30분일 때, 12시부터 16시까지인 BestMeetingTimeVo를 반환한다.")
+        @Test
+        void durationTwoHourHalfTest() {
+            // given
+            BestMeetingTimeVo r1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_16_00, 0);
+            List<BestMeetingTimeVo> result = List.of(r1);
+
+            // when
+            List<BestMeetingTimeVo> response = continuousMeetingTimeStrategy.find(timeBlocks, Duration.TWO_HOUR_HALF);
+
+            // then
+            assertThat(response).isEqualTo(result);
+        }
+
+        @DisplayName("회의 진행 시간이 3시간일 때, 12시부터 16시까지인 BestMeetingTimeVo를 반환한다.")
+        @Test
+        void durationThreeHourTest() {
+            BestMeetingTimeVo r1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_16_00, 0);
+            List<BestMeetingTimeVo> result = List.of(r1);
+
+            // when
+            List<BestMeetingTimeVo> response = continuousMeetingTimeStrategy.find(timeBlocks, Duration.THREE_HOUR);
+
+            // then
+            assertThat(response).isEqualTo(result);
+        }
+    }
 }
