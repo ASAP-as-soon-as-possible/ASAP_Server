@@ -11,9 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
-@Component
 @RequiredArgsConstructor
 public class MeetingTimeRecommendService {
     private static final int BEST_MEETING_TIME_SIZE = 3;
@@ -31,10 +29,10 @@ public class MeetingTimeRecommendService {
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>();
         for (PossibleTimeCaseVo timeCase : timeCases) {
             List<TimeBlockDto> timeBlocksFilteredUserCount = timeBlocks.stream()
-                    .filter(t -> t.userCount() == timeCase.getMemberCnt())
+                    .filter(t -> t.userCount() == timeCase.memberCnt())
                     .toList();
 
-            List<BestMeetingTimeVo> candidateMeetingTimes = new ArrayList<>(findTimeBlockStrategy.find(timeBlocksFilteredUserCount, timeCase.getDuration()));
+            List<BestMeetingTimeVo> candidateMeetingTimes = new ArrayList<>(findTimeBlockStrategy.find(timeBlocksFilteredUserCount, timeCase.duration()));
             candidateMeetingTimes = findBestTimeBlockStrategy.find(candidateMeetingTimes);
             bestMeetingTimes.addAll(candidateMeetingTimes);
 
