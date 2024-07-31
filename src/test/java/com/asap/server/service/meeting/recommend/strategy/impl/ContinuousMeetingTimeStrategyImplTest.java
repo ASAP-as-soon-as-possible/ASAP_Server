@@ -450,5 +450,33 @@ class ContinuousMeetingTimeStrategyImplTest {
             // then
             assertThat(response).isEqualTo(result);
         }
+
+        @DisplayName("가중치가 큰 BestMeetingVo 순으로 반환된다.")
+        @Test
+        void weightTest2() {
+            // given
+            LocalDate availableDate = LocalDate.of(2023, 7, 10);
+            LocalDate availableDate2 = LocalDate.of(2023, 7, 11);
+            LocalDate availableDate3 = LocalDate.of(2023, 7, 12);
+            List<TimeBlockDto> tempTimeBlocks = TimeBlockDtoGenerator.generator(availableDate, SLOT_12_00, SLOT_14_00, 2, 2L);
+            List<TimeBlockDto> tempTimeBlocks2 = TimeBlockDtoGenerator.generator(availableDate2, SLOT_16_00, SLOT_16_30, 4, 2L);
+            List<TimeBlockDto> tempTimeBlocks3 = TimeBlockDtoGenerator.generator(availableDate3, SLOT_16_30, SLOT_17_00, 1, 2L);
+            List<TimeBlockDto> timeBlocks = new ArrayList<>() {{
+                addAll(tempTimeBlocks);
+                addAll(tempTimeBlocks2);
+                addAll(tempTimeBlocks3);
+            }};
+
+            BestMeetingTimeVo r1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_14_00, 2);
+            BestMeetingTimeVo r2 = new BestMeetingTimeVo(availableDate2, SLOT_16_00, SLOT_16_30, 4);
+            BestMeetingTimeVo r3 = new BestMeetingTimeVo(availableDate3, SLOT_16_30, SLOT_17_00, 1);
+            List<BestMeetingTimeVo> result = List.of(r2, r1, r3);
+
+            // when
+            List<BestMeetingTimeVo> response = continuousMeetingTimeStrategy.find(timeBlocks, Duration.HALF);
+
+            // then
+            assertThat(response).isEqualTo(result);
+        }
     }
 }
