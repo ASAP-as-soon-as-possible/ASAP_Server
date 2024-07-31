@@ -27,7 +27,7 @@ public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeS
 
             TimeBlockDto startTimeBlock = timeBlocks.get(startIdx);
             if (isSatisfiedDuration(startTimeBlock, endTimeBlock, duration)) {
-                int weight = sumTimeBlocksWeight(timeBlocks, startIdx, endIdx - 1);
+                int weight = sumTimeBlocksWeight(timeBlocks, startIdx, endIdx);
                 response.add(
                         new BestMeetingTimeVo(
                                 startTimeBlock.availableDate(),
@@ -44,7 +44,7 @@ public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeS
             TimeBlockDto startTimeBlock = timeBlocks.get(startIdx);
             TimeBlockDto endTimeBlock = timeBlocks.get(endIdx - 1);
             if (isSatisfiedDuration(startTimeBlock, endTimeBlock, duration)) {
-                int weight = sumTimeBlocksWeight(timeBlocks, startIdx, endIdx - 1);
+                int weight = sumTimeBlocksWeight(timeBlocks, startIdx, endIdx);
                 response.add(
                         new BestMeetingTimeVo(
                                 startTimeBlock.availableDate(),
@@ -80,10 +80,9 @@ public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeS
             final int startIdx,
             final int endIdx
     ) {
-        return timeBlocks
-                .subList(startIdx, endIdx)
-                .stream()
-                .map(TimeBlockDto::weight)
-                .reduce(0, Integer::sum);
+        int totalWeight = timeBlocks.subList(startIdx, endIdx).stream()
+                .mapToInt(TimeBlockDto::weight)
+                .sum();
+        return totalWeight / (endIdx - startIdx);
     }
 }
