@@ -19,6 +19,7 @@ public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeS
         while (endIdx < timeBlocks.size()) {
             TimeBlockDto endTimeBlock = timeBlocks.get(endIdx - 1);
             TimeBlockDto nextTimeBlock = timeBlocks.get(endIdx);
+
             if (isContinuous(endTimeBlock, nextTimeBlock)) {
                 endIdx++;
                 continue;
@@ -27,8 +28,14 @@ public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeS
             TimeBlockDto startTimeBlock = timeBlocks.get(startIdx);
             if (isSatisfiedDuration(startTimeBlock, endTimeBlock, duration)) {
                 int weight = sumTimeBlocksWeight(timeBlocks, startIdx, endIdx - 1);
-                response.add(new BestMeetingTimeVo(startTimeBlock.availableDate(), startTimeBlock.timeSlot(),
-                        endTimeBlock.timeSlot(), weight));
+                response.add(
+                        new BestMeetingTimeVo(
+                                startTimeBlock.availableDate(),
+                                startTimeBlock.timeSlot(),
+                                endTimeBlock.timeSlot(),
+                                weight
+                        )
+                );
             }
             startIdx = endIdx++;
         }
@@ -38,8 +45,14 @@ public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeS
             TimeBlockDto endTimeBlock = timeBlocks.get(endIdx - 1);
             if (isSatisfiedDuration(startTimeBlock, endTimeBlock, duration)) {
                 int weight = sumTimeBlocksWeight(timeBlocks, startIdx, endIdx - 1);
-                response.add(new BestMeetingTimeVo(startTimeBlock.availableDate(), startTimeBlock.timeSlot(),
-                        endTimeBlock.timeSlot(), weight));
+                response.add(
+                        new BestMeetingTimeVo(
+                                startTimeBlock.availableDate(),
+                                startTimeBlock.timeSlot(),
+                                endTimeBlock.timeSlot(),
+                                weight
+                        )
+                );
             }
         }
         return response;
