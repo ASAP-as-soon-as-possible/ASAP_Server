@@ -19,8 +19,7 @@ public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeS
         while (endIdx < timeBlocks.size()) {
             TimeBlockDto endTimeBlock = timeBlocks.get(endIdx - 1);
             TimeBlockDto nextTimeBlock = timeBlocks.get(endIdx);
-            if (endTimeBlock.availableDate().isEqual(nextTimeBlock.availableDate())
-                    && endTimeBlock.timeSlot().ordinal() + 1 == nextTimeBlock.timeSlot().ordinal()) {
+            if (isContinuous(endTimeBlock, nextTimeBlock)) {
                 endIdx++;
                 continue;
             }
@@ -44,6 +43,14 @@ public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeS
             }
         }
         return response;
+    }
+
+    private boolean isContinuous(
+            TimeBlockDto endTimeBlock,
+            TimeBlockDto nextTimeBlock
+    ) {
+        return endTimeBlock.availableDate().isEqual(nextTimeBlock.availableDate())
+                && endTimeBlock.timeSlot().ordinal() + 1 == nextTimeBlock.timeSlot().ordinal();
     }
 
     private boolean isSatisfiedDuration(
