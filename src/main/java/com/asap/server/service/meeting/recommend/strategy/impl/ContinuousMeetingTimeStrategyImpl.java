@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeStrategy {
     @Override
-    public List<BestMeetingTimeVo> find(List<TimeBlockDto> timeBlocksFilteredUserCount, Duration duration) {
+    public List<BestMeetingTimeVo> find(List<TimeBlockDto> timeBlocks, Duration duration) {
         return null;
     }
 }
