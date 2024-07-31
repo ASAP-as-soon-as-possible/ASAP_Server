@@ -5,6 +5,6 @@ import com.asap.server.persistence.repository.timeblock.dto.TimeBlockDto;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import java.util.List;
 
-public interface FindTimeBlockStrategy {
+public interface ContinuousMeetingTimeStrategy {
     List<BestMeetingTimeVo> find(List<TimeBlockDto> timeBlocksFilteredUserCount, Duration duration);
 }

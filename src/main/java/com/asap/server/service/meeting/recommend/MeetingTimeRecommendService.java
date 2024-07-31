@@ -2,9 +2,9 @@ package com.asap.server.service.meeting.recommend;
 
 import com.asap.server.persistence.domain.enums.Duration;
 import com.asap.server.persistence.repository.timeblock.dto.TimeBlockDto;
-import com.asap.server.service.meeting.recommend.strategy.FindBestTimeBlockStrategy;
-import com.asap.server.service.meeting.recommend.strategy.FindMeetingTimeCasesStrategy;
-import com.asap.server.service.meeting.recommend.strategy.FindTimeBlockStrategy;
+import com.asap.server.service.meeting.recommend.strategy.BestMeetingTimeStrategy;
+import com.asap.server.service.meeting.recommend.strategy.MeetingTimeTimeCasesStrategy;
+import com.asap.server.service.meeting.recommend.strategy.ContinuousMeetingTimeStrategy;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.PossibleTimeCaseVo;
 import java.util.ArrayList;
@@ -15,16 +15,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MeetingTimeRecommendService {
     private static final int BEST_MEETING_TIME_SIZE = 3;
-    private final FindMeetingTimeCasesStrategy findMeetingTimeCasesStrategy;
-    private final FindTimeBlockStrategy findTimeBlockStrategy;
-    private final FindBestTimeBlockStrategy findBestTimeBlockStrategy;
+    private final MeetingTimeTimeCasesStrategy meetingTimeTimeCasesStrategy;
+    private final ContinuousMeetingTimeStrategy continuousMeetingTimeStrategy;
+    private final BestMeetingTimeStrategy bestMeetingTimeStrategy;
 
     public List<BestMeetingTimeVo> getBestMeetingTime(
             final List<TimeBlockDto> timeBlocks,
             final Duration duration,
             final int userCount
     ) {
-        List<PossibleTimeCaseVo> timeCases = findMeetingTimeCasesStrategy.find(duration, userCount);
+        List<PossibleTimeCaseVo> timeCases = meetingTimeTimeCasesStrategy.find(duration, userCount);
 
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>();
         for (PossibleTimeCaseVo timeCase : timeCases) {
@@ -32,8 +32,9 @@ public class MeetingTimeRecommendService {
                     .filter(t -> t.userCount() == timeCase.memberCnt())
                     .toList();
 
-            List<BestMeetingTimeVo> candidateMeetingTimes = new ArrayList<>(findTimeBlockStrategy.find(timeBlocksFilteredUserCount, timeCase.duration()));
-            candidateMeetingTimes = findBestTimeBlockStrategy.find(candidateMeetingTimes);
+            List<BestMeetingTimeVo> candidateMeetingTimes = new ArrayList<>(
+                    continuousMeetingTimeStrategy.find(timeBlocksFilteredUserCount, timeCase.duration()));
+            candidateMeetingTimes = bestMeetingTimeStrategy.find(candidateMeetingTimes);
             bestMeetingTimes.addAll(candidateMeetingTimes);
 
             if (bestMeetingTimes.size() < BEST_MEETING_TIME_SIZE) {
