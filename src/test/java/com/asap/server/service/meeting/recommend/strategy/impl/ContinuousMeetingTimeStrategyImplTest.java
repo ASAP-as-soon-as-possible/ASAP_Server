@@ -13,6 +13,10 @@ import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_17_00;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_18_00;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_19_30;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_20_00;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_23_30;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_24_00;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_6_00;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_6_30;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.asap.server.common.generator.TimeBlockDtoGenerator;
@@ -45,7 +49,8 @@ class ContinuousMeetingTimeStrategyImplTest {
 
         @DisplayName("회의 진행 시간이 주어졌을 때, 12시부터 16시까지인 BestMeetingTimeVo를 반환한다.")
         @ParameterizedTest
-        @EnumSource(value = Duration.class, names = {"HALF", "HOUR", "HOUR_HALF", "TWO_HOUR", "TWO_HOUR_HALF", "THREE_HOUR"})
+        @EnumSource(value = Duration.class, names = {"HALF", "HOUR", "HOUR_HALF", "TWO_HOUR", "TWO_HOUR_HALF",
+                "THREE_HOUR"})
         void durationsTest(Duration duration) {
             // when
             List<BestMeetingTimeVo> response = continuousMeetingTimeStrategy.find(timeBlocks, duration);
@@ -308,5 +313,48 @@ class ContinuousMeetingTimeStrategyImplTest {
             // then
             assertThat(response).isEqualTo(result);
         }
+    }
+
+    @DisplayName("TimeSlot 양 끝단(06_00, 24_00) 테스트")
+    @Nested
+    class TimeSlotEdgeTest {
+        @DisplayName("회의 진행 시간이 30분이고 12시부터 12시 30분까지 30분 간격인 timeBlocks이 있을 때, 06:00 ~ 06:30을 반환한다.")
+        @Test
+        void timeSlot6_00Test() {
+            // given
+            LocalDate availableDate = LocalDate.of(2023, 7, 10);
+            List<TimeBlockDto> tempTimeBlocks = TimeBlockDtoGenerator
+                    .generator(availableDate, SLOT_6_00, SLOT_6_00, 0, 2L);
+            List<TimeBlockDto> timeBlocks = new ArrayList<>(tempTimeBlocks);
+
+            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_6_00, SLOT_6_30, 0);
+            List<BestMeetingTimeVo> expected = List.of(e1);
+
+            // when
+            List<BestMeetingTimeVo> response = continuousMeetingTimeStrategy.find(timeBlocks, Duration.HALF);
+
+            // then
+            assertThat(response).isEqualTo(expected);
+        }
+
+        @DisplayName("회의 진행 시간이 30분이고 23시 30분부터 24시까지 30분 간격인 timeBlocks이 있을 때, 23:30 ~ 24:00을 반환한다.")
+        @Test
+        void timeSlot24_00Test() {
+            // given
+            LocalDate availableDate = LocalDate.of(2023, 7, 10);
+            List<TimeBlockDto> tempTimeBlocks = TimeBlockDtoGenerator
+                    .generator(availableDate, SLOT_23_30, SLOT_23_30, 0, 2L);
+            List<TimeBlockDto> timeBlocks = new ArrayList<>(tempTimeBlocks);
+
+            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_23_30, SLOT_24_00, 0);
+            List<BestMeetingTimeVo> expected = List.of(e1);
+
+            // when
+            List<BestMeetingTimeVo> response = continuousMeetingTimeStrategy.find(timeBlocks, Duration.HALF);
+
+            // then
+            assertThat(response).isEqualTo(expected);
+        }
+
     }
 }
