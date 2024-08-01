@@ -1,22 +1,6 @@
 package com.asap.server.service.meeting.recommend.strategy.impl;
 
-import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_12_00;
-import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_12_30;
-import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_13_00;
-import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_13_30;
-import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_14_00;
-import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_14_30;
-import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_15_30;
-import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_16_00;
-import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_16_30;
-import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_17_00;
-import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_18_00;
-import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_19_30;
-import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_20_00;
-import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_23_30;
-import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_24_00;
-import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_6_00;
-import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_6_30;
+import static com.asap.server.persistence.domain.enums.TimeSlot.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.asap.server.common.generator.TimeBlockDtoGenerator;
