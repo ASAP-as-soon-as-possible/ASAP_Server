@@ -1,6 +1,7 @@
 package com.asap.server.service.meeting.recommend.strategy.impl;
 
 import com.asap.server.persistence.domain.enums.Duration;
+import com.asap.server.persistence.domain.enums.TimeSlot;
 import com.asap.server.persistence.repository.timeblock.dto.TimeBlockDto;
 import com.asap.server.service.meeting.recommend.strategy.ContinuousMeetingTimeStrategy;
 import com.asap.server.service.vo.BestMeetingTimeVo;
@@ -62,11 +63,12 @@ public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeS
         TimeBlockDto endTimeBlock = timeBlocks.get(endIdx - 1);
         if (isSatisfiedDuration(startTimeBlock, endTimeBlock, duration)) {
             int weight = sumTimeBlocksWeight(timeBlocks, startIdx, endIdx);
+            TimeSlot endTimeSlot = TimeSlot.getTimeSlot(endTimeBlock.timeSlot().ordinal() + 1);
             response.add(
                     new BestMeetingTimeVo(
                             startTimeBlock.availableDate(),
                             startTimeBlock.timeSlot(),
-                            endTimeBlock.timeSlot(),
+                            endTimeSlot,
                             weight
                     )
             );
@@ -87,7 +89,7 @@ public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeS
             Duration duration
     ) {
         int blockCnt = endTimeBlock.timeSlot().ordinal() - startTimeBlock.timeSlot().ordinal();
-        return blockCnt >= duration.getNeedBlock();
+        return blockCnt + 1 >= duration.getNeedBlock();
     }
 
     private int sumTimeBlocksWeight(
