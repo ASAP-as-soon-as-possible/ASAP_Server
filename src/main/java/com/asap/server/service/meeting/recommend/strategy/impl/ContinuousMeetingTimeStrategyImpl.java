@@ -63,7 +63,7 @@ public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeS
         TimeBlockDto endTimeBlock = timeBlocks.get(endIdx - 1);
         if (isSatisfiedDuration(startTimeBlock, endTimeBlock, duration)) {
             int weight = sumTimeBlocksWeight(timeBlocks, startIdx, endIdx);
-            TimeSlot endTimeSlot = TimeSlot.getTimeSlot(endTimeBlock.timeSlot().ordinal() + 1);
+            TimeSlot endTimeSlot = TimeSlot.getTimeSlot(endTimeBlock.timeSlot().getIndex() + 1);
             response.add(
                     new BestMeetingTimeVo(
                             startTimeBlock.availableDate(),
@@ -80,7 +80,7 @@ public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeS
             TimeBlockDto nextTimeBlock
     ) {
         return endTimeBlock.availableDate().isEqual(nextTimeBlock.availableDate())
-                && endTimeBlock.timeSlot().ordinal() + 1 == nextTimeBlock.timeSlot().ordinal();
+                && endTimeBlock.timeSlot().getIndex() + 1 == nextTimeBlock.timeSlot().getIndex();
     }
 
     private boolean isSatisfiedDuration(
@@ -88,7 +88,7 @@ public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeS
             TimeBlockDto endTimeBlock,
             Duration duration
     ) {
-        int blockCnt = endTimeBlock.timeSlot().ordinal() - startTimeBlock.timeSlot().ordinal();
+        int blockCnt = endTimeBlock.timeSlot().getIndex() - startTimeBlock.timeSlot().getIndex();
         return blockCnt + 1 >= duration.getNeedBlock();
     }
 
