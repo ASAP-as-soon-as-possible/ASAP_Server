@@ -3,12 +3,15 @@ package com.asap.server.service.meeting.recommend.strategy.impl;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_12_00;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_12_30;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_13_00;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_13_30;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_14_00;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_14_30;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_15_30;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_16_00;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_16_30;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_17_00;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_18_00;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_19_30;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_20_00;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -35,7 +38,7 @@ class ContinuousMeetingTimeStrategyImplTest {
         // given
         LocalDate availableDate = LocalDate.of(2023, 7, 10);
         List<TimeBlockDto> timeBlocks = TimeBlockDtoGenerator
-                .generator(availableDate, SLOT_12_00, SLOT_16_00, 0, 2L);
+                .generator(availableDate, SLOT_12_00, SLOT_15_30, 0, 2L);
 
         BestMeetingTimeVo r1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_16_00, 0);
         List<BestMeetingTimeVo> result = List.of(r1);
@@ -58,9 +61,9 @@ class ContinuousMeetingTimeStrategyImplTest {
         // given
         LocalDate availableDate = LocalDate.of(2023, 7, 10);
         List<TimeBlockDto> tempTimeBlocks = TimeBlockDtoGenerator
-                .generator(availableDate, SLOT_12_00, SLOT_16_00, 0, 2L);
+                .generator(availableDate, SLOT_12_00, SLOT_15_30, 0, 2L);
         List<TimeBlockDto> tempTimeBlocks2 = TimeBlockDtoGenerator
-                .generator(availableDate, SLOT_18_00, SLOT_20_00, 0, 2L);
+                .generator(availableDate, SLOT_18_00, SLOT_19_30, 0, 2L);
         List<TimeBlockDto> timeBlocks = new ArrayList<>() {{
             addAll(tempTimeBlocks);
             addAll(tempTimeBlocks2);
@@ -103,7 +106,7 @@ class ContinuousMeetingTimeStrategyImplTest {
     class ReturnOneBestMeetingTimeVoByDuration2 {
         // given
         LocalDate availableDate = LocalDate.of(2023, 7, 10);
-        List<TimeBlockDto> timeBlocks = TimeBlockDtoGenerator.generator(availableDate, SLOT_12_00, SLOT_12_30, 0, 2L);
+        List<TimeBlockDto> timeBlocks = TimeBlockDtoGenerator.generator(availableDate, SLOT_12_00, SLOT_12_00, 0, 2L);
 
         @DisplayName("회의 진행 시간이 30분일 때, 12시부터 12시 30분까지인 BestMeetingTimeVo를 반환한다.")
         @Test
@@ -137,9 +140,9 @@ class ContinuousMeetingTimeStrategyImplTest {
         LocalDate availableDate = LocalDate.of(2023, 7, 10);
         LocalDate availableDate2 = LocalDate.of(2023, 7, 11);
         List<TimeBlockDto> tempTimeBlocks = TimeBlockDtoGenerator
-                .generator(availableDate, SLOT_12_00, SLOT_14_00, 0, 2L);
+                .generator(availableDate, SLOT_12_00, SLOT_13_30, 0, 2L);
         List<TimeBlockDto> tempTimeBlocks2 = TimeBlockDtoGenerator
-                .generator(availableDate2, SLOT_12_00, SLOT_13_00, 0, 2L);
+                .generator(availableDate2, SLOT_12_00, SLOT_12_30, 0, 2L);
         List<TimeBlockDto> timeBlocks = new ArrayList<>() {{
             addAll(tempTimeBlocks);
             addAll(tempTimeBlocks2);
@@ -195,9 +198,9 @@ class ContinuousMeetingTimeStrategyImplTest {
         LocalDate availableDate = LocalDate.of(2023, 7, 10);
         LocalDate availableDate2 = LocalDate.of(2023, 7, 11);
         List<TimeBlockDto> tempTimeBlocks = TimeBlockDtoGenerator
-                .generator(availableDate, SLOT_12_00, SLOT_14_00, 0, 2L);
+                .generator(availableDate, SLOT_12_00, SLOT_13_30, 0, 2L);
         List<TimeBlockDto> tempTimeBlocks2 = TimeBlockDtoGenerator
-                .generator(availableDate2, SLOT_14_30, SLOT_17_00, 0, 2L);
+                .generator(availableDate2, SLOT_14_30, SLOT_16_30, 0, 2L);
         List<TimeBlockDto> timeBlocks = new ArrayList<>() {{
             addAll(tempTimeBlocks);
             addAll(tempTimeBlocks2);
@@ -256,9 +259,9 @@ class ContinuousMeetingTimeStrategyImplTest {
             LocalDate availableDate = LocalDate.of(2023, 7, 10);
             LocalDate availableDate2 = LocalDate.of(2023, 7, 11);
             List<TimeBlockDto> tempTimeBlocks = TimeBlockDtoGenerator
-                    .generator(availableDate, SLOT_12_00, SLOT_14_00, 4, 2L);
+                    .generator(availableDate, SLOT_12_00, SLOT_13_30, 4, 2L);
             List<TimeBlockDto> tempTimeBlocks2 = TimeBlockDtoGenerator
-                    .generator(availableDate2, SLOT_16_00, SLOT_16_30, 2, 2L);
+                    .generator(availableDate2, SLOT_16_00, SLOT_16_00, 2, 2L);
             List<TimeBlockDto> timeBlocks = new ArrayList<>() {{
                 addAll(tempTimeBlocks);
                 addAll(tempTimeBlocks2);
@@ -283,11 +286,11 @@ class ContinuousMeetingTimeStrategyImplTest {
             LocalDate availableDate2 = LocalDate.of(2023, 7, 11);
             LocalDate availableDate3 = LocalDate.of(2023, 7, 12);
             List<TimeBlockDto> tempTimeBlocks = TimeBlockDtoGenerator
-                    .generator(availableDate, SLOT_12_00, SLOT_14_00, 2, 2L);
+                    .generator(availableDate, SLOT_12_00, SLOT_13_30, 2, 2L);
             List<TimeBlockDto> tempTimeBlocks2 = TimeBlockDtoGenerator
-                    .generator(availableDate2, SLOT_16_00, SLOT_16_30, 4, 2L);
+                    .generator(availableDate2, SLOT_16_00, SLOT_16_00, 4, 2L);
             List<TimeBlockDto> tempTimeBlocks3 = TimeBlockDtoGenerator
-                    .generator(availableDate3, SLOT_16_30, SLOT_17_00, 1, 2L);
+                    .generator(availableDate3, SLOT_16_30, SLOT_16_30, 1, 2L);
             List<TimeBlockDto> timeBlocks = new ArrayList<>() {{
                 addAll(tempTimeBlocks);
                 addAll(tempTimeBlocks2);
