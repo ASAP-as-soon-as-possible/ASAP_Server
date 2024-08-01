@@ -26,39 +26,51 @@ public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeS
                 continue;
             }
 
-            TimeBlockDto startTimeBlock = timeBlocks.get(startIdx);
-            if (isSatisfiedDuration(startTimeBlock, endTimeBlock, duration)) {
-                int weight = sumTimeBlocksWeight(timeBlocks, startIdx, endIdx);
-                response.add(
-                        new BestMeetingTimeVo(
-                                startTimeBlock.availableDate(),
-                                startTimeBlock.timeSlot(),
-                                endTimeBlock.timeSlot(),
-                                weight
-                        )
-                );
-            }
+            validateAndAddMeetingTime(
+                    timeBlocks,
+                    duration,
+                    startIdx,
+                    endIdx,
+                    response
+            );
+
             startIdx = endIdx++;
         }
 
         if (startIdx < endIdx) {
-            TimeBlockDto startTimeBlock = timeBlocks.get(startIdx);
-            TimeBlockDto endTimeBlock = timeBlocks.get(endIdx - 1);
-            if (isSatisfiedDuration(startTimeBlock, endTimeBlock, duration)) {
-                int weight = sumTimeBlocksWeight(timeBlocks, startIdx, endIdx);
-                response.add(
-                        new BestMeetingTimeVo(
-                                startTimeBlock.availableDate(),
-                                startTimeBlock.timeSlot(),
-                                endTimeBlock.timeSlot(),
-                                weight
-                        )
-                );
-            }
+            validateAndAddMeetingTime(
+                    timeBlocks,
+                    duration,
+                    startIdx,
+                    endIdx,
+                    response
+            );
         }
         return response.stream()
                 .sorted((t1, t2) -> t2.weight() - t1.weight())
                 .collect(Collectors.toList());
+    }
+
+    private void validateAndAddMeetingTime(
+            List<TimeBlockDto> timeBlocks,
+            Duration duration,
+            int startIdx,
+            int endIdx,
+            List<BestMeetingTimeVo> response
+    ) {
+        TimeBlockDto startTimeBlock = timeBlocks.get(startIdx);
+        TimeBlockDto endTimeBlock = timeBlocks.get(endIdx - 1);
+        if (isSatisfiedDuration(startTimeBlock, endTimeBlock, duration)) {
+            int weight = sumTimeBlocksWeight(timeBlocks, startIdx, endIdx);
+            response.add(
+                    new BestMeetingTimeVo(
+                            startTimeBlock.availableDate(),
+                            startTimeBlock.timeSlot(),
+                            endTimeBlock.timeSlot(),
+                            weight
+                    )
+            );
+        }
     }
 
     private boolean isContinuous(
