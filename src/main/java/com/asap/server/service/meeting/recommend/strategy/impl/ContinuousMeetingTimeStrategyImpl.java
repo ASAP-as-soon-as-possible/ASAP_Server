@@ -6,6 +6,7 @@ import com.asap.server.service.meeting.recommend.strategy.ContinuousMeetingTimeS
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -55,7 +56,9 @@ public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeS
                 );
             }
         }
-        return response;
+        return response.stream()
+                .sorted((t1, t2) -> t2.weight() - t1.weight())
+                .collect(Collectors.toList());
     }
 
     private boolean isContinuous(
