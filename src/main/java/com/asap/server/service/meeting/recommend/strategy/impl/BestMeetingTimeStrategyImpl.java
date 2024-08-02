@@ -16,21 +16,21 @@ public class BestMeetingTimeStrategyImpl implements BestMeetingTimeStrategy {
     public List<BestMeetingTimeVo> find(List<BestMeetingTimeVo> candidateMeetingTimes, Duration duration) {
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>();
         for (BestMeetingTimeVo candidate : candidateMeetingTimes) {
-            bestMeetingTimes.add(createFirstTimeSlot(candidate, duration));
+            bestMeetingTimes.add(createFirstMeetingTime(candidate, duration));
 
             if (isTimeBlockSufficientlyLong(candidate, duration)) {
-                bestMeetingTimes.add(createSecondTimeSlot(candidate, duration));
+                bestMeetingTimes.add(createSecondMeetingTime(candidate, duration));
             }
         }
         return bestMeetingTimes;
     }
 
-    private BestMeetingTimeVo createFirstTimeSlot(BestMeetingTimeVo candidate, Duration duration) {
+    private BestMeetingTimeVo createFirstMeetingTime(BestMeetingTimeVo candidate, Duration duration) {
         TimeSlot endTimeSlot = TimeSlot.getTimeSlot(candidate.startTime().getIndex() + duration.getNeedBlock());
         return new BestMeetingTimeVo(candidate.date(), candidate.startTime(), endTimeSlot, candidate.weight());
     }
 
-    private BestMeetingTimeVo createSecondTimeSlot(BestMeetingTimeVo candidate, Duration duration) {
+    private BestMeetingTimeVo createSecondMeetingTime(BestMeetingTimeVo candidate, Duration duration) {
         TimeSlot startTimeSlot = TimeSlot.getTimeSlot(candidate.endTime().getIndex() - duration.getNeedBlock());
         return new BestMeetingTimeVo(candidate.date(), startTimeSlot, candidate.endTime(), candidate.weight());
     }
