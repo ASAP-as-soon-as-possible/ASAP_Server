@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class BestMeetingTimeStrategyImpl implements BestMeetingTimeStrategy {
     @Override
-    public List<BestMeetingTimeVo> find(List<BestMeetingTimeVo> candidateMeetingTimes) {
         return null;
+    public List<BestMeetingTimeVo> find(List<BestMeetingTimeVo> candidateMeetingTimes, Duration duration) {
     }
 }

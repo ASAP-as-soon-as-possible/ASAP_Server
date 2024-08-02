@@ -34,7 +34,7 @@ public class MeetingTimeRecommendService {
 
             List<BestMeetingTimeVo> candidateMeetingTimes = new ArrayList<>(
                     continuousMeetingTimeStrategy.find(timeBlocksFilteredUserCount, timeCase.duration()));
-            candidateMeetingTimes = bestMeetingTimeStrategy.find(candidateMeetingTimes);
+            candidateMeetingTimes = bestMeetingTimeStrategy.find(candidateMeetingTimes, timeCase.duration());
             bestMeetingTimes.addAll(candidateMeetingTimes);
 
             if (bestMeetingTimes.size() < BEST_MEETING_TIME_SIZE) {
