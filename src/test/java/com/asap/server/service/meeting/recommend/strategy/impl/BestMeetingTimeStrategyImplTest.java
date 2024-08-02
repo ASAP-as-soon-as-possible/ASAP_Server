@@ -58,6 +58,29 @@ class BestMeetingTimeStrategyImplTest {
             // then
             assertThat(response).isEqualTo(expected);
         }
+
+        @DisplayName("6:00 - 6:30, 21:00 - 24:00 returns 6:00 - 6:30, 21:00 - 21:30, 23:30 - 24:00")
+        @Test
+        void test3() {
+            // given
+            LocalDate availableDate = LocalDate.of(2023, 7, 10);
+            BestMeetingTimeVo bestMeetingTimeVo =
+                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_6_00, TimeSlot.SLOT_6_30, 0);
+            BestMeetingTimeVo bestMeetingTimeVo2 =
+                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_21_00, TimeSlot.SLOT_24_00, 0);
+            List<BestMeetingTimeVo> candidateMeetingTimes = List.of(bestMeetingTimeVo, bestMeetingTimeVo2);
+
+            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_6_00, TimeSlot.SLOT_6_30, 0);
+            BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_21_00, TimeSlot.SLOT_21_30, 0);
+            BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_23_30, TimeSlot.SLOT_24_00, 0);
+            List<BestMeetingTimeVo> expected = List.of(e1, e2, e3);
+
+            // when
+            List<BestMeetingTimeVo> response = continuousMeetingTimeStrategy.find(candidateMeetingTimes, duration);
+
+            // then
+            assertThat(response).isEqualTo(expected);
+        }
     }
 
     @DisplayName("회의 진행 시간이 1시간인 경우, 4시간 이상인 블록은 긴 블록으로 처리한다.")
@@ -264,7 +287,7 @@ class BestMeetingTimeStrategyImplTest {
             // then
             assertThat(response).isEqualTo(expected);
         }
-        
+
         @DisplayName("14:00 - 22:00 returns 14:00 - 17:00, 19:00 - 22:00")
         @Test
         void test2() {
