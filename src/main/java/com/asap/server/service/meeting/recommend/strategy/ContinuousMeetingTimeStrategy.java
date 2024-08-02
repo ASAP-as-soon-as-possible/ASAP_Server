@@ -6,5 +6,5 @@ import com.asap.server.service.vo.BestMeetingTimeVo;
 import java.util.List;
 
 public interface ContinuousMeetingTimeStrategy {
-    List<BestMeetingTimeVo> find(List<TimeBlockDto> timeBlocksFilteredUserCount, Duration duration);
+    List<BestMeetingTimeVo> find(List<TimeBlockDto> timeBlocks, Duration duration);
 }
