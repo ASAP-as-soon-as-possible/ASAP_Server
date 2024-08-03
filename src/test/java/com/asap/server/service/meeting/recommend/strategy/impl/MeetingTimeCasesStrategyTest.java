@@ -24,11 +24,11 @@ public class MeetingTimeCasesStrategyTest {
     @Nested
     class TenMemberTest {
 
+        int userCount = 10;
+
         @DisplayName("10명이 1시간 30분 회의를 진행할 경우 27개의 리스트를 반환한다.")
         @Test
         void findTimeCasesOverStandardRatio() {
-            // given
-            int userCount = 10;
             List<PossibleTimeCaseVo> response = List.of(
                     new PossibleTimeCaseVo(HOUR_HALF, 10),
                     new PossibleTimeCaseVo(HOUR, 10),
@@ -69,7 +69,6 @@ public class MeetingTimeCasesStrategyTest {
         @DisplayName("10명이 3시간 회의를 진행할 경우, 32개의 케이스를 반환한다.")
         @Test
         void findPossibleTimeForTenMemberThreeHour() {
-            int userCount = 10;
             List<PossibleTimeCaseVo> response = List.of(
                     new PossibleTimeCaseVo(THREE_HOUR, 10),
                     new PossibleTimeCaseVo(TWO_HOUR_HALF, 10),
@@ -110,12 +109,76 @@ public class MeetingTimeCasesStrategyTest {
             assertThat(result).isEqualTo(response);
         }
     }
+    @Nested
+    class SevenMemberTest {
+
+        int userCount = 7;
+        @Test
+        @DisplayName("7 명이 3시간 회의를 진행할 경우, 22개의 케이스를 반환한다.")
+        void findSevenMemberThreeHour() {
+            List<PossibleTimeCaseVo> response = List.of(
+                    new PossibleTimeCaseVo(THREE_HOUR, 7),
+                    new PossibleTimeCaseVo(TWO_HOUR_HALF, 7),
+                    new PossibleTimeCaseVo(THREE_HOUR, 6),
+                    new PossibleTimeCaseVo(TWO_HOUR_HALF, 6),
+                    new PossibleTimeCaseVo(TWO_HOUR, 7),
+                    new PossibleTimeCaseVo(HOUR_HALF, 7),
+                    new PossibleTimeCaseVo(TWO_HOUR, 6),
+                    new PossibleTimeCaseVo(HOUR_HALF, 6),
+                    new PossibleTimeCaseVo(HOUR, 7),
+                    new PossibleTimeCaseVo(HOUR, 6),
+                    new PossibleTimeCaseVo(THREE_HOUR, 5),
+                    new PossibleTimeCaseVo(TWO_HOUR_HALF, 5),
+                    new PossibleTimeCaseVo(THREE_HOUR, 4),
+                    new PossibleTimeCaseVo(TWO_HOUR_HALF, 4),
+                    new PossibleTimeCaseVo(TWO_HOUR, 5),
+                    new PossibleTimeCaseVo(TWO_HOUR, 4),
+                    new PossibleTimeCaseVo(THREE_HOUR, 3),
+                    new PossibleTimeCaseVo(TWO_HOUR_HALF, 3),
+                    new PossibleTimeCaseVo(THREE_HOUR, 2),
+                    new PossibleTimeCaseVo(TWO_HOUR_HALF, 2),
+                    new PossibleTimeCaseVo(TWO_HOUR, 3),
+                    new PossibleTimeCaseVo(TWO_HOUR, 2)
+            );
+
+            List<PossibleTimeCaseVo> result = strategy.find(THREE_HOUR, userCount);
+            assertThat(result.size()).isEqualTo(response.size());
+            assertThat(result).isEqualTo(response);
+        }
+
+        @Test
+        @DisplayName("7 명이 1시간 회의를 진행할 경우, 22개의 케이스를 반환한다.")
+        void findSevenMemberOneHour() {
+            List<PossibleTimeCaseVo> response = List.of(
+                    new PossibleTimeCaseVo(HOUR, 7),
+                    new PossibleTimeCaseVo(HALF, 7),
+                    new PossibleTimeCaseVo(HOUR, 6),
+                    new PossibleTimeCaseVo(HALF, 6),
+                    new PossibleTimeCaseVo(HOUR, 5),
+                    new PossibleTimeCaseVo(HALF, 5),
+                    new PossibleTimeCaseVo(HOUR, 4),
+                    new PossibleTimeCaseVo(HALF, 4),
+                    new PossibleTimeCaseVo(HOUR, 3),
+                    new PossibleTimeCaseVo(HALF, 3),
+                    new PossibleTimeCaseVo(HOUR, 2),
+                    new PossibleTimeCaseVo(HALF, 2)
+            );
+
+            List<PossibleTimeCaseVo> result = strategy.find(HOUR, userCount);
+            System.out.println(result);
+            assertThat(result.size()).isEqualTo(response.size());
+            assertThat(result).isEqualTo(response);
+        }
+
+    }
 
     @Nested
     class OneMemberTest {
+
         int userCount = 1;
+
         @Test
-        @DisplayName("한명이 3시간 회의를 입력했을 때")
+        @DisplayName("한 명이 3시간 회의를 진행할 경우, 5개의 케이스를 반환한다.")
         void findOneMemberThreeHour() {
             List<PossibleTimeCaseVo> response = List.of(
                     new PossibleTimeCaseVo(THREE_HOUR,1),
@@ -126,12 +189,13 @@ public class MeetingTimeCasesStrategyTest {
             );
 
             List<PossibleTimeCaseVo> result = strategy.find(THREE_HOUR, userCount);
+
             assertThat(result.size()).isEqualTo(response.size());
             assertThat(result).isEqualTo(response);
         }
 
         @Test
-        @DisplayName("한명이 1시간 회의를 입력했을 때")
+        @DisplayName("한 명이 1시간 회의를 진행할 경우, 2개의 케이스를 반환한다.")
         void findOneMemberOneHour() {
             List<PossibleTimeCaseVo> response = List.of(
                     new PossibleTimeCaseVo(HOUR, 1),
@@ -139,6 +203,7 @@ public class MeetingTimeCasesStrategyTest {
             );
 
             List<PossibleTimeCaseVo> result = strategy.find(HOUR, userCount);
+
             assertThat(result.size()).isEqualTo(response.size());
             assertThat(result).isEqualTo(response);
         }
@@ -149,8 +214,9 @@ public class MeetingTimeCasesStrategyTest {
         int userCount = 2;
 
         @Test
-        @DisplayName("두 명이 1시간 회의를 진행할 경우")
+        @DisplayName("두 명이 1시간 회의를 진행할 경우, 2개의 케이스를 반환한다.")
         void findTwoMemberOneHour() {
+
             List<PossibleTimeCaseVo> response = List.of(
                     new PossibleTimeCaseVo(HOUR, 2),
                     new PossibleTimeCaseVo(HALF, 2)
@@ -161,7 +227,7 @@ public class MeetingTimeCasesStrategyTest {
             assertThat(result).isEqualTo(response);
         }
 
-        @DisplayName("두 명이 3시간 회의를 진행할 경우")
+        @DisplayName("두 명이 3시간 회의를 진행할 경우, 5개의 케이스를 반환한다.")
         @Test
         void findPossibleTimeForTwoMemberOneThreeHour() {
             int userCount = 2;
@@ -178,7 +244,7 @@ public class MeetingTimeCasesStrategyTest {
             assertThat(result).isEqualTo(response);
         }
 
-        @DisplayName("두 명이 1시간 30분 회의를 진행할 경우")
+        @DisplayName("두 명이 1시간 30분 회의를 진행할 경우, 3개의 케이스를 반환한다.")
         @Test
         void findPossibleTimeForTwoMemberOneHourHalf() {
             int userCount = 2;
@@ -189,6 +255,7 @@ public class MeetingTimeCasesStrategyTest {
             );
 
             List<PossibleTimeCaseVo> result = strategy.find(HOUR_HALF, userCount);
+
             assertThat(result.size()).isEqualTo(response.size());
             assertThat(result).isEqualTo(response);
         }
