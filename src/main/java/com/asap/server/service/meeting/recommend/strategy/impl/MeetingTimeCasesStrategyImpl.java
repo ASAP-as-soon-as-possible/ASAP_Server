@@ -26,14 +26,14 @@ public class MeetingTimeCasesStrategyImpl implements MeetingTimeCasesStrategy {
             userCount -= standard + 1;
 
             while (userCount >= 2) {
-                possibleTimeCases.addAll(findPossibleTimeCasesOverTwoHourUnderStandardRatio(duration, userCount, standard));
+                possibleTimeCases.addAll(getPossibleTimeCasesOverTwoHourUnderStandardRatio(duration, userCount, standard));
                 userCount -= standard + 1;
             }
 
         } else {
 
             do {
-                possibleTimeCases.addAll(findPossibleTimeUnderTwoHour(duration, userCount, standard));
+                possibleTimeCases.addAll(getPossibleTimeUnderTwoHour(duration, userCount, standard));
                 userCount -= standard + 1;
             } while (userCount >= 2);
 
@@ -42,24 +42,24 @@ public class MeetingTimeCasesStrategyImpl implements MeetingTimeCasesStrategy {
     }
 
     private List<PossibleTimeCaseVo> getPossibleTimeCasesOverTwoHourOverStandardRatio(final Duration duration, final int userCount, final int standard) {
-        List<PossibleTimeCaseVo> possibleTimeCases = new ArrayList<>(findPossibleTimeCasesUnitOverTwoHour(duration, userCount, standard));
+        List<PossibleTimeCaseVo> possibleTimeCases = new ArrayList<>(getPossibleTimeCasesUnitOverTwoHour(duration, userCount, standard));
 
         Duration nextDuration = duration;
 
         while (nextDuration.getNeedBlock() > HOUR.getNeedBlock() && nextDuration.getNeedBlock() >= duration.getNeedBlock() - TWO_HOUR.getNeedBlock()) {
             nextDuration = durations[nextDuration.getNeedBlock() - 3];
-            possibleTimeCases.addAll(findPossibleTimeCasesUnitOverTwoHour(nextDuration, userCount, standard));
+            possibleTimeCases.addAll(getPossibleTimeCasesUnitOverTwoHour(nextDuration, userCount, standard));
         }
 
         return possibleTimeCases;
     }
 
-    private List<PossibleTimeCaseVo> findPossibleTimeCasesOverTwoHourUnderStandardRatio(final Duration duration, final int userCount, final int standard) {
+    private List<PossibleTimeCaseVo> getPossibleTimeCasesOverTwoHourUnderStandardRatio(final Duration duration, final int userCount, final int standard) {
         List<PossibleTimeCaseVo> possibleTimeCases = new ArrayList<>();
         Duration nextDuration = duration;
 
         while (nextDuration.getNeedBlock() > duration.getNeedBlock() - HOUR.getNeedBlock() && nextDuration.getNeedBlock() > HOUR.getNeedBlock()) {
-            possibleTimeCases.addAll(findPossibleTimeCasesUnitOverTwoHour(nextDuration, userCount, standard));
+            possibleTimeCases.addAll(getPossibleTimeCasesUnitOverTwoHour(nextDuration, userCount, standard));
             nextDuration = durations[nextDuration.getNeedBlock() - 3];
         }
 
@@ -71,20 +71,20 @@ public class MeetingTimeCasesStrategyImpl implements MeetingTimeCasesStrategy {
     }
 
 
-    private List<PossibleTimeCaseVo> findPossibleTimeUnderTwoHour(final Duration duration, final int userCount, final int standard) {
-        List<PossibleTimeCaseVo> possibleTimeCases = new ArrayList<>(findPossibleTimeCasesUnitUnderTwoHour(duration, userCount, standard));
+    private List<PossibleTimeCaseVo> getPossibleTimeUnderTwoHour(final Duration duration, final int userCount, final int standard) {
+        List<PossibleTimeCaseVo> possibleTimeCases = new ArrayList<>(getPossibleTimeCasesUnitUnderTwoHour(duration, userCount, standard));
 
         Duration nextDuration = duration;
 
         while (nextDuration.getNeedBlock() > HOUR.getNeedBlock()) {
             nextDuration = durations[nextDuration.getNeedBlock() - 3];
-            possibleTimeCases.addAll(findPossibleTimeCasesUnitUnderTwoHour(nextDuration, userCount, standard));
+            possibleTimeCases.addAll(getPossibleTimeCasesUnitUnderTwoHour(nextDuration, userCount, standard));
         }
 
         return possibleTimeCases;
     }
 
-    private List<PossibleTimeCaseVo> findPossibleTimeCasesUnitOverTwoHour(final Duration duration, final int userCount, final int standard) {
+    private List<PossibleTimeCaseVo> getPossibleTimeCasesUnitOverTwoHour(final Duration duration, final int userCount, final int standard) {
         List<PossibleTimeCaseVo> possibleTimeCases = new ArrayList<>();
 
         for (int count = userCount; count >= userCount - standard; count--) {
@@ -98,7 +98,7 @@ public class MeetingTimeCasesStrategyImpl implements MeetingTimeCasesStrategy {
         return possibleTimeCases;
     }
 
-    private List<PossibleTimeCaseVo> findPossibleTimeCasesUnitUnderTwoHour(final Duration duration, final int userCount, final int standard) {
+    private List<PossibleTimeCaseVo> getPossibleTimeCasesUnitUnderTwoHour(final Duration duration, final int userCount, final int standard) {
         List<PossibleTimeCaseVo> possibleTimeCases = new ArrayList<>();
 
         for (int count = userCount; count >= userCount - standard; count--) {
