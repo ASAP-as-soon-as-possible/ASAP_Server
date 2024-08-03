@@ -2,6 +2,7 @@ package com.asap.server.service.meeting.recommend.strategy.impl;
 
 
 import com.asap.server.persistence.domain.enums.Duration;
+import com.asap.server.service.meeting.recommend.strategy.MeetingTimeCasesStrategy;
 import com.asap.server.service.vo.PossibleTimeCaseVo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +16,7 @@ import static com.asap.server.persistence.domain.enums.Duration.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class MeetingTimeCasesStrategyTest {
-    private MeetingTimeCasesStrategyImpl strategy;
+    private MeetingTimeCasesStrategy strategy;
 
     @BeforeEach
     void setUp() {
@@ -640,7 +641,7 @@ public class MeetingTimeCasesStrategyTest {
                     new PossibleTimeCaseVo(TWO_HOUR, 2)
             );
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
-            
+
             assertThat(result).isEqualTo(expected);
         }
     }
