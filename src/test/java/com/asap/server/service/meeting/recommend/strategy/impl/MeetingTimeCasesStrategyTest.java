@@ -33,14 +33,13 @@ public class MeetingTimeCasesStrategyTest {
         void findOneMemberTest() {
             int userCount = 1;
 
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(HALF, 1)
             );
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
 
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+            assertThat(result).isEqualTo(expected);
         }
 
         @Test
@@ -48,14 +47,13 @@ public class MeetingTimeCasesStrategyTest {
         void findTwoMemberTest() {
             int userCount = 2;
 
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(HALF, 2)
             );
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
 
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+            assertThat(result).isEqualTo(expected);
         }
 
 
@@ -64,7 +62,7 @@ public class MeetingTimeCasesStrategyTest {
         void findSevenMemberTest() {
             int userCount = 7;
 
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(HALF, 7),
                     new PossibleTimeCaseVo(HALF, 6),
                     new PossibleTimeCaseVo(HALF, 5),
@@ -74,8 +72,8 @@ public class MeetingTimeCasesStrategyTest {
             );
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+
+            assertThat(result).isEqualTo(expected);
         }
 
         @Test
@@ -83,7 +81,7 @@ public class MeetingTimeCasesStrategyTest {
         void findTestMemberTest() {
             int userCount = 10;
 
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(HALF, 10),
                     new PossibleTimeCaseVo(HALF, 9),
                     new PossibleTimeCaseVo(HALF, 8),
@@ -97,8 +95,7 @@ public class MeetingTimeCasesStrategyTest {
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
 
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+            assertThat(result).isEqualTo(expected);
         }
     }
 
@@ -113,15 +110,14 @@ public class MeetingTimeCasesStrategyTest {
         @DisplayName("한 명이 1시간 회의를 진행할 경우, 2개의 케이스를 반환한다.")
         void findOneMemberOneHour() {
             int userCount = 1;
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(HOUR, 1),
                     new PossibleTimeCaseVo(HALF, 1)
             );
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
 
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+            assertThat(result).isEqualTo(expected);
         }
 
 
@@ -130,15 +126,14 @@ public class MeetingTimeCasesStrategyTest {
         void findTwoMemberOneHour() {
             int userCount = 2;
 
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(HOUR, 2),
                     new PossibleTimeCaseVo(HALF, 2)
             );
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
 
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+            assertThat(result).isEqualTo(expected);
 
         }
 
@@ -147,7 +142,7 @@ public class MeetingTimeCasesStrategyTest {
         void findSevenMemberTest() {
             int userCount = 7;
 
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(HOUR, 7),
                     new PossibleTimeCaseVo(HALF, 7),
                     new PossibleTimeCaseVo(HOUR, 6),
@@ -164,8 +159,7 @@ public class MeetingTimeCasesStrategyTest {
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
 
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+            assertThat(result).isEqualTo(expected);
         }
 
         @Test
@@ -173,7 +167,7 @@ public class MeetingTimeCasesStrategyTest {
         void findTenMemberTest() {
             int userCount = 10;
 
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(HOUR, 10),
                     new PossibleTimeCaseVo(HALF, 10),
                     new PossibleTimeCaseVo(HOUR, 9),
@@ -195,8 +189,8 @@ public class MeetingTimeCasesStrategyTest {
             );
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+
+            assertThat(result).isEqualTo(expected);
         }
     }
 
@@ -209,7 +203,7 @@ public class MeetingTimeCasesStrategyTest {
         @Test
         void findOneMemberTest() {
             int userCount = 1;
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(HOUR_HALF, 1),
                     new PossibleTimeCaseVo(HOUR, 1),
                     new PossibleTimeCaseVo(HALF, 1)
@@ -217,8 +211,7 @@ public class MeetingTimeCasesStrategyTest {
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
 
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+            assertThat(result).isEqualTo(expected);
         }
 
         @DisplayName("두 명이 1시간 30분 회의를 진행할 경우, 3개의 케이스를 반환한다.")
@@ -241,7 +234,7 @@ public class MeetingTimeCasesStrategyTest {
         @Test
         void findSevenMemberTest() {
             int userCount = 7;
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(HOUR_HALF, 7),
                     new PossibleTimeCaseVo(HOUR, 7),
                     new PossibleTimeCaseVo(HOUR_HALF, 6),
@@ -264,15 +257,14 @@ public class MeetingTimeCasesStrategyTest {
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
 
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+            assertThat(result).isEqualTo(expected);
         }
 
         @DisplayName("10명이 1시간 30분 회의를 진행할 경우 27개의 리스트를 반환한다.")
         @Test
         void findTenMemberTest() {
             int userCount = 10;
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(HOUR_HALF, 10),
                     new PossibleTimeCaseVo(HOUR, 10),
                     new PossibleTimeCaseVo(HOUR_HALF, 9),
@@ -304,8 +296,8 @@ public class MeetingTimeCasesStrategyTest {
 
             // when
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+
+            assertThat(result).isEqualTo(expected);
         }
 
 
@@ -321,7 +313,7 @@ public class MeetingTimeCasesStrategyTest {
         @Test
         void findOneMemberTest() {
             int userCount = 1;
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(TWO_HOUR, 1),
                     new PossibleTimeCaseVo(HOUR_HALF, 1),
                     new PossibleTimeCaseVo(HOUR, 1)
@@ -329,15 +321,14 @@ public class MeetingTimeCasesStrategyTest {
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
 
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+            assertThat(result).isEqualTo(expected);
         }
 
         @DisplayName("두 명이 2시간 회의를 진행할 경우, 3개의 케이스를 반환한다.")
         @Test
         void findTwoMemberTest() {
             int userCount = 2;
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(TWO_HOUR, 2),
                     new PossibleTimeCaseVo(HOUR_HALF, 2),
                     new PossibleTimeCaseVo(HOUR, 2)
@@ -345,15 +336,14 @@ public class MeetingTimeCasesStrategyTest {
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
 
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+            assertThat(result).isEqualTo(expected);
         }
 
         @DisplayName("일곱 명이 2시간 회의를 진행할 경우, 24개의 케이스를 반환한다.")
         @Test
         void findSevenMemberTest() {
             int userCount = 7;
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(TWO_HOUR, 7),
                     new PossibleTimeCaseVo(HOUR_HALF, 7),
                     new PossibleTimeCaseVo(TWO_HOUR, 6),
@@ -376,15 +366,14 @@ public class MeetingTimeCasesStrategyTest {
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
 
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+            assertThat(result).isEqualTo(expected);
         }
 
         @DisplayName("10명이 2시간 회의를 진행할 경우 27개의 리스트를 반환한다.")
         @Test
         void findTenMemberTest() {
             int userCount = 10;
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(TWO_HOUR, 10),
                     new PossibleTimeCaseVo(HOUR_HALF, 10),
                     new PossibleTimeCaseVo(TWO_HOUR, 9),
@@ -416,8 +405,8 @@ public class MeetingTimeCasesStrategyTest {
 
             // when
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+
+            assertThat(result).isEqualTo(expected);
         }
 
     }
@@ -431,7 +420,7 @@ public class MeetingTimeCasesStrategyTest {
         @Test
         void findOneMemberTest() {
             int userCount = 1;
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(TWO_HOUR_HALF, 1),
                     new PossibleTimeCaseVo(TWO_HOUR, 1),
                     new PossibleTimeCaseVo(HOUR_HALF, 1),
@@ -440,15 +429,14 @@ public class MeetingTimeCasesStrategyTest {
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
 
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+            assertThat(result).isEqualTo(expected);
         }
 
         @DisplayName("두 명이 2시간 회의를 진행할 경우, 4개의 케이스를 반환한다.")
         @Test
         void findTwoMemberTest() {
             int userCount = 2;
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(TWO_HOUR_HALF, 2),
                     new PossibleTimeCaseVo(TWO_HOUR, 2),
                     new PossibleTimeCaseVo(HOUR_HALF, 2),
@@ -457,15 +445,14 @@ public class MeetingTimeCasesStrategyTest {
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
 
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+            assertThat(result).isEqualTo(expected);
         }
 
         @DisplayName("일곱 명이 2시간 30분 회의를 진행할 경우, 18개의 케이스를 반환한다.")
         @Test
         void findSevenMemberTest() {
             int userCount = 7;
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(TWO_HOUR_HALF, 7),
                     new PossibleTimeCaseVo(TWO_HOUR, 7),
                     new PossibleTimeCaseVo(TWO_HOUR_HALF, 6),
@@ -490,15 +477,14 @@ public class MeetingTimeCasesStrategyTest {
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
 
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+            assertThat(result).isEqualTo(expected);
         }
 
         @DisplayName("10명이 2시간 30분 회의를 진행할 경우 27개의 리스트를 반환한다.")
         @Test
         void findTenMemberTest() {
             int userCount = 10;
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(TWO_HOUR_HALF, 10),
                     new PossibleTimeCaseVo(TWO_HOUR, 10),
                     new PossibleTimeCaseVo(TWO_HOUR_HALF, 9),
@@ -533,8 +519,8 @@ public class MeetingTimeCasesStrategyTest {
 
             // when
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+
+            assertThat(result).isEqualTo(expected);
         }
     }
 
@@ -547,7 +533,7 @@ public class MeetingTimeCasesStrategyTest {
         @DisplayName("한 명이 3시간 회의를 진행할 경우, 5개의 케이스를 반환한다.")
         void findOneMemberTest() {
             int userCount = 1;
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(THREE_HOUR, 1),
                     new PossibleTimeCaseVo(TWO_HOUR_HALF, 1),
                     new PossibleTimeCaseVo(TWO_HOUR, 1),
@@ -557,15 +543,14 @@ public class MeetingTimeCasesStrategyTest {
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
 
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+            assertThat(result).isEqualTo(expected);
         }
 
         @DisplayName("두 명이 3시간 회의를 진행할 경우, 5개의 케이스를 반환한다.")
         @Test
         void findTwoMemberTest() {
             int userCount = 2;
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(THREE_HOUR, 2),
                     new PossibleTimeCaseVo(TWO_HOUR_HALF, 2),
                     new PossibleTimeCaseVo(TWO_HOUR, 2),
@@ -574,8 +559,8 @@ public class MeetingTimeCasesStrategyTest {
             );
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+
+            assertThat(result).isEqualTo(expected);
         }
 
         @Test
@@ -583,7 +568,7 @@ public class MeetingTimeCasesStrategyTest {
         void findSevenMemberThreeHour() {
             int userCount = 7;
 
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(THREE_HOUR, 7),
                     new PossibleTimeCaseVo(TWO_HOUR_HALF, 7),
                     new PossibleTimeCaseVo(THREE_HOUR, 6),
@@ -609,8 +594,8 @@ public class MeetingTimeCasesStrategyTest {
             );
 
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+
+            assertThat(result).isEqualTo(expected);
         }
 
 
@@ -619,7 +604,7 @@ public class MeetingTimeCasesStrategyTest {
         void findTenMemberTest() {
             int userCount = 10;
 
-            List<PossibleTimeCaseVo> response = List.of(
+            List<PossibleTimeCaseVo> expected = List.of(
                     new PossibleTimeCaseVo(THREE_HOUR, 10),
                     new PossibleTimeCaseVo(TWO_HOUR_HALF, 10),
                     new PossibleTimeCaseVo(THREE_HOUR, 9),
@@ -655,8 +640,8 @@ public class MeetingTimeCasesStrategyTest {
                     new PossibleTimeCaseVo(TWO_HOUR, 2)
             );
             List<PossibleTimeCaseVo> result = strategy.find(duration, userCount);
-            assertThat(result.size()).isEqualTo(response.size());
-            assertThat(result).isEqualTo(response);
+            
+            assertThat(result).isEqualTo(expected);
         }
     }
 
