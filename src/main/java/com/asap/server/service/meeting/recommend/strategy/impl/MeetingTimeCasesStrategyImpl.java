@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.asap.server.persistence.domain.enums.Duration.HALF;
 import static com.asap.server.persistence.domain.enums.Duration.HOUR;
 import static com.asap.server.persistence.domain.enums.Duration.HOUR_HALF;
 import static com.asap.server.persistence.domain.enums.Duration.TWO_HOUR;
