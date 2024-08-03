@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.asap.server.persistence.domain.enums.Duration.HALF;
 import static com.asap.server.persistence.domain.enums.Duration.HOUR;
 import static com.asap.server.persistence.domain.enums.Duration.HOUR_HALF;
 import static com.asap.server.persistence.domain.enums.Duration.TWO_HOUR;
@@ -15,13 +16,14 @@ import static com.asap.server.persistence.domain.enums.Duration.TWO_HOUR;
 @Component
 public class MeetingTimeCasesStrategyImpl implements MeetingTimeCasesStrategy {
     private static final Duration[] durations = Duration.values();
+    private static final int STANDARD = 80;
 
     @Override
     public List<PossibleTimeCaseVo> find(final Duration duration, int userCount) {
         List<PossibleTimeCaseVo> possibleTimeCases = new ArrayList<>();
-        final int standard = (int) (userCount * 0.2);
+        final int standard = userCount * (100 - STANDARD) / 100;
 
-        if (duration.getNeedBlock() > TWO_HOUR.getNeedBlock()) {
+        if (isOverTwoHour(duration)) {
             possibleTimeCases.addAll(getPossibleTimeCasesOverTwoHourOverStandardRatio(duration, userCount, standard));
             userCount -= standard + 1;
 
@@ -30,14 +32,14 @@ public class MeetingTimeCasesStrategyImpl implements MeetingTimeCasesStrategy {
                 userCount -= standard + 1;
             }
 
-        } else {
-
-            do {
-                possibleTimeCases.addAll(getPossibleTimeUnderTwoHour(duration, userCount, standard));
-                userCount -= standard + 1;
-            } while (userCount >= 2);
-
+            return possibleTimeCases;
         }
+
+        do {
+            possibleTimeCases.addAll(getPossibleTimeUnderTwoHour(duration, userCount, standard));
+            userCount -= standard + 1;
+        } while (userCount >= 2);
+
         return possibleTimeCases;
     }
 
@@ -46,7 +48,7 @@ public class MeetingTimeCasesStrategyImpl implements MeetingTimeCasesStrategy {
 
         Duration nextDuration = duration;
 
-        while (nextDuration.getNeedBlock() > HOUR.getNeedBlock() && nextDuration.getNeedBlock() >= duration.getNeedBlock() - TWO_HOUR.getNeedBlock()) {
+        while (nextDuration.getNeedBlock() > HOUR_HALF.getNeedBlock() && nextDuration.getNeedBlock() >= duration.getNeedBlock() - TWO_HOUR.getNeedBlock()) {
             nextDuration = durations[nextDuration.getNeedBlock() - 3];
             possibleTimeCases.addAll(getPossibleTimeCasesUnitOverTwoHour(nextDuration, userCount, standard));
         }
@@ -58,7 +60,7 @@ public class MeetingTimeCasesStrategyImpl implements MeetingTimeCasesStrategy {
         List<PossibleTimeCaseVo> possibleTimeCases = new ArrayList<>();
         Duration nextDuration = duration;
 
-        while (nextDuration.getNeedBlock() > duration.getNeedBlock() - HOUR.getNeedBlock() && nextDuration.getNeedBlock() > HOUR.getNeedBlock()) {
+        while (nextDuration.getNeedBlock() > HOUR.getNeedBlock() && nextDuration.getNeedBlock() > duration.getNeedBlock() - HOUR.getNeedBlock()) {
             possibleTimeCases.addAll(getPossibleTimeCasesUnitOverTwoHour(nextDuration, userCount, standard));
             nextDuration = durations[nextDuration.getNeedBlock() - 3];
         }
@@ -88,6 +90,7 @@ public class MeetingTimeCasesStrategyImpl implements MeetingTimeCasesStrategy {
         List<PossibleTimeCaseVo> possibleTimeCases = new ArrayList<>();
 
         for (int count = userCount; count >= userCount - standard; count--) {
+
             possibleTimeCases.add(new PossibleTimeCaseVo(duration, count));
 
             if (duration.getNeedBlock() < HOUR_HALF.getNeedBlock()) continue;
@@ -110,5 +113,9 @@ public class MeetingTimeCasesStrategyImpl implements MeetingTimeCasesStrategy {
 
         }
         return possibleTimeCases;
+    }
+
+    private boolean isOverTwoHour(final Duration duration) {
+        return duration.getNeedBlock() >= TWO_HOUR.getNeedBlock();
     }
 }
