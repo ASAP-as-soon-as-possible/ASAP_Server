@@ -22,6 +22,7 @@ public class MeetingTimeCasesStrategyTest {
     }
 
     @Nested
+    @DisplayName("10 명의 회의")
     class TenMemberTest {
 
         int userCount = 10;
@@ -109,7 +110,9 @@ public class MeetingTimeCasesStrategyTest {
             assertThat(result).isEqualTo(response);
         }
     }
+
     @Nested
+    @DisplayName("7 명의 회의")
     class SevenMemberTest {
 
         int userCount = 7;
@@ -173,6 +176,7 @@ public class MeetingTimeCasesStrategyTest {
     }
 
     @Nested
+    @DisplayName("1 명의 회의")
     class OneMemberTest {
 
         int userCount = 1;
@@ -210,6 +214,7 @@ public class MeetingTimeCasesStrategyTest {
     }
 
     @Nested
+    @DisplayName("2 명의 회의")
     class TwoMemberTest {
         int userCount = 2;
 
