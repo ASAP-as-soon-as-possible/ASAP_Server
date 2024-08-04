@@ -3,7 +3,7 @@ package com.asap.server.service.meeting.recommend;
 import com.asap.server.persistence.domain.enums.Duration;
 import com.asap.server.persistence.repository.timeblock.dto.TimeBlockDto;
 import com.asap.server.service.meeting.recommend.strategy.BestMeetingTimeStrategy;
-import com.asap.server.service.meeting.recommend.strategy.MeetingTimeTimeCasesStrategy;
+import com.asap.server.service.meeting.recommend.strategy.MeetingTimeCasesStrategy;
 import com.asap.server.service.meeting.recommend.strategy.ContinuousMeetingTimeStrategy;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.PossibleTimeCaseVo;
@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MeetingTimeRecommendService {
     private static final int BEST_MEETING_TIME_SIZE = 3;
-    private final MeetingTimeTimeCasesStrategy meetingTimeTimeCasesStrategy;
+    private final MeetingTimeCasesStrategy meetingTimeTimeCasesStrategy;
     private final ContinuousMeetingTimeStrategy continuousMeetingTimeStrategy;
     private final BestMeetingTimeStrategy bestMeetingTimeStrategy;
 
