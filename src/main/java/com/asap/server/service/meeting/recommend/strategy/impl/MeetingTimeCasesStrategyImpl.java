@@ -22,7 +22,7 @@ public class MeetingTimeCasesStrategyImpl implements MeetingTimeCasesStrategy {
         List<PossibleTimeCaseVo> possibleTimeCases = new ArrayList<>();
         final int standard = userCount * (100 - STANDARD) / 100;
 
-        if (isOverTwoHour(duration)) {
+        if (isDurationGreaterThanOrEqualToTwoHour(duration)) {
             possibleTimeCases.addAll(getPossibleTimeCasesOverTwoHourOverStandardRatio(duration, userCount, standard));
             userCount -= standard + 1;
 
@@ -47,7 +47,7 @@ public class MeetingTimeCasesStrategyImpl implements MeetingTimeCasesStrategy {
 
         Duration nextDuration = duration;
 
-        while (nextDuration.getNeedBlock() > HOUR_HALF.getNeedBlock() && nextDuration.getNeedBlock() >= duration.getNeedBlock() - TWO_HOUR.getNeedBlock()) {
+        while (isDurationGreaterThanHourHalf(nextDuration) && nextDuration.getNeedBlock() > duration.getNeedBlock() - TWO_HOUR.getNeedBlock()) {
             nextDuration = durations[nextDuration.getNeedBlock() - 3];
             possibleTimeCases.addAll(getPossibleTimeCasesUnitOverTwoHour(nextDuration, userCount, standard));
         }
@@ -59,7 +59,7 @@ public class MeetingTimeCasesStrategyImpl implements MeetingTimeCasesStrategy {
         List<PossibleTimeCaseVo> possibleTimeCases = new ArrayList<>();
         Duration nextDuration = duration;
 
-        while (nextDuration.getNeedBlock() > HOUR.getNeedBlock() && nextDuration.getNeedBlock() > duration.getNeedBlock() - HOUR.getNeedBlock()) {
+        while (isDurationGreaterThanHour(nextDuration) && nextDuration.getNeedBlock() > duration.getNeedBlock() - HOUR.getNeedBlock()) {
             possibleTimeCases.addAll(getPossibleTimeCasesUnitOverTwoHour(nextDuration, userCount, standard));
             nextDuration = durations[nextDuration.getNeedBlock() - 3];
         }
@@ -77,7 +77,7 @@ public class MeetingTimeCasesStrategyImpl implements MeetingTimeCasesStrategy {
 
         Duration nextDuration = duration;
 
-        while (nextDuration.getNeedBlock() > HOUR.getNeedBlock()) {
+        while (isDurationGreaterThanHour(nextDuration)) {
             nextDuration = durations[nextDuration.getNeedBlock() - 3];
             possibleTimeCases.addAll(getPossibleTimeCasesUnitUnderTwoHour(nextDuration, userCount, standard));
         }
@@ -113,8 +113,17 @@ public class MeetingTimeCasesStrategyImpl implements MeetingTimeCasesStrategy {
         }
         return possibleTimeCases;
     }
+    
 
-    private boolean isOverTwoHour(final Duration duration) {
+    private boolean isDurationGreaterThanOrEqualToTwoHour(final Duration duration) {
         return duration.getNeedBlock() >= TWO_HOUR.getNeedBlock();
+    }
+
+    private boolean isDurationGreaterThanHourHalf(final Duration duration) {
+        return duration.getNeedBlock() > HOUR_HALF.getNeedBlock();
+    }
+
+    private boolean isDurationGreaterThanHour(final Duration duration) {
+        return duration.getNeedBlock() > HOUR.getNeedBlock();
     }
 }
