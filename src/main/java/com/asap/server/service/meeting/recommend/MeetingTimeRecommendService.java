@@ -60,7 +60,7 @@ public class MeetingTimeRecommendService {
     }
 
     private boolean isRecommendedMeetingTime(TimeBlockDto timeBlock, BestMeetingTimeVo bestMeetingTime) {
-        return timeBlock.availableDate() == bestMeetingTime.date()
+        return timeBlock.availableDate().isEqual(bestMeetingTime.date())
                 && bestMeetingTime.startTime().getIndex() <= timeBlock.timeSlot().getIndex()
                 && bestMeetingTime.endTime().getIndex() >= timeBlock.timeSlot().getIndex();
     }
