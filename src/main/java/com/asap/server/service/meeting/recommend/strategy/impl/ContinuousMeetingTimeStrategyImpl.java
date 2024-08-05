@@ -14,10 +14,14 @@ import org.springframework.stereotype.Component;
 public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeStrategy {
     @Override
     public List<BestMeetingTimeVo> find(List<TimeBlockDto> timeBlocks, Duration duration) {
+        List<BestMeetingTimeVo> response = new ArrayList<>();
+        if (timeBlocks.isEmpty()) {
+            return response;
+        }
+
         int startIdx = 0;
         int endIdx = 1;
 
-        List<BestMeetingTimeVo> response = new ArrayList<>();
         while (endIdx < timeBlocks.size()) {
             TimeBlockDto endTimeBlock = timeBlocks.get(endIdx - 1);
             TimeBlockDto nextTimeBlock = timeBlocks.get(endIdx);

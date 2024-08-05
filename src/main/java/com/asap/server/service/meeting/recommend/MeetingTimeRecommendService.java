@@ -3,8 +3,8 @@ package com.asap.server.service.meeting.recommend;
 import com.asap.server.persistence.domain.enums.Duration;
 import com.asap.server.persistence.repository.timeblock.dto.TimeBlockDto;
 import com.asap.server.service.meeting.recommend.strategy.BestMeetingTimeStrategy;
-import com.asap.server.service.meeting.recommend.strategy.MeetingTimeCasesStrategy;
 import com.asap.server.service.meeting.recommend.strategy.ContinuousMeetingTimeStrategy;
+import com.asap.server.service.meeting.recommend.strategy.MeetingTimeCasesStrategy;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.PossibleTimeCaseVo;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class MeetingTimeRecommendService {
     private final BestMeetingTimeStrategy bestMeetingTimeStrategy;
 
     public List<BestMeetingTimeVo> getBestMeetingTime(
-            final List<TimeBlockDto> timeBlocks,
+            List<TimeBlockDto> timeBlocks,
             final Duration duration,
             final int userCount
     ) {
@@ -34,10 +34,17 @@ public class MeetingTimeRecommendService {
                     .filter(t -> t.userCount() == timeCase.memberCnt())
                     .toList();
 
-            List<BestMeetingTimeVo> candidateMeetingTimes = new ArrayList<>(
-                    continuousMeetingTimeStrategy.find(timeBlocksFilteredUserCount, timeCase.duration()));
-            candidateMeetingTimes = bestMeetingTimeStrategy.find(candidateMeetingTimes, timeCase.duration());
-            bestMeetingTimes.addAll(candidateMeetingTimes);
+            List<BestMeetingTimeVo> candidateMeetingTimes =
+                    continuousMeetingTimeStrategy.find(timeBlocksFilteredUserCount, timeCase.duration());
+
+            timeBlocks = timeBlocks.stream()
+                    .filter(timeBlock -> candidateMeetingTimes
+                            .stream()
+                            .noneMatch(candidateMeetingTime -> isRecommendedMeetingTime(timeBlock, candidateMeetingTime))
+                    )
+                    .toList();
+
+            bestMeetingTimes.addAll(bestMeetingTimeStrategy.find(candidateMeetingTimes, timeCase.duration()));
 
             if (bestMeetingTimes.size() < BEST_MEETING_TIME_SIZE) {
                 continue;
@@ -50,5 +57,11 @@ public class MeetingTimeRecommendService {
             bestMeetingTimes.add(null);
         }
         return bestMeetingTimes;
+    }
+
+    private boolean isRecommendedMeetingTime(TimeBlockDto timeBlock, BestMeetingTimeVo bestMeetingTime) {
+        return timeBlock.availableDate() == bestMeetingTime.date()
+                && bestMeetingTime.startTime().getIndex() <= timeBlock.timeSlot().getIndex()
+                && bestMeetingTime.endTime().getIndex() >= timeBlock.timeSlot().getIndex();
     }
 }
