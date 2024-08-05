@@ -1,6 +1,12 @@
 package com.asap.server.service.meeting.recommend;
 
-import static com.asap.server.persistence.domain.enums.TimeSlot.*;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_12_00;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_12_30;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_13_00;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_13_30;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_15_00;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_15_30;
+import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_16_00;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.asap.server.common.generator.TimeBlockDtoGenerator;
@@ -103,15 +109,18 @@ class MeetingTimeRecommendServiceTest {
         LocalDate availableDate = LocalDate.of(2023, 7, 10);
         LocalDate availableDate2 = LocalDate.of(2023, 7, 11);
 
-        TimeBlockDto timeBlock = new TimeBlockDto(availableDate, SLOT_12_00, 0, 2L);
-        TimeBlockDto timeBlock2 = new TimeBlockDto(availableDate, SLOT_12_30, 0, 2L);
-        TimeBlockDto timeBlock3 = new TimeBlockDto(availableDate2, SLOT_12_30, 0, 2L);
-        TimeBlockDto timeBlock4 = new TimeBlockDto(availableDate2, SLOT_13_00, 0, 2L);
-        List<TimeBlockDto> timeBlocks = List.of(timeBlock, timeBlock2, timeBlock3, timeBlock4);
+        List<TimeBlockDto> tempTimeBlocks = TimeBlockDtoGenerator
+                .generator(availableDate, SLOT_12_00, SLOT_15_30, 0, 2L);
+        List<TimeBlockDto> tempTimeBlocks2 = TimeBlockDtoGenerator
+                .generator(availableDate2, SLOT_12_30, SLOT_13_00, 0, 2L);
+        List<TimeBlockDto> timeBlocks = new ArrayList<>() {{
+            addAll(tempTimeBlocks);
+            addAll(tempTimeBlocks2);
+        }};
 
         BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_13_00, 0);
-        BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate2, SLOT_12_30, SLOT_13_30, 0);
-        BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_12_30, 0);
+        BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, SLOT_15_00, SLOT_16_00, 0);
+        BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate2, SLOT_12_30, SLOT_13_30, 0);
         List<BestMeetingTimeVo> expected = List.of(e1, e2, e3);
 
         // when
