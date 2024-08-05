@@ -50,7 +50,7 @@ public class MeetingTimeRecommendService {
                 continue;
             }
 
-            return bestMeetingTimes.stream().limit(BEST_MEETING_TIME_SIZE).collect(Collectors.toList());
+            return bestMeetingTimes.stream().limit(BEST_MEETING_TIME_SIZE).toList();
         }
 
         while (bestMeetingTimes.size() < BEST_MEETING_TIME_SIZE) {

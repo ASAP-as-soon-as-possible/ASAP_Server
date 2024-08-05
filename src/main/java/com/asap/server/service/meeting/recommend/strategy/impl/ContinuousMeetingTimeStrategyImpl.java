@@ -53,7 +53,7 @@ public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeS
         }
         return response.stream()
                 .sorted((t1, t2) -> t2.weight() - t1.weight())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private void validateAndAddMeetingTime(
