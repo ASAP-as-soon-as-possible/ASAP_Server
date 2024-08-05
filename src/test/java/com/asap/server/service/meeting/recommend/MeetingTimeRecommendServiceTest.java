@@ -1,19 +1,22 @@
-package com.asap.server.service.meeting;
+package com.asap.server.service.meeting.recommend;
 
+import static com.asap.server.persistence.domain.enums.TimeSlot.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+import com.asap.server.common.generator.TimeBlockDtoGenerator;
 import com.asap.server.persistence.domain.enums.Duration;
 import com.asap.server.persistence.repository.timeblock.dto.TimeBlockDto;
+import com.asap.server.service.meeting.recommend.strategy.impl.BestMeetingTimeStrategyImpl;
+import com.asap.server.service.meeting.recommend.strategy.impl.ContinuousMeetingTimeStrategyImpl;
+import com.asap.server.service.meeting.recommend.strategy.impl.MeetingTimeCasesStrategyImpl;
 import com.asap.server.service.vo.BestMeetingTimeVo;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.asap.server.persistence.domain.enums.TimeSlot.*;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class MeetingTimeRecommendServiceTest {
     private MeetingTimeRecommendService meetingTimeRecommendService;
@@ -21,8 +24,9 @@ class MeetingTimeRecommendServiceTest {
     @BeforeEach
     public void setUp() {
         meetingTimeRecommendService = new MeetingTimeRecommendService(
-                new FindBestMeetingTimeCasesStrategy(),
-                new FindBestMeetingTimeStrategy()
+                new MeetingTimeCasesStrategyImpl(),
+                new ContinuousMeetingTimeStrategyImpl(),
+                new BestMeetingTimeStrategyImpl()
         );
     }
 
@@ -32,7 +36,7 @@ class MeetingTimeRecommendServiceTest {
         // given
         LocalDate availableDate = LocalDate.of(2023, 7, 10);
         TimeBlockDto timeBlock = new TimeBlockDto(availableDate, SLOT_12_00, 0, 1L);
-        List<TimeBlockDto> timeBlocks = new ArrayList<>(Arrays.asList(timeBlock));
+        List<TimeBlockDto> timeBlocks = List.of(timeBlock);
 
         BestMeetingTimeVo expected = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_12_30, 0);
 
@@ -52,15 +56,15 @@ class MeetingTimeRecommendServiceTest {
 
         TimeBlockDto timeBlock = new TimeBlockDto(availableDate, SLOT_12_00, 0, 1L);
         TimeBlockDto timeBlock2 = new TimeBlockDto(availableDate2, SLOT_12_30, 0, 1L);
-        List<TimeBlockDto> timeBlocks = new ArrayList<>(Arrays.asList(timeBlock, timeBlock2));
+        List<TimeBlockDto> timeBlocks = List.of(timeBlock, timeBlock2);
 
         BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_12_30, 0);
         BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate2, SLOT_12_30, SLOT_13_00, 0);
         List<BestMeetingTimeVo> expected = Arrays.asList(e1, e2, null);
 
         // when
-        List<BestMeetingTimeVo> bestMeetingTimes = meetingTimeRecommendService.getBestMeetingTime(timeBlocks,
-                Duration.HALF, 1);
+        List<BestMeetingTimeVo> bestMeetingTimes = meetingTimeRecommendService
+                .getBestMeetingTime(timeBlocks, Duration.HALF, 1);
 
         // then
         assertThat(bestMeetingTimes).isEqualTo(expected);
@@ -74,19 +78,19 @@ class MeetingTimeRecommendServiceTest {
         LocalDate availableDate2 = LocalDate.of(2023, 7, 11);
 
         TimeBlockDto timeBlock = new TimeBlockDto(availableDate, SLOT_12_00, 0, 2L);
-        TimeBlockDto timeBlock2 = new TimeBlockDto(availableDate, SLOT_12_30, 0, 2L);
+        TimeBlockDto timeBlock2 = new TimeBlockDto(availableDate, SLOT_13_00, 0, 2L);
         TimeBlockDto timeBlock3 = new TimeBlockDto(availableDate2, SLOT_12_30, 0, 2L);
         TimeBlockDto timeBlock4 = new TimeBlockDto(availableDate2, SLOT_13_00, 0, 2L);
-        List<TimeBlockDto> timeBlocks = new ArrayList<>(Arrays.asList(timeBlock, timeBlock2, timeBlock3, timeBlock4));
+        List<TimeBlockDto> timeBlocks = List.of(timeBlock, timeBlock2, timeBlock3, timeBlock4);
 
         BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_12_30, 0);
-        BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, SLOT_12_30, SLOT_13_00, 0);
+        BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, SLOT_13_00, SLOT_13_30, 0);
         BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate2, SLOT_12_30, SLOT_13_00, 0);
-        List<BestMeetingTimeVo> expected = Arrays.asList(e1, e2, e3);
+        List<BestMeetingTimeVo> expected = List.of(e1, e2, e3);
 
         // when
-        List<BestMeetingTimeVo> bestMeetingTimes = meetingTimeRecommendService.getBestMeetingTime(timeBlocks,
-                Duration.HALF, 2);
+        List<BestMeetingTimeVo> bestMeetingTimes = meetingTimeRecommendService
+                .getBestMeetingTime(timeBlocks, Duration.HALF, 2);
 
         // then
         assertThat(bestMeetingTimes).isEqualTo(expected);
@@ -103,16 +107,16 @@ class MeetingTimeRecommendServiceTest {
         TimeBlockDto timeBlock2 = new TimeBlockDto(availableDate, SLOT_12_30, 0, 2L);
         TimeBlockDto timeBlock3 = new TimeBlockDto(availableDate2, SLOT_12_30, 0, 2L);
         TimeBlockDto timeBlock4 = new TimeBlockDto(availableDate2, SLOT_13_00, 0, 2L);
-        List<TimeBlockDto> timeBlocks = new ArrayList<>(Arrays.asList(timeBlock, timeBlock2, timeBlock3, timeBlock4));
+        List<TimeBlockDto> timeBlocks = List.of(timeBlock, timeBlock2, timeBlock3, timeBlock4);
 
         BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_13_00, 0);
         BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate2, SLOT_12_30, SLOT_13_30, 0);
         BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_12_30, 0);
-        List<BestMeetingTimeVo> expected = Arrays.asList(e1, e2, e3);
+        List<BestMeetingTimeVo> expected = List.of(e1, e2, e3);
 
         // when
-        List<BestMeetingTimeVo> bestMeetingTimes = meetingTimeRecommendService.getBestMeetingTime(timeBlocks,
-                Duration.HOUR, 2);
+        List<BestMeetingTimeVo> bestMeetingTimes = meetingTimeRecommendService
+                .getBestMeetingTime(timeBlocks, Duration.HOUR, 2);
 
         // then
         assertThat(bestMeetingTimes).isEqualTo(expected);
@@ -125,26 +129,23 @@ class MeetingTimeRecommendServiceTest {
         LocalDate availableDate = LocalDate.of(2023, 7, 10);
         LocalDate availableDate2 = LocalDate.of(2023, 7, 11);
 
-        TimeBlockDto timeBlock = new TimeBlockDto(availableDate, SLOT_12_00, 0, 2L);
-        TimeBlockDto timeBlock2 = new TimeBlockDto(availableDate, SLOT_12_30, 0, 2L);
-        TimeBlockDto timeBlock3 = new TimeBlockDto(availableDate, SLOT_13_00, 0, 2L);
-        TimeBlockDto timeBlock4 = new TimeBlockDto(availableDate, SLOT_13_30, 0, 2L);
-        TimeBlockDto timeBlock5 = new TimeBlockDto(availableDate2, SLOT_12_30, 0, 2L);
-        TimeBlockDto timeBlock6 = new TimeBlockDto(availableDate2, SLOT_13_00, 6, 2L);
-        TimeBlockDto timeBlock7 = new TimeBlockDto(availableDate2, SLOT_13_30, 6, 2L);
-        TimeBlockDto timeBlock8 = new TimeBlockDto(availableDate2, SLOT_14_00, 6, 2L);
-        List<TimeBlockDto> timeBlocks = new ArrayList<>(
-                Arrays.asList(timeBlock, timeBlock2, timeBlock3, timeBlock4, timeBlock5, timeBlock6, timeBlock7,
-                        timeBlock8));
+        List<TimeBlockDto> tempTimeBlocks = TimeBlockDtoGenerator
+                .generator(availableDate, SLOT_12_00, SLOT_15_30, 0, 2L);
+        List<TimeBlockDto> tempTimeBlocks2 = TimeBlockDtoGenerator
+                .generator(availableDate2, SLOT_12_30, SLOT_13_00, 6, 2L);
+        List<TimeBlockDto> timeBlocks = new ArrayList<>() {{
+            addAll(tempTimeBlocks);
+            addAll(tempTimeBlocks2);
+        }};
 
-        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate2, SLOT_13_00, SLOT_14_30, 18);
-        BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate2, SLOT_12_30, SLOT_14_00, 12);
-        BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_13_30, 0);
+        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate2, SLOT_12_30, SLOT_13_30, 6);
+        BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_13_00, 0);
+        BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate, SLOT_15_00, SLOT_16_00, 0);
         List<BestMeetingTimeVo> expected = Arrays.asList(e1, e2, e3);
 
         // when
-        List<BestMeetingTimeVo> bestMeetingTimes = meetingTimeRecommendService.getBestMeetingTime(timeBlocks,
-                Duration.HOUR_HALF, 2);
+        List<BestMeetingTimeVo> bestMeetingTimes = meetingTimeRecommendService
+                .getBestMeetingTime(timeBlocks, Duration.HOUR, 2);
 
         // then
         assertThat(bestMeetingTimes).isEqualTo(expected);
@@ -156,8 +157,8 @@ class MeetingTimeRecommendServiceTest {
         // given
         LocalDate availableDate = LocalDate.of(2023, 7, 10);
 
-        TimeBlockDto timeBlock = new TimeBlockDto(availableDate, SLOT_12_00, 0, 1L);
-        List<TimeBlockDto> timeBlocks = new ArrayList<>(Arrays.asList(timeBlock));
+        TimeBlockDto timeBlock = new TimeBlockDto(availableDate, SLOT_12_00, 0, 2L);
+        List<TimeBlockDto> timeBlocks = List.of(timeBlock);
 
         BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_12_30, 0);
         List<BestMeetingTimeVo> expected = Arrays.asList(e1, null, null);
@@ -174,22 +175,23 @@ class MeetingTimeRecommendServiceTest {
     public void getBestMeetingTime7() {
         // given
         LocalDate availableDate = LocalDate.of(2023, 7, 10);
+        LocalDate availableDate2 = LocalDate.of(2023, 7, 11);
+        LocalDate availableDate3 = LocalDate.of(2023, 7, 12);
 
         TimeBlockDto timeBlock = new TimeBlockDto(availableDate, SLOT_12_00, 3, 3L);
-        TimeBlockDto timeBlock2 = new TimeBlockDto(availableDate, SLOT_12_30, 4, 2L);
-        TimeBlockDto timeBlock3 = new TimeBlockDto(availableDate, SLOT_13_00, 4, 2L);
-        TimeBlockDto timeBlock4 = new TimeBlockDto(availableDate, SLOT_13_30, 4, 2L);
-        TimeBlockDto timeBlock5 = new TimeBlockDto(availableDate, SLOT_14_00, 4, 2L);
-        List<TimeBlockDto> timeBlocks = new ArrayList<>(
-                Arrays.asList(timeBlock, timeBlock2, timeBlock3, timeBlock4, timeBlock5));
+        TimeBlockDto timeBlock2 = new TimeBlockDto(availableDate, SLOT_12_30, 3, 3L);
+        TimeBlockDto timeBlock3 = new TimeBlockDto(availableDate2, SLOT_12_00, 4, 3L);
+        TimeBlockDto timeBlock4 = new TimeBlockDto(availableDate3, SLOT_12_00, 4, 3L);
 
-        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_12_30, 3);
-        BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, SLOT_12_30, SLOT_13_00, 4);
-        BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate, SLOT_13_00, SLOT_13_30, 4);
+        List<TimeBlockDto> timeBlocks = List.of(timeBlock, timeBlock2, timeBlock3, timeBlock4);
+
+        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_13_00, 3);
+        BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate2, SLOT_12_00, SLOT_12_30, 4);
+        BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate3, SLOT_12_00, SLOT_12_30, 4);
         List<BestMeetingTimeVo> expected = Arrays.asList(e1, e2, e3);
 
         // when
-        List<BestMeetingTimeVo> result = meetingTimeRecommendService.getBestMeetingTime(timeBlocks, Duration.HALF, 3);
+        List<BestMeetingTimeVo> result = meetingTimeRecommendService.getBestMeetingTime(timeBlocks, Duration.HOUR, 3);
 
         // then
         assertThat(result).isEqualTo(expected);

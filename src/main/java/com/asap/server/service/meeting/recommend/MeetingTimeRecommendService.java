@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class MeetingTimeRecommendService {
     private static final int BEST_MEETING_TIME_SIZE = 3;
