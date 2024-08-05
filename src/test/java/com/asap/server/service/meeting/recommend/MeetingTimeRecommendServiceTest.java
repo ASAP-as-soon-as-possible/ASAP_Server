@@ -196,4 +196,23 @@ class MeetingTimeRecommendServiceTest {
         // then
         assertThat(result).isEqualTo(expected);
     }
+
+    @Test
+    @DisplayName("이미 추천한 시간대는 이후 조합에서 추천하지 않는다.")
+    public void getBestMeetingTime8() {
+        // given
+        LocalDate availableDate = LocalDate.of(2023, 7, 10);
+
+        List<TimeBlockDto> timeBlocks = TimeBlockDtoGenerator
+                .generator(availableDate, SLOT_12_00, SLOT_15_00, 0, 2L);
+
+        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_13_30, 0);
+        List<BestMeetingTimeVo> expected = Arrays.asList(e1, null, null);
+
+        // when
+        List<BestMeetingTimeVo> result = meetingTimeRecommendService.getBestMeetingTime(timeBlocks, Duration.HOUR_HALF, 2);
+
+        // then
+        assertThat(result).isEqualTo(expected);
+    }
 }
