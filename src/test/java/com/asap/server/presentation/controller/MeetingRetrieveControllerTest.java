@@ -1,6 +1,6 @@
 package com.asap.server.presentation.controller;
 
-import com.asap.server.presentation.controller.MeetingController;
+import com.asap.server.presentation.controller.meeting.MeetingRegisterController;
 import com.asap.server.service.MeetingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,10 +18,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.nio.charset.Charset;
 
 @ExtendWith(MockitoExtension.class)
-public class MeetingControllerTest {
+public class MeetingRetrieveControllerTest {
 
     @InjectMocks
-    private MeetingController target;
+    private MeetingRegisterController target;
 
     @Mock
     private MeetingService meetingService;
