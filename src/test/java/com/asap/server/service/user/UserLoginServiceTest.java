@@ -4,14 +4,17 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
+import com.asap.server.common.exception.model.ConflictException;
 import com.asap.server.common.exception.model.UnauthorizedException;
 import com.asap.server.common.jwt.JwtService;
+import com.asap.server.persistence.domain.ConfirmedDateTime;
 import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.User;
 import com.asap.server.persistence.domain.enums.Role;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;
 import com.asap.server.presentation.controller.dto.response.HostLoginResponseDto;
 import com.asap.server.service.TimeBlockUserService;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -76,7 +79,7 @@ class UserLoginServiceTest {
         assertThat(response).isEqualTo(expected);
     }
 
-    @DisplayName("특정 회의의 방장 이름과 일치하지 않는다면 400에러를 반환한다.")
+    @DisplayName("특정 회의의 방장 이름과 일치하지 않는다면 UnauthorizedException 에러를 반환한다.")
     @ParameterizedTest
     @ValueSource(strings = {"user1", "user2", "K"})
     void test2(String name) {
@@ -103,7 +106,7 @@ class UserLoginServiceTest {
         }).isInstanceOf(UnauthorizedException.class);
     }
 
-    @DisplayName("특정 회의의 비밀번호가 일치하지 않는다면 400에러를 반환한다.")
+    @DisplayName("특정 회의의 비밀번호가 일치하지 않는다면 UnauthorizedException 에러를 반환한다.")
     @ParameterizedTest
     @ValueSource(strings = {"1111", "1112", "1234"})
     void test3(String password) {
@@ -128,5 +131,32 @@ class UserLoginServiceTest {
         assertThatThrownBy(() -> {
             userLoginService.loginByHost(meetingId, "KWY", password);
         }).isInstanceOf(UnauthorizedException.class);
+    }
+
+    @DisplayName("이미 확정된 회의라면 ConflictException 에러를 반환한다.")
+    @Test
+    void test4() {
+        // given
+        long meetingId = 1L;
+        String encodedPassword = passwordEncoder.encode("0000");
+        final Meeting meeting = Meeting.builder()
+                .id(meetingId)
+                .password(encodedPassword)
+                .confirmedDateTime(new ConfirmedDateTime(LocalDateTime.now(), LocalDateTime.now()))
+                .build();
+        final User host = User.builder()
+                .id(1L)
+                .meeting(meeting)
+                .name("KWY")
+                .role(Role.HOST)
+                .isFixed(false)
+                .build();
+        meeting.setHost(host);
+        when(meetingRepository.findByIdWithHost(meetingId)).thenReturn(Optional.of(meeting));
+
+        // when, then
+        assertThatThrownBy(() -> {
+            userLoginService.loginByHost(meetingId, "KWY", "0000");
+        }).isInstanceOf(ConflictException.class);
     }
 }
