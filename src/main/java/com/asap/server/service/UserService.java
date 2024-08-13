@@ -48,7 +48,6 @@ public class UserService {
     private final AvailableDateService availableDateService;
     private final MeetingRepository meetingRepository;
     private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
 
     public User createUser(final Meeting meeting,
                            final String hostName,
@@ -153,34 +152,6 @@ public class UserService {
 
     public int getMeetingUserCount(final Meeting meeting) {
         return userRepository.countByMeeting(meeting);
-    }
-
-    @Transactional
-    public HostLoginResponseDto loginByHost(
-            final Long meetingId,
-            final HostLoginRequestDto requestDto
-    ) {
-        Meeting meeting = meetingRepository.findByIdWithHost(meetingId)
-                .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-
-        if (!meeting.checkHostName(requestDto.getName()))
-            throw new UnauthorizedException(Error.INVALID_HOST_ID_PASSWORD_EXCEPTION);
-
-        if (!passwordEncoder.matches(requestDto.getPassword(), meeting.getPassword()))
-            throw new UnauthorizedException(Error.INVALID_HOST_ID_PASSWORD_EXCEPTION);
-
-        if (meeting.isConfirmedMeeting())
-            throw new ConflictException(MEETING_VALIDATION_FAILED_EXCEPTION);
-
-        HostLoginResponseDto responseDto = HostLoginResponseDto
-                .builder()
-                .accessToken(jwtService.issuedToken(meeting.getHost().getId().toString()))
-                .build();
-        if (timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost())) {
-            throw new HostTimeForbiddenException(Error.HOST_MEETING_TIME_NOT_PROVIDED, responseDto);
-        }
-
-        return responseDto;
     }
 
     public List<BestMeetingTimeWithUsersVo> getBestMeetingInUsers(
