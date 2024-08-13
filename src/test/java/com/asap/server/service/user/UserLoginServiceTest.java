@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 import com.asap.server.common.exception.model.ConflictException;
+import com.asap.server.common.exception.model.HostTimeForbiddenException;
 import com.asap.server.common.exception.model.UnauthorizedException;
 import com.asap.server.common.jwt.JwtService;
 import com.asap.server.persistence.domain.ConfirmedDateTime;
@@ -158,5 +159,33 @@ class UserLoginServiceTest {
         assertThatThrownBy(() -> {
             userLoginService.loginByHost(meetingId, "KWY", "0000");
         }).isInstanceOf(ConflictException.class);
+    }
+
+    @DisplayName("방장이 시간을 입력하지 않았다면 HostTimeForbiddenException 에러를 반환한다.")
+    @Test
+    void test5() {
+        // given
+        long meetingId = 1L;
+        String encodedPassword = passwordEncoder.encode("0000");
+        final Meeting meeting = Meeting.builder()
+                .id(meetingId)
+                .password(encodedPassword)
+                .build();
+        final User host = User.builder()
+                .id(1L)
+                .meeting(meeting)
+                .name("KWY")
+                .role(Role.HOST)
+                .isFixed(false)
+                .build();
+        meeting.setHost(host);
+        when(meetingRepository.findByIdWithHost(meetingId)).thenReturn(Optional.of(meeting));
+        when(jwtService.issuedToken("1")).thenReturn("access token");
+        when(timeBlockUserService.isEmptyHostTimeBlock(host)).thenReturn(true);
+
+        // when, then
+        assertThatThrownBy(() -> {
+            userLoginService.loginByHost(meetingId, "KWY", "0000");
+        }).isInstanceOf(HostTimeForbiddenException.class);
     }
 }
