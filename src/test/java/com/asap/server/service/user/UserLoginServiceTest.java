@@ -1,8 +1,10 @@
 package com.asap.server.service.user;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
+import com.asap.server.common.exception.model.UnauthorizedException;
 import com.asap.server.common.jwt.JwtService;
 import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.User;
@@ -11,12 +13,15 @@ import com.asap.server.persistence.repository.meeting.MeetingRepository;
 import com.asap.server.presentation.controller.dto.response.HostLoginResponseDto;
 import com.asap.server.service.TimeBlockUserService;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,21 +30,62 @@ class UserLoginServiceTest {
     private MeetingRepository meetingRepository;
     @Mock
     private JwtService jwtService;
-    @Mock
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     @Mock
     private TimeBlockUserService timeBlockUserService;
-    @InjectMocks
     UserLoginService userLoginService;
 
-    @Test
+    @BeforeEach
+    void setUp() {
+        userLoginService = new UserLoginService(
+                meetingRepository,
+                jwtService,
+                passwordEncoder,
+                timeBlockUserService
+        );
+    }
+
     @DisplayName("아직 확정되지 않은 특정 회의의 방장의 이름과 비밀번호가 일치하면 accessToken을 반환한다.")
+    @Test
     void test() {
         // given
         long meetingId = 1L;
+        String encodedPassword = passwordEncoder.encode("0000");
+        Meeting meeting = Meeting.builder()
+                .id(meetingId)
+                .password(encodedPassword)
+                .build();
+        User host = User.builder()
+                .id(1L)
+                .meeting(meeting)
+                .name("KWY")
+                .role(Role.HOST)
+                .isFixed(false)
+                .build();
+        meeting.setHost(host);
+        when(meetingRepository.findByIdWithHost(meetingId)).thenReturn(Optional.of(meeting));
+        when(timeBlockUserService.isEmptyHostTimeBlock(host)).thenReturn(false);
+        when(jwtService.issuedToken("1")).thenReturn("access token");
+
+        HostLoginResponseDto expected = new HostLoginResponseDto("access token");
+
+        // when
+        HostLoginResponseDto response = userLoginService.loginByHost(meetingId, "KWY", "0000");
+
+        // then
+        assertThat(response).isEqualTo(expected);
+    }
+
+    @DisplayName("특정 회의의 방장 이름과 일치하지 않는다면 400에러를 반환한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"user1", "user2", "K"})
+    void test2(String name) {
+        // given
+        long meetingId = 1L;
+        String encodedPassword = passwordEncoder.encode("0000");
         final Meeting meeting = Meeting.builder()
                 .id(meetingId)
-                .password("0000")
+                .password(encodedPassword)
                 .build();
         final User host = User.builder()
                 .id(1L)
@@ -50,16 +96,37 @@ class UserLoginServiceTest {
                 .build();
         meeting.setHost(host);
         when(meetingRepository.findByIdWithHost(meetingId)).thenReturn(Optional.of(meeting));
-        when(passwordEncoder.matches(meeting.getPassword(), "0000")).thenReturn(true);
-        when(timeBlockUserService.isEmptyHostTimeBlock(host)).thenReturn(false);
-        when(jwtService.issuedToken("1")).thenReturn("access token");
-        
-        HostLoginResponseDto expected = new HostLoginResponseDto("access token");
 
-        // when
-        HostLoginResponseDto response = userLoginService.loginByHost(meetingId, "KWY", "0000");
+        // when, then
+        assertThatThrownBy(() -> {
+            userLoginService.loginByHost(meetingId, name, "0000");
+        }).isInstanceOf(UnauthorizedException.class);
+    }
 
-        // then
-        assertThat(response).isEqualTo(expected);
+    @DisplayName("특정 회의의 비밀번호가 일치하지 않는다면 400에러를 반환한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"1111", "1112", "1234"})
+    void test3(String password) {
+        // given
+        long meetingId = 1L;
+        String encodedPassword = passwordEncoder.encode("0000");
+        final Meeting meeting = Meeting.builder()
+                .id(meetingId)
+                .password(encodedPassword)
+                .build();
+        final User host = User.builder()
+                .id(1L)
+                .meeting(meeting)
+                .name("KWY")
+                .role(Role.HOST)
+                .isFixed(false)
+                .build();
+        meeting.setHost(host);
+        when(meetingRepository.findByIdWithHost(meetingId)).thenReturn(Optional.of(meeting));
+
+        // when, then
+        assertThatThrownBy(() -> {
+            userLoginService.loginByHost(meetingId, "KWY", password);
+        }).isInstanceOf(UnauthorizedException.class);
     }
 }
