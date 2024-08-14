@@ -21,6 +21,10 @@ public enum Error {
     INVALID_TOKEN_EXCEPTION(HttpStatus.BAD_REQUEST, "유효하지 않은 토큰을 입력했습니다."),
     BAD_REQUEST_EXCEPTION(HttpStatus.BAD_REQUEST, "잘못된 요청이 있습니다."),
     INVALID_DATE_FORMAT_EXCEPTION(HttpStatus.BAD_REQUEST, "유요하지 않은 날짜를 입력했습니다."),
+    // user
+    USERNAME_NOT_NULL_EXCEPTION(HttpStatus.BAD_REQUEST, "사용자 이름에는 null이 들어올 수 없습니다."),
+    USERNAME_NOT_BLANK_EXCEPTION(HttpStatus.BAD_REQUEST, "사용자 이름에는 빈 값이 들어올 수 없습니다."),
+    USERNAME_TOO_LONG_EXCEPTION(HttpStatus.BAD_REQUEST, "사용자 이름의 최대 입력 길이(8자)를 초과했습니다."),
     /**
      * 401 UNAUTHORIZED
      **/

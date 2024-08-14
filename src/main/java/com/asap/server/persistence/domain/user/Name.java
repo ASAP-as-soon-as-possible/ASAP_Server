@@ -5,10 +5,18 @@ import static com.asap.server.common.exception.Error.USERNAME_NOT_NULL_EXCEPTION
 import static com.asap.server.common.exception.Error.USERNAME_TOO_LONG_EXCEPTION;
 
 import com.asap.server.common.exception.model.BadRequestException;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Embeddable
-public record Name(String value) {
+@NoArgsConstructor
+@Getter
+public class Name {
+    @Column(nullable = false, name = "name")
+    private String value;
+
     private static final int MAX_NAME_LENGTH = 8;
 
     public Name(String value) {
