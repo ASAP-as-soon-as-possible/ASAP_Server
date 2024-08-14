@@ -13,7 +13,6 @@ import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.User;
 import com.asap.server.persistence.domain.enums.Role;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;
-import com.asap.server.presentation.controller.dto.response.HostLoginResponseDto;
 import com.asap.server.service.TimeBlockUserService;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -71,7 +70,7 @@ class UserLoginServiceTest {
         when(timeBlockUserService.isEmptyHostTimeBlock(host)).thenReturn(false);
         when(jwtService.issuedToken("1")).thenReturn("access token");
 
-        HostLoginResponseDto expected = new HostLoginResponseDto("access token");
+        String expected = "access token";
 
         // when
         String response = userLoginService.loginByHost(meetingId, "KWY", "0000");
