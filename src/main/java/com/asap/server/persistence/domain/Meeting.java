@@ -1,6 +1,7 @@
 package com.asap.server.persistence.domain;
 
 import com.asap.server.persistence.domain.enums.Duration;
+import com.asap.server.persistence.domain.user.Name;
 import com.asap.server.persistence.domain.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -12,13 +13,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -59,8 +59,8 @@ public class Meeting extends AuditingTimeEntity {
         return this.host.getId().equals(userId);
     }
 
-    public boolean checkHostName(final String name) {
-        return this.host.getName().equals(name);
+    public boolean checkHostName(final Name name) {
+        return this.host.getName().equals(name.getValue());
     }
 
     public boolean isConfirmedMeeting() {

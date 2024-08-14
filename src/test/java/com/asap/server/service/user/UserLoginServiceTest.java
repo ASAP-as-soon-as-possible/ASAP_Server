@@ -4,15 +4,16 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
+import com.asap.server.common.exception.model.BadRequestException;
 import com.asap.server.common.exception.model.ConflictException;
 import com.asap.server.common.exception.model.HostTimeForbiddenException;
 import com.asap.server.common.exception.model.UnauthorizedException;
 import com.asap.server.common.jwt.JwtService;
 import com.asap.server.persistence.domain.ConfirmedDateTime;
 import com.asap.server.persistence.domain.Meeting;
+import com.asap.server.persistence.domain.enums.Role;
 import com.asap.server.persistence.domain.user.Name;
 import com.asap.server.persistence.domain.user.User;
-import com.asap.server.persistence.domain.enums.Role;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;
 import com.asap.server.service.TimeBlockUserService;
 import java.time.LocalDateTime;
@@ -192,5 +193,33 @@ class UserLoginServiceTest {
         assertThatThrownBy(() -> {
             userLoginService.loginByHost(meetingId, "KWY", "0000");
         }).isInstanceOf(HostTimeForbiddenException.class);
+    }
+
+    @DisplayName("유효하지 않은 이름을 입력했다면 BadRequestException 을 반환한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"123456789", "  ", ""})
+    void test6(String name) {
+        // given
+        long meetingId = 1L;
+        String encodedPassword = passwordEncoder.encode("0000");
+        final Meeting meeting = Meeting.builder()
+                .id(meetingId)
+                .password(encodedPassword)
+                .build();
+        Name hostName = new Name("KWY");
+        final User host = User.builder()
+                .id(1L)
+                .meeting(meeting)
+                .name(hostName)
+                .role(Role.HOST)
+                .isFixed(false)
+                .build();
+        meeting.setHost(host);
+        when(meetingRepository.findByIdWithHost(meetingId)).thenReturn(Optional.of(meeting));
+
+        // when, then
+        assertThatThrownBy(() -> {
+            userLoginService.loginByHost(meetingId, name, "0000");
+        }).isInstanceOf(BadRequestException.class);
     }
 }

@@ -3,12 +3,9 @@ package com.asap.server.presentation.controller.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 
 @Schema(description = "방장 로그인 DTO")
 public record HostLoginRequestDto(
-        @NotBlank
-        @Size(max = 8, message = "방장 이름의 최대 입력 길이(8자)를 초과했습니다.")
         @Schema(description = "방장 이름", example = "김아삽")
         String name,
         @NotBlank
