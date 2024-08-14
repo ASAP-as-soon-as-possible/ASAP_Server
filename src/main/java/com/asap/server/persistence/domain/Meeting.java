@@ -1,6 +1,7 @@
 package com.asap.server.persistence.domain;
 
 import com.asap.server.persistence.domain.enums.Duration;
+import com.asap.server.persistence.domain.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;

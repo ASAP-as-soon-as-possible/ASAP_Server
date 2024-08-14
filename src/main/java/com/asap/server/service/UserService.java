@@ -11,7 +11,7 @@ import com.asap.server.common.exception.model.UnauthorizedException;
 import com.asap.server.common.jwt.JwtService;
 import com.asap.server.persistence.domain.AvailableDate;
 import com.asap.server.persistence.domain.Meeting;
-import com.asap.server.persistence.domain.User;
+import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.domain.enums.Role;
 import com.asap.server.persistence.domain.enums.TimeSlot;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;

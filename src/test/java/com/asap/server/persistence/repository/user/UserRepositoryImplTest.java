@@ -5,7 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import com.asap.server.persistence.config.querydsl.QueryDslConfig;
 import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.Place;
-import com.asap.server.persistence.domain.User;
+import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.domain.enums.Duration;
 import com.asap.server.persistence.domain.enums.PlaceType;
 import com.asap.server.persistence.domain.enums.Role;

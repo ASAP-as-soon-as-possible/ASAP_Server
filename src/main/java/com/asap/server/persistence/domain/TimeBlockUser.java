@@ -1,5 +1,6 @@
 package com.asap.server.persistence.domain;
 
+import com.asap.server.persistence.domain.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

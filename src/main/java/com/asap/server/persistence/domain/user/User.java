@@ -1,5 +1,7 @@
-package com.asap.server.persistence.domain;
+package com.asap.server.persistence.domain.user;
 
+import com.asap.server.persistence.domain.AuditingTimeEntity;
+import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.enums.Role;
 import jakarta.persistence.FetchType;
 import lombok.AccessLevel;

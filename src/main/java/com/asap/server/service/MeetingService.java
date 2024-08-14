@@ -13,7 +13,7 @@ import com.asap.server.common.utils.DateUtil;
 import com.asap.server.persistence.domain.ConfirmedDateTime;
 import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.Place;
-import com.asap.server.persistence.domain.User;
+import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.domain.enums.Role;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;
 import com.asap.server.persistence.repository.timeblock.TimeBlockRepository;

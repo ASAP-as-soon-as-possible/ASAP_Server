@@ -4,7 +4,7 @@ import com.asap.server.presentation.controller.dto.request.MeetingConfirmRequest
 import com.asap.server.presentation.controller.dto.request.UserRequestDto;
 import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.Place;
-import com.asap.server.persistence.domain.User;
+import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.domain.enums.Duration;
 import com.asap.server.persistence.domain.enums.PlaceType;
 import com.asap.server.persistence.domain.enums.Role;
