@@ -51,6 +51,6 @@ class NameTest {
         Name name = new Name(value);
 
         // then
-        assertThat(name.value()).isEqualTo("KWY");
+        assertThat(name.getValue()).isEqualTo("KWY");
     }
 }

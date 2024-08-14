@@ -1,5 +1,6 @@
 package com.asap.server.service.meeting;
 
+import com.asap.server.persistence.domain.user.Name;
 import com.asap.server.presentation.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.presentation.controller.dto.request.UserRequestDto;
 import com.asap.server.persistence.domain.Meeting;
@@ -43,9 +44,11 @@ public class ConfirmMeetingMethodTest {
                 .duration(Duration.HALF)
                 .place(place)
                 .build();
+
+        final Name name = new Name("KWY");
         final User user = User.builder()
                 .meeting(meeting)
-                .name("강원용")
+                .name(name)
                 .role(Role.HOST)
                 .isFixed(false)
                 .build();

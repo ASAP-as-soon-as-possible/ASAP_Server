@@ -3,6 +3,7 @@ package com.asap.server.persistence.repository;
 import com.asap.server.persistence.config.querydsl.QueryDslConfig;
 import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.Place;
+import com.asap.server.persistence.domain.user.Name;
 import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.domain.enums.Duration;
 import com.asap.server.persistence.domain.enums.PlaceType;
@@ -44,9 +45,10 @@ public class MeetingRepositoryCustomTest {
                 .place(place)
                 .build();
 
+        final Name name = new Name("강원용");
         final User user = User.builder()
                 .meeting(meeting)
-                .name("강원용")
+                .name(name)
                 .role(Role.HOST)
                 .isFixed(false)
                 .build();

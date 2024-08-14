@@ -38,7 +38,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         return queryFactory.select(
                         new QUserVo(
                                 user.id,
-                                user.name
+                                user.name.value
                         )
                 ).from(timeBlockUser)
                 .innerJoin(timeBlock).on(timeBlockUser.timeBlock.id.eq(timeBlock.id))

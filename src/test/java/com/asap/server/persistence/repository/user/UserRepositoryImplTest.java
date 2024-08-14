@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import com.asap.server.persistence.config.querydsl.QueryDslConfig;
 import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.Place;
+import com.asap.server.persistence.domain.user.Name;
 import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.domain.enums.Duration;
 import com.asap.server.persistence.domain.enums.PlaceType;
@@ -43,27 +44,31 @@ class UserRepositoryImplTest {
                 .build();
         em.persist(meeting);
 
+        final Name name = new Name("KWY");
+        final Name name2 = new Name("DSY");
+        final Name name3 = new Name("LJH");
+        final Name name4 = new Name("SES");
         User user = User.builder()
                 .meeting(meeting)
-                .name("KWY")
+                .name(name)
                 .isFixed(false)
                 .role(Role.HOST)
                 .build();
         User user2 = User.builder()
                 .meeting(meeting)
-                .name("DSY")
+                .name(name2)
                 .isFixed(false)
                 .role(Role.MEMBER)
                 .build();
         User user3 = User.builder()
                 .meeting(meeting)
-                .name("LJH")
+                .name(name3)
                 .isFixed(false)
                 .role(Role.MEMBER)
                 .build();
         User user4 = User.builder()
                 .meeting(meeting)
-                .name("SES")
+                .name(name4)
                 .isFixed(false)
                 .role(Role.MEMBER)
                 .build();

@@ -10,6 +10,7 @@ import com.asap.server.common.exception.model.UnauthorizedException;
 import com.asap.server.common.jwt.JwtService;
 import com.asap.server.persistence.domain.ConfirmedDateTime;
 import com.asap.server.persistence.domain.Meeting;
+import com.asap.server.persistence.domain.user.Name;
 import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.domain.enums.Role;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;
@@ -58,10 +59,11 @@ class UserLoginServiceTest {
                 .id(meetingId)
                 .password(encodedPassword)
                 .build();
+        Name name = new Name("KWY");
         User host = User.builder()
                 .id(1L)
                 .meeting(meeting)
-                .name("KWY")
+                .name(name)
                 .role(Role.HOST)
                 .isFixed(false)
                 .build();
@@ -90,10 +92,11 @@ class UserLoginServiceTest {
                 .id(meetingId)
                 .password(encodedPassword)
                 .build();
+        Name hostName = new Name("KWY");
         final User host = User.builder()
                 .id(1L)
                 .meeting(meeting)
-                .name("KWY")
+                .name(hostName)
                 .role(Role.HOST)
                 .isFixed(false)
                 .build();
@@ -117,10 +120,11 @@ class UserLoginServiceTest {
                 .id(meetingId)
                 .password(encodedPassword)
                 .build();
+        Name hostName = new Name("KWY");
         final User host = User.builder()
                 .id(1L)
                 .meeting(meeting)
-                .name("KWY")
+                .name(hostName)
                 .role(Role.HOST)
                 .isFixed(false)
                 .build();
@@ -144,10 +148,11 @@ class UserLoginServiceTest {
                 .password(encodedPassword)
                 .confirmedDateTime(new ConfirmedDateTime(LocalDateTime.now(), LocalDateTime.now()))
                 .build();
+        Name hostName = new Name("KWY");
         final User host = User.builder()
                 .id(1L)
                 .meeting(meeting)
-                .name("KWY")
+                .name(hostName)
                 .role(Role.HOST)
                 .isFixed(false)
                 .build();
@@ -170,10 +175,11 @@ class UserLoginServiceTest {
                 .id(meetingId)
                 .password(encodedPassword)
                 .build();
+        Name hostName = new Name("KWY");
         final User host = User.builder()
                 .id(1L)
                 .meeting(meeting)
-                .name("KWY")
+                .name(hostName)
                 .role(Role.HOST)
                 .isFixed(false)
                 .build();
