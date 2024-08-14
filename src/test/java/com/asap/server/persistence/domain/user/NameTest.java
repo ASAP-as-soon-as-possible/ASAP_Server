@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class NameTest {
 
-    @DisplayName("이름 값이 8자를 초과하면 BadRequestException 을 반환한다.")
+    @DisplayName("이름 값이 null로 들어오면 BadRequestException 을 반환한다.")
     @Test
     void test() {
         // when, then
@@ -21,7 +21,7 @@ class NameTest {
                 .hasMessage("사용자 이름에는 null이 들어올 수 없습니다.");
     }
 
-    @DisplayName("이름 값이 8자를 초과하면 BadRequestException 을 반환한다.")
+    @DisplayName("이름 값이 공백으로 들어오면 BadRequestException 을 반환한다.")
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "    "})
     void test2(String value) {
