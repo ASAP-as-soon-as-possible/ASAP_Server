@@ -13,6 +13,7 @@ import com.asap.server.common.utils.DateUtil;
 import com.asap.server.persistence.domain.ConfirmedDateTime;
 import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.Place;
+import com.asap.server.persistence.domain.user.Name;
 import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.domain.enums.Role;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;
@@ -69,7 +70,7 @@ public class MeetingService {
 
         meetingRepository.save(meeting);
 
-        User host = userService.createUser(meeting, meetingSaveRequestDto.name(), Role.HOST);
+        User host = userService.createUser(meeting, new Name(meetingSaveRequestDto.name()), Role.HOST);
 
         availableDateService.create(meeting, meetingSaveRequestDto.availableDates());
 
