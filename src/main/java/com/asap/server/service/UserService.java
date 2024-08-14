@@ -45,11 +45,11 @@ public class UserService {
     private final JwtService jwtService;
 
     public User createUser(final Meeting meeting,
-                           final String hostName,
+                           final String userName,
                            final Role role) {
         User user = User.builder()
                 .meeting(meeting)
-                .name(new Name(hostName))
+                .name(new Name(userName))
                 .role(role)
                 .isFixed(false)
                 .build();
