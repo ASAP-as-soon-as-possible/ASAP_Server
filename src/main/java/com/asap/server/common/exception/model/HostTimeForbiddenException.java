@@ -6,9 +6,9 @@ import lombok.Getter;
 
 @Getter
 public class HostTimeForbiddenException extends AsapException {
-    private final HostLoginResponseDto data;
+    private final String data;
 
-    public HostTimeForbiddenException(Error error, HostLoginResponseDto data) {
+    public HostTimeForbiddenException(Error error, String data) {
         super(error);
         this.data = data;
     }

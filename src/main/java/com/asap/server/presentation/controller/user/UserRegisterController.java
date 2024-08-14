@@ -26,9 +26,15 @@ public class UserRegisterController implements UserRegisterControllerDocs {
             @MeetingPathVariable final Long meetingId,
             @RequestBody @Valid final HostLoginRequestDto requestDto
     ) {
+        String hostAccessToken = userLoginService.loginByHost(
+                meetingId,
+                requestDto.name(),
+                requestDto.password()
+        );
+
         return SuccessResponse.success(
                 Success.LOGIN_SUCCESS,
-                userLoginService.loginByHost(meetingId, requestDto.getName(), requestDto.getPassword())
+                new HostLoginResponseDto(hostAccessToken)
         );
     }
 }

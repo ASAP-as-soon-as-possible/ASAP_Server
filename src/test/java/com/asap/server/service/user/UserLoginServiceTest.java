@@ -74,7 +74,7 @@ class UserLoginServiceTest {
         HostLoginResponseDto expected = new HostLoginResponseDto("access token");
 
         // when
-        HostLoginResponseDto response = userLoginService.loginByHost(meetingId, "KWY", "0000");
+        String response = userLoginService.loginByHost(meetingId, "KWY", "0000");
 
         // then
         assertThat(response).isEqualTo(expected);

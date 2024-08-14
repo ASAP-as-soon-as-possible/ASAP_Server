@@ -104,7 +104,8 @@ public class ControllerExceptionAdvice {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(HostTimeForbiddenException.class)
     protected ErrorDataResponse<HostLoginResponseDto> handleForbiddenException(final HostTimeForbiddenException e) {
-        return ErrorDataResponse.error(e.getError(), e.getMessage(), e.getData());
+        HostLoginResponseDto body = new HostLoginResponseDto(e.getData());
+        return ErrorDataResponse.error(e.getError(), e.getMessage(), body);
     }
 
     /**
