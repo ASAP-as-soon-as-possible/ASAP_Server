@@ -1,4 +1,3 @@
-# 워크플로우의 이름 지정
 name: ASAP-DEV-CD
 
 on:
