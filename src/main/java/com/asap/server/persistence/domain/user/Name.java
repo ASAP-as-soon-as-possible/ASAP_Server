@@ -19,7 +19,7 @@ public class Name {
 
     private static final int MAX_NAME_LENGTH = 8;
 
-    public Name(String value) {
+    public Name(final String value) {
         if (value == null) {
             throw new BadRequestException(USERNAME_NOT_NULL_EXCEPTION);
         }
