@@ -2,7 +2,7 @@ name: ASAP-DEV-CD
 
 on:
   push:
-    branches: [ "feat/#311" ]
+    branches: [ "develop" ]
 
 jobs:
   build:
