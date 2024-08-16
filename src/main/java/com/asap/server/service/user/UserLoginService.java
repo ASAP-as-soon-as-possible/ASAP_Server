@@ -9,6 +9,7 @@ import com.asap.server.common.exception.model.NotFoundException;
 import com.asap.server.common.exception.model.UnauthorizedException;
 import com.asap.server.common.jwt.JwtService;
 import com.asap.server.persistence.domain.Meeting;
+import com.asap.server.persistence.domain.user.Name;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;
 import com.asap.server.service.TimeBlockUserService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,9 @@ public class UserLoginService {
         Meeting meeting = meetingRepository.findByIdWithHost(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        if (!meeting.checkHostName(name)) {
+        Name hostName = new Name(name);
+
+        if (!meeting.checkHostName(hostName)) {
             throw new UnauthorizedException(Error.INVALID_HOST_ID_PASSWORD_EXCEPTION);
         }
 

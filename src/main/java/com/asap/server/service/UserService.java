@@ -11,7 +11,8 @@ import com.asap.server.common.exception.model.UnauthorizedException;
 import com.asap.server.common.jwt.JwtService;
 import com.asap.server.persistence.domain.AvailableDate;
 import com.asap.server.persistence.domain.Meeting;
-import com.asap.server.persistence.domain.User;
+import com.asap.server.persistence.domain.user.Name;
+import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.domain.enums.Role;
 import com.asap.server.persistence.domain.enums.TimeSlot;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;
@@ -44,11 +45,11 @@ public class UserService {
     private final JwtService jwtService;
 
     public User createUser(final Meeting meeting,
-                           final String hostName,
+                           final Name userName,
                            final Role role) {
         User user = User.builder()
                 .meeting(meeting)
-                .name(hostName)
+                .name(userName)
                 .role(role)
                 .isFixed(false)
                 .build();
@@ -84,7 +85,7 @@ public class UserService {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        User user = createUser(meeting, requestDto.getName(), Role.MEMBER);
+        User user = createUser(meeting, new Name(requestDto.getName()), Role.MEMBER);
         isDuplicatedDate(requestDto.getAvailableTimes());
         requestDto.getAvailableTimes().forEach(availableTime -> createUserTimeBlock(meeting, user, availableTime));
 

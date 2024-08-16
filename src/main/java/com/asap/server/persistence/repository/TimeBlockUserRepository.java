@@ -2,7 +2,7 @@ package com.asap.server.persistence.repository;
 
 import com.asap.server.persistence.domain.TimeBlock;
 import com.asap.server.persistence.domain.TimeBlockUser;
-import com.asap.server.persistence.domain.User;
+import com.asap.server.persistence.domain.user.User;
 import org.springframework.data.repository.Repository;
 
 import java.util.List;

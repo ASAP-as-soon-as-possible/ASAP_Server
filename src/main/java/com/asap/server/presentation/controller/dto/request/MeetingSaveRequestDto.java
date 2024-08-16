@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-
 import java.util.List;
 
 @Schema(description = "회의 생성 DTO")
@@ -27,8 +26,6 @@ public record MeetingSaveRequestDto(
         @NotNull(message = "회의 진행 시간이 입력되지 않았습니다.")
         Duration duration,
         @Schema(description = "회의 방장 이름", example = "김아삽")
-        @NotBlank(message = "방장의 이름이 입력되지 않았습니다.")
-        @Size(max = 8, message = "방장 이름의 최대 입력 길이(8자)를 초과했습니다.")
         String name,
         @Schema(description = "회의 비밀번호", example = "0808")
         @NotBlank(message = "회의 비밀번호가 입력되지 않았습니다.")

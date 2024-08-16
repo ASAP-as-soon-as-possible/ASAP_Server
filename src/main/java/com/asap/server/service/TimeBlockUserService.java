@@ -3,7 +3,7 @@ package com.asap.server.service;
 import com.asap.server.presentation.controller.dto.response.TimeSlotDto;
 import com.asap.server.persistence.domain.TimeBlock;
 import com.asap.server.persistence.domain.TimeBlockUser;
-import com.asap.server.persistence.domain.User;
+import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.repository.TimeBlockUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

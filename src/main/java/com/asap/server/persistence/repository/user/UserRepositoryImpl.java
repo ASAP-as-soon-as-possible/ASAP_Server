@@ -3,7 +3,7 @@ package com.asap.server.persistence.repository.user;
 import static com.asap.server.persistence.domain.QAvailableDate.availableDate;
 import static com.asap.server.persistence.domain.QTimeBlock.timeBlock;
 import static com.asap.server.persistence.domain.QTimeBlockUser.timeBlockUser;
-import static com.asap.server.persistence.domain.QUser.user;
+import static com.asap.server.persistence.domain.user.QUser.user;
 
 import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.enums.TimeSlot;
@@ -38,7 +38,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         return queryFactory.select(
                         new QUserVo(
                                 user.id,
-                                user.name
+                                user.name.value
                         )
                 ).from(timeBlockUser)
                 .innerJoin(timeBlock).on(timeBlockUser.timeBlock.id.eq(timeBlock.id))

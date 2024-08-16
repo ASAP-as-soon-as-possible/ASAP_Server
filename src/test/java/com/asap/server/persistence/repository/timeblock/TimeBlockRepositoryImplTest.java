@@ -6,12 +6,12 @@ import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.Place;
 import com.asap.server.persistence.domain.TimeBlock;
 import com.asap.server.persistence.domain.TimeBlockUser;
-import com.asap.server.persistence.domain.User;
+import com.asap.server.persistence.domain.user.Name;
+import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.domain.enums.Duration;
 import com.asap.server.persistence.domain.enums.PlaceType;
 import com.asap.server.persistence.domain.enums.Role;
 import com.asap.server.persistence.domain.enums.TimeSlot;
-import com.asap.server.persistence.repository.timeblock.TimeBlockRepository;
 import com.asap.server.persistence.repository.timeblock.dto.TimeBlockDto;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -52,14 +52,16 @@ class TimeBlockRepositoryImplTest {
                 .build();
         em.persist(meeting);
 
+        final Name name = new Name("KWY");
+        final Name name2 = new Name("DSY");
         User user = User.builder()
                 .meeting(meeting)
-                .name("KWY")
+                .name(name)
                 .role(Role.HOST)
                 .build();
         User user2 = User.builder()
                 .meeting(meeting)
-                .name("DSY")
+                .name(name2)
                 .role(Role.MEMBER)
                 .build();
         em.persist(user);
