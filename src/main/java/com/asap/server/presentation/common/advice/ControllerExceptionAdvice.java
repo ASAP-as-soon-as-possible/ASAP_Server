@@ -1,9 +1,7 @@
 package com.asap.server.presentation.common.advice;
 
-import com.asap.server.presentation.common.dto.ErrorDataResponse;
-import com.asap.server.presentation.common.dto.ErrorResponse;
-import com.asap.server.infra.slack.SlackUtil;
-import com.asap.server.presentation.controller.dto.response.HostLoginResponseDto;
+import static com.asap.server.common.exception.Error.METHOD_NOT_ALLOWED_EXCEPTION;
+
 import com.asap.server.common.exception.Error;
 import com.asap.server.common.exception.model.AsapException;
 import com.asap.server.common.exception.model.BadRequestException;
@@ -14,9 +12,15 @@ import com.asap.server.common.exception.model.InternalErrorException;
 import com.asap.server.common.exception.model.NotFoundException;
 import com.asap.server.common.exception.model.TooManyRequestException;
 import com.asap.server.common.exception.model.UnauthorizedException;
+import com.asap.server.infra.slack.SlackUtil;
+import com.asap.server.presentation.common.dto.ErrorDataResponse;
+import com.asap.server.presentation.common.dto.ErrorResponse;
+import com.asap.server.presentation.controller.dto.response.HostLoginResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
+import java.io.IOException;
+import java.time.DateTimeException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,11 +32,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
-
-import java.io.IOException;
-import java.time.DateTimeException;
-
-import static com.asap.server.common.exception.Error.METHOD_NOT_ALLOWED_EXCEPTION;
 
 @Slf4j
 @RestControllerAdvice
@@ -48,6 +47,12 @@ public class ControllerExceptionAdvice {
     @ExceptionHandler(ValidationException.class)
     protected ErrorResponse handleValidException(final ValidationException e) {
         return ErrorResponse.error(Error.VALIDATION_REQUEST_MISSING_EXCEPTION);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected ErrorResponse handleIllegalArgumentException(final IllegalArgumentException e) {
+        return ErrorResponse.error(Error.ILLEGAL_ARGUMENT_EXCEPTION);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
