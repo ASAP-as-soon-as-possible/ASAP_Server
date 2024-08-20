@@ -2,6 +2,7 @@ package com.asap.server.common.generator;
 
 import com.asap.server.persistence.domain.enums.TimeSlot;
 import com.asap.server.persistence.repository.timeblock.dto.TimeBlockDto;
+import com.asap.server.service.time.vo.TimeBlock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,20 @@ public class TimeBlockDtoGenerator {
         List<TimeBlockDto> timeBlocks = new ArrayList<>();
         for (int i = startTime.ordinal(); i <= endTime.ordinal(); i++) {
             timeBlocks.add(new TimeBlockDto(availableDate, timeSlots[i], weight, userCount));
+        }
+        return timeBlocks;
+    }
+
+    public static List<TimeBlock> generator(
+            LocalDate availableDate,
+            TimeSlot startTime,
+            TimeSlot endTime,
+            int weight,
+            List<Long> users
+    ) {
+        List<TimeBlock> timeBlocks = new ArrayList<>();
+        for (int i = startTime.ordinal(); i <= endTime.ordinal(); i++) {
+            timeBlocks.add(new TimeBlock(availableDate, timeSlots[i], weight, users));
         }
         return timeBlocks;
     }
