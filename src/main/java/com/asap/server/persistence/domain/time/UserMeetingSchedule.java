@@ -8,13 +8,12 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-
-import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -39,12 +38,19 @@ public class UserMeetingSchedule {
     private int weight;
 
     @Builder
-    private UserMeetingSchedule(final Long userId, final Long meetingId, final LocalDate availableDate,
-                                final TimeSlot startTimeSlot, final TimeSlot endTimeSlot) {
+    private UserMeetingSchedule(
+            final Long userId,
+            final Long meetingId,
+            final LocalDate availableDate,
+            final TimeSlot startTimeSlot,
+            final TimeSlot endTimeSlot,
+            final int weight
+    ) {
         this.userId = userId;
         this.meetingId = meetingId;
         this.availableDate = availableDate;
         this.startTimeSlot = startTimeSlot;
         this.endTimeSlot = endTimeSlot;
+        this.weight = weight;
     }
 }

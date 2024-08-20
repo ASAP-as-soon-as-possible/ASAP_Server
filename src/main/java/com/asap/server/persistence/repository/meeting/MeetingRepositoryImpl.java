@@ -13,7 +13,7 @@ public class MeetingRepositoryImpl implements MeetingRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Optional<Meeting> findByIdWithHost(Long id) {
+    public Optional<Meeting> findByIdWithHost(final long id) {
         return Optional.ofNullable(
                 queryFactory.selectFrom(meeting)
                         .where(meeting.id.eq(id))
