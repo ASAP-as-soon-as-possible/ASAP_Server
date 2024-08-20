@@ -3,7 +3,7 @@ package com.asap.server.service.time;
 import com.asap.server.common.utils.DateUtil;
 import com.asap.server.persistence.domain.time.UserMeetingSchedule;
 import com.asap.server.persistence.repository.UserMeetingScheduleRepository;
-import com.asap.server.service.dto.UserMeetingScheduleRegisterDto;
+import com.asap.server.service.time.dto.UserMeetingScheduleRegisterDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

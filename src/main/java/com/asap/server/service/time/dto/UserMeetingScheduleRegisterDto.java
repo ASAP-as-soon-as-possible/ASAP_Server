@@ -1,4 +1,4 @@
-package com.asap.server.service.dto;
+package com.asap.server.service.time.dto;
 
 import com.asap.server.persistence.domain.enums.TimeSlot;
 
