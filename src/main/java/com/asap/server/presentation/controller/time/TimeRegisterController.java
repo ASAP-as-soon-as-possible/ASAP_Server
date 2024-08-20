@@ -10,6 +10,8 @@ import com.asap.server.presentation.controller.dto.response.UserMeetingTimeRespo
 import com.asap.server.presentation.controller.dto.response.UserTimeResponseDto;
 import com.asap.server.presentation.controller.time.docs.TimeRegisterControllerDocs;
 import com.asap.server.service.UserService;
+import com.asap.server.service.dto.UserMeetingScheduleRegisterDto;
+import com.asap.server.service.dto.UserTimeRegisterDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
@@ -34,7 +36,7 @@ public class TimeRegisterController implements TimeRegisterControllerDocs {
     ) {
         return SuccessResponse.success(
                 Success.CREATE_HOST_TIME_SUCCESS,
-                userService.createHostTime(meetingId, userId, requestDtoList)
+                userService.createHostTime(meetingId, userId, UserMeetingScheduleRegisterDto.of(requestDtoList))
         );
     }
 
@@ -46,7 +48,7 @@ public class TimeRegisterController implements TimeRegisterControllerDocs {
     ) {
         return SuccessResponse.success(
                 Success.CREATE_MEETING_TIME_SUCCESS,
-                userService.createUserTime(meetingId, requestDto)
+                userService.createUserTime(meetingId, UserTimeRegisterDto.of(requestDto))
         );
     }
 }
