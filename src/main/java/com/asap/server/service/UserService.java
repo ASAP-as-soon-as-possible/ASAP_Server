@@ -22,6 +22,7 @@ import com.asap.server.presentation.controller.dto.response.UserMeetingTimeRespo
 import com.asap.server.presentation.controller.dto.response.UserTimeResponseDto;
 import com.asap.server.service.dto.UserMeetingScheduleRegisterDto;
 import com.asap.server.service.dto.UserTimeRegisterDto;
+import com.asap.server.service.time.UserMeetingScheduleService;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.BestMeetingTimeWithUsersVo;
 import com.asap.server.service.vo.UserVo;

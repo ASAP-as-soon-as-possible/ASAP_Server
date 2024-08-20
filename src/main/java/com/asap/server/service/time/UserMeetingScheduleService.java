@@ -1,4 +1,4 @@
-package com.asap.server.service;
+package com.asap.server.service.time;
 
 import com.asap.server.common.utils.DateUtil;
 import com.asap.server.persistence.domain.time.UserMeetingSchedule;
