@@ -1,9 +1,12 @@
 package com.asap.server.presentation.controller.dto.request;
 
 import com.asap.server.persistence.domain.enums.TimeSlot;
+import com.asap.server.service.dto.UserMeetingScheduleRegisterDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.List;
 
 @Schema(description = "회의 가능 시간 DTO")
 public record UserMeetingTimeSaveRequestDto(
@@ -25,4 +28,14 @@ public record UserMeetingTimeSaveRequestDto(
         @Schema(description = "회의 가능 시간 우선 순위", example = "1")
         int priority
 ) {
+        public static List<UserMeetingScheduleRegisterDto> to(final List<UserMeetingTimeSaveRequestDto> targets) {
+                return targets.stream().map(
+                        t -> new UserMeetingScheduleRegisterDto(
+                                t.month(),
+                                t.day(),
+                                t.startTime(),
+                                t.endTime(),
+                                t.priority()
+                        )).toList();
+        }
 }

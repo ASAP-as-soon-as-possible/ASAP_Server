@@ -10,16 +10,15 @@ import com.asap.server.presentation.controller.dto.response.UserMeetingTimeRespo
 import com.asap.server.presentation.controller.dto.response.UserTimeResponseDto;
 import com.asap.server.presentation.controller.time.docs.TimeRegisterControllerDocs;
 import com.asap.server.service.UserService;
-import com.asap.server.service.dto.UserMeetingScheduleRegisterDto;
-import com.asap.server.service.dto.UserTimeRegisterDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -36,7 +35,7 @@ public class TimeRegisterController implements TimeRegisterControllerDocs {
     ) {
         return SuccessResponse.success(
                 Success.CREATE_HOST_TIME_SUCCESS,
-                userService.createHostTime(meetingId, userId, UserMeetingScheduleRegisterDto.of(requestDtoList))
+                userService.createHostTime(meetingId, userId, UserMeetingTimeSaveRequestDto.to(requestDtoList))
         );
     }
 
@@ -48,7 +47,7 @@ public class TimeRegisterController implements TimeRegisterControllerDocs {
     ) {
         return SuccessResponse.success(
                 Success.CREATE_MEETING_TIME_SUCCESS,
-                userService.createUserTime(meetingId, UserTimeRegisterDto.of(requestDto))
+                userService.createUserTime(meetingId, AvailableTimeRequestDto.to(requestDto))
         );
     }
 }
