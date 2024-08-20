@@ -35,8 +35,11 @@ public class TimeRegisterController implements TimeRegisterControllerDocs {
     ) {
         return SuccessResponse.success(
                 Success.CREATE_HOST_TIME_SUCCESS,
-                userService.createHostTime(meetingId, userId, UserMeetingTimeSaveRequestDto.to(requestDtoList))
-        );
+                userService.createHostTime(
+                        meetingId,
+                        userId,
+                        requestDtoList.stream().map(UserMeetingTimeSaveRequestDto::toRegisterDto).toList()
+                ));
     }
 
     @PostMapping("/{meetingId}/time")
@@ -47,7 +50,7 @@ public class TimeRegisterController implements TimeRegisterControllerDocs {
     ) {
         return SuccessResponse.success(
                 Success.CREATE_MEETING_TIME_SUCCESS,
-                userService.createUserTime(meetingId, AvailableTimeRequestDto.to(requestDto))
+                userService.createUserTime(meetingId, requestDto.toRegisterDto())
         );
     }
 }

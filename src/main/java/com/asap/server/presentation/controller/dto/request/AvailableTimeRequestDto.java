@@ -1,6 +1,6 @@
 package com.asap.server.presentation.controller.dto.request;
 
-import com.asap.server.service.dto.UserTimeRegisterDto;
+import com.asap.server.service.time.dto.UserTimeRegisterDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 
@@ -13,7 +13,10 @@ public record AvailableTimeRequestDto(
         @Schema(description = "가능 일자")
         List<@Valid UserMeetingTimeSaveRequestDto> availableTimes
 ) {
-    public static UserTimeRegisterDto to(final AvailableTimeRequestDto target) {
-        return new UserTimeRegisterDto(target.name(), UserMeetingTimeSaveRequestDto.to(target.availableTimes()));
+    public UserTimeRegisterDto toRegisterDto() {
+        return new UserTimeRegisterDto(
+                this.name(),
+                this.availableTimes().stream().map(UserMeetingTimeSaveRequestDto::toRegisterDto).toList()
+        );
     }
 }
