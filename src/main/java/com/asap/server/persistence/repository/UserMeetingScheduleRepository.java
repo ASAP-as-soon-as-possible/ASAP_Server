@@ -1,6 +1,6 @@
 package com.asap.server.persistence.repository;
 
-import com.asap.server.persistence.domain.UserMeetingSchedule;
+import com.asap.server.persistence.domain.time.UserMeetingSchedule;
 import org.springframework.data.repository.Repository;
 
 public interface UserMeetingScheduleRepository extends Repository<UserMeetingSchedule, Long> {

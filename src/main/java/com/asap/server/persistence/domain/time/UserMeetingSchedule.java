@@ -1,4 +1,4 @@
-package com.asap.server.persistence.domain;
+package com.asap.server.persistence.domain.time;
 
 import com.asap.server.persistence.domain.enums.TimeSlot;
 import jakarta.persistence.Column;
