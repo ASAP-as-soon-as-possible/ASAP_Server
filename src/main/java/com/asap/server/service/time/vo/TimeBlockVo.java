@@ -5,14 +5,14 @@ import java.time.LocalDate;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
-public record TimeBlock(
+public record TimeBlockVo(
         LocalDate availableDate,
         TimeSlot timeSlot,
         int weight,
         List<Long> users
-) implements Comparable<TimeBlock> {
+) implements Comparable<TimeBlockVo> {
     @Override
-    public int compareTo(@NotNull TimeBlock o) {
+    public int compareTo(@NotNull TimeBlockVo o) {
         if (this.availableDate.equals(o.availableDate)) {
             return Integer.compare(this.timeSlot.getIndex(), o.timeSlot.getIndex());
         }

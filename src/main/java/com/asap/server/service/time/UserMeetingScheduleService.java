@@ -5,7 +5,7 @@ import com.asap.server.persistence.domain.enums.TimeSlot;
 import com.asap.server.persistence.domain.time.UserMeetingSchedule;
 import com.asap.server.persistence.repository.UserMeetingScheduleRepository;
 import com.asap.server.service.time.dto.UserMeetingScheduleRegisterDto;
-import com.asap.server.service.time.vo.TimeBlock;
+import com.asap.server.service.time.vo.TimeBlockVo;
 import com.asap.server.service.time.vo.UserScheduleByTimeSlot;
 import com.asap.server.service.time.vo.UserScheduleByTimeSlot.CompositeKey;
 import java.util.List;
@@ -38,7 +38,7 @@ public class UserMeetingScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public List<TimeBlock> getTimeBlocks(final Long meetingId) {
+    public List<TimeBlockVo> getTimeBlocks(final Long meetingId) {
         List<UserMeetingSchedule> userMeetingSchedules = userMeetingScheduleRepository.findAllByMeetingId(meetingId);
 
         return userMeetingSchedules.stream()
@@ -68,7 +68,7 @@ public class UserMeetingScheduleService {
                 );
     }
 
-    private TimeBlock convertToTimeBlock(
+    private TimeBlockVo convertToTimeBlock(
             final Entry<CompositeKey, List<UserScheduleByTimeSlot>> entry
     ) {
         List<Long> users = entry.getValue().stream()
@@ -79,6 +79,6 @@ public class UserMeetingScheduleService {
                 .mapToInt(UserScheduleByTimeSlot::weight)
                 .sum();
 
-        return new TimeBlock(entry.getKey().availableDate(), entry.getKey().time(), weight, users);
+        return new TimeBlockVo(entry.getKey().availableDate(), entry.getKey().time(), weight, users);
     }
 }

@@ -2,7 +2,6 @@ package com.asap.server.common.generator;
 
 import com.asap.server.persistence.domain.enums.TimeSlot;
 import com.asap.server.persistence.repository.timeblock.dto.TimeBlockDto;
-import com.asap.server.service.time.vo.TimeBlock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 import com.asap.server.persistence.domain.enums.TimeSlot;
 import com.asap.server.persistence.domain.time.UserMeetingSchedule;
 import com.asap.server.persistence.repository.UserMeetingScheduleRepository;
-import com.asap.server.service.time.vo.TimeBlock;
+import com.asap.server.service.time.vo.TimeBlockVo;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -47,16 +47,16 @@ class UserMeetingScheduleServiceTest {
         List<UserMeetingSchedule> userMeetingSchedules = List.of(userMeetingSchedule, userMeetingSchedule2);
         when(userMeetingScheduleRepository.findAllByMeetingId(1L)).thenReturn(userMeetingSchedules);
 
-        List<TimeBlock> expected = List.of(
-                new TimeBlock(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_6_00, 0, List.of(1L, 2L)),
-                new TimeBlock(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_6_30, 0, List.of(1L, 2L)),
-                new TimeBlock(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_7_00, 0, List.of(1L, 2L)),
-                new TimeBlock(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_7_30, 0, List.of(1L, 2L)),
-                new TimeBlock(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_8_00, 0, List.of(1L, 2L))
+        List<TimeBlockVo> expected = List.of(
+                new TimeBlockVo(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_6_00, 0, List.of(1L, 2L)),
+                new TimeBlockVo(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_6_30, 0, List.of(1L, 2L)),
+                new TimeBlockVo(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_7_00, 0, List.of(1L, 2L)),
+                new TimeBlockVo(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_7_30, 0, List.of(1L, 2L)),
+                new TimeBlockVo(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_8_00, 0, List.of(1L, 2L))
         );
 
         // when
-        List<TimeBlock> response = userMeetingScheduleService.getTimeBlocks(1L);
+        List<TimeBlockVo> response = userMeetingScheduleService.getTimeBlocks(1L);
 
         // then
         assertThat(response).isEqualTo(expected);
@@ -69,7 +69,7 @@ class UserMeetingScheduleServiceTest {
         when(userMeetingScheduleRepository.findAllByMeetingId(1L)).thenReturn(Collections.emptyList());
 
         // when
-        List<TimeBlock> response = userMeetingScheduleService.getTimeBlocks(1L);
+        List<TimeBlockVo> response = userMeetingScheduleService.getTimeBlocks(1L);
 
         // then
         assertThat(response.isEmpty()).isTrue();
@@ -100,16 +100,16 @@ class UserMeetingScheduleServiceTest {
         List<UserMeetingSchedule> userMeetingSchedules = List.of(userMeetingSchedule, userMeetingSchedule2);
         when(userMeetingScheduleRepository.findAllByMeetingId(1L)).thenReturn(userMeetingSchedules);
 
-        List<TimeBlock> expected = List.of(
-                new TimeBlock(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_6_00, 3, List.of(1L, 2L)),
-                new TimeBlock(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_6_30, 3, List.of(1L, 2L)),
-                new TimeBlock(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_7_00, 3, List.of(1L, 2L)),
-                new TimeBlock(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_7_30, 2, List.of(2L)),
-                new TimeBlock(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_8_00, 2, List.of(2L))
+        List<TimeBlockVo> expected = List.of(
+                new TimeBlockVo(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_6_00, 3, List.of(1L, 2L)),
+                new TimeBlockVo(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_6_30, 3, List.of(1L, 2L)),
+                new TimeBlockVo(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_7_00, 3, List.of(1L, 2L)),
+                new TimeBlockVo(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_7_30, 2, List.of(2L)),
+                new TimeBlockVo(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_8_00, 2, List.of(2L))
         );
 
         // when
-        List<TimeBlock> response = userMeetingScheduleService.getTimeBlocks(1L);
+        List<TimeBlockVo> response = userMeetingScheduleService.getTimeBlocks(1L);
 
         // then
         assertThat(response).isEqualTo(expected);
