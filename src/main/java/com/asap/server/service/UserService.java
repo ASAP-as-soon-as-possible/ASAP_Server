@@ -43,6 +43,7 @@ public class UserService {
     private final AvailableDateService availableDateService;
     private final MeetingRepository meetingRepository;
     private final JwtService jwtService;
+    private final UserMeetingScheduleService userMeetingScheduleService;
 
     public User createUser(final Meeting meeting,
                            final Name userName,
@@ -88,7 +89,6 @@ public class UserService {
         User user = createUser(meeting, new Name(requestDto.getName()), Role.MEMBER);
         isDuplicatedDate(requestDto.getAvailableTimes());
         requestDto.getAvailableTimes().forEach(availableTime -> createUserTimeBlock(meeting, user, availableTime));
-
         return UserTimeResponseDto.builder()
                 .role(Role.MEMBER.getRole())
                 .build();
@@ -112,6 +112,7 @@ public class UserService {
                 .stream()
                 .map(timeSlot -> timeBlockService.searchTimeBlock(timeSlot, availableDate, requestDto.priority())).collect(Collectors.toList())
                 .forEach(timeBlock -> timeBlock.addTimeBlockUsers(timeBlockUserService.create(timeBlock, user)));
+        userMeetingScheduleService.createUserMeetingSchedule(meeting.getId(), user.getId(), requestDto);
     }
 
     private void isDuplicatedDate(final List<UserMeetingTimeSaveRequestDto> requestDtoList) {
