@@ -7,12 +7,14 @@ import com.asap.server.presentation.controller.dto.request.UserMeetingTimeSaveRe
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMeetingScheduleService {
     private final UserMeetingScheduleRepository userMeetingScheduleRepository;
 
+    @Transactional
     public void createUserMeetingSchedule(final Long userId, final Long meetingId, final UserMeetingTimeSaveRequestDto userMeetingTimeSaveRequestDto) {
         UserMeetingSchedule userMeetingSchedule = UserMeetingSchedule.builder()
                 .userId(userId).meetingId(meetingId)
