@@ -17,11 +17,12 @@ import com.asap.server.persistence.domain.enums.Role;
 import com.asap.server.persistence.domain.enums.TimeSlot;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;
 import com.asap.server.persistence.repository.user.UserRepository;
-import com.asap.server.presentation.controller.dto.request.AvailableTimeRequestDto;
-import com.asap.server.presentation.controller.dto.request.UserMeetingTimeSaveRequestDto;
 import com.asap.server.presentation.controller.dto.request.UserRequestDto;
 import com.asap.server.presentation.controller.dto.response.UserMeetingTimeResponseDto;
 import com.asap.server.presentation.controller.dto.response.UserTimeResponseDto;
+import com.asap.server.service.time.dto.UserMeetingScheduleRegisterDto;
+import com.asap.server.service.time.dto.UserTimeRegisterDto;
+import com.asap.server.service.time.UserMeetingScheduleService;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.BestMeetingTimeWithUsersVo;
 import com.asap.server.service.vo.UserVo;
@@ -43,6 +44,7 @@ public class UserService {
     private final AvailableDateService availableDateService;
     private final MeetingRepository meetingRepository;
     private final JwtService jwtService;
+    private final UserMeetingScheduleService userMeetingScheduleService;
 
     public User createUser(final Meeting meeting,
                            final Name userName,
@@ -60,7 +62,7 @@ public class UserService {
     @Transactional
     public UserMeetingTimeResponseDto createHostTime(final Long meetingId,
                                                      final Long userId,
-                                                     final List<UserMeetingTimeSaveRequestDto> requestDtos) {
+                                                     final List<UserMeetingScheduleRegisterDto> requestDtos) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
         if (!meeting.authenticateHost(userId))
@@ -81,14 +83,13 @@ public class UserService {
 
     @Transactional
     public UserTimeResponseDto createUserTime(final Long meetingId,
-                                              final AvailableTimeRequestDto requestDto) {
+                                              final UserTimeRegisterDto registerDto) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
-        User user = createUser(meeting, new Name(requestDto.getName()), Role.MEMBER);
-        isDuplicatedDate(requestDto.getAvailableTimes());
-        requestDto.getAvailableTimes().forEach(availableTime -> createUserTimeBlock(meeting, user, availableTime));
-
+        User user = createUser(meeting, new Name(registerDto.name()), Role.MEMBER);
+        isDuplicatedDate(registerDto.availableSchedules());
+        registerDto.availableSchedules().forEach(availableTime -> createUserTimeBlock(meeting, user, availableTime));
         return UserTimeResponseDto.builder()
                 .role(Role.MEMBER.getRole())
                 .build();
@@ -106,17 +107,18 @@ public class UserService {
 
     private void createUserTimeBlock(final Meeting meeting,
                                      final User user,
-                                     final UserMeetingTimeSaveRequestDto requestDto) {
-        AvailableDate availableDate = availableDateService.findByMeetingAndDate(meeting, requestDto.month(), requestDto.day());
-        TimeSlot.getTimeSlots(requestDto.startTime().ordinal(), requestDto.endTime().ordinal() - 1)
+                                     final UserMeetingScheduleRegisterDto registerDto) {
+        AvailableDate availableDate = availableDateService.findByMeetingAndDate(meeting, registerDto.month(), registerDto.day());
+        TimeSlot.getTimeSlots(registerDto.startTime().ordinal(), registerDto.endTime().ordinal() - 1)
                 .stream()
-                .map(timeSlot -> timeBlockService.searchTimeBlock(timeSlot, availableDate, requestDto.priority())).collect(Collectors.toList())
+                .map(timeSlot -> timeBlockService.searchTimeBlock(timeSlot, availableDate, registerDto.priority())).toList()
                 .forEach(timeBlock -> timeBlock.addTimeBlockUsers(timeBlockUserService.create(timeBlock, user)));
+        userMeetingScheduleService.createUserMeetingSchedule(meeting.getId(), user.getId(), registerDto);
     }
 
-    private void isDuplicatedDate(final List<UserMeetingTimeSaveRequestDto> requestDtoList) {
+    private void isDuplicatedDate(final List<UserMeetingScheduleRegisterDto> registerDto) {
         Map<String, List<TimeSlot>> meetingTimeAvailable = new HashMap<>();
-        for (UserMeetingTimeSaveRequestDto requestDto : requestDtoList) {
+        for (UserMeetingScheduleRegisterDto requestDto : registerDto) {
             String col = String.format("%s %s", requestDto.month(), requestDto.day());
             List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(requestDto.startTime().ordinal(), requestDto.endTime().ordinal() - 1);
             if (meetingTimeAvailable.containsKey(col)) {
