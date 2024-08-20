@@ -6,8 +6,8 @@ import com.asap.server.persistence.domain.time.UserMeetingSchedule;
 import com.asap.server.persistence.repository.UserMeetingScheduleRepository;
 import com.asap.server.service.time.dto.UserMeetingScheduleRegisterDto;
 import com.asap.server.service.time.vo.TimeBlockVo;
-import com.asap.server.service.time.vo.UserScheduleByTimeSlot;
-import com.asap.server.service.time.vo.UserScheduleByTimeSlot.CompositeKey;
+import com.asap.server.service.time.vo.UserScheduleByTimeSlotVo;
+import com.asap.server.service.time.vo.UserScheduleByTimeSlotVo.CompositeKey;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -43,14 +43,14 @@ public class UserMeetingScheduleService {
 
         return userMeetingSchedules.stream()
                 .flatMap(this::convertToUserScheduleByTimeSlot)
-                .collect(Collectors.groupingBy(UserScheduleByTimeSlot::composeKey))
+                .collect(Collectors.groupingBy(UserScheduleByTimeSlotVo::composeKey))
                 .entrySet().stream()
                 .map(this::convertToTimeBlock)
                 .sorted()
                 .toList();
     }
 
-    private Stream<UserScheduleByTimeSlot> convertToUserScheduleByTimeSlot(
+    private Stream<UserScheduleByTimeSlotVo> convertToUserScheduleByTimeSlot(
             final UserMeetingSchedule userMeetingSchedule
     ) {
         return TimeSlot.getTimeSlots(
@@ -58,7 +58,7 @@ public class UserMeetingScheduleService {
                         userMeetingSchedule.getEndTimeSlot().getIndex()
                 )
                 .stream()
-                .map(timeSlot -> new UserScheduleByTimeSlot(
+                .map(timeSlot -> new UserScheduleByTimeSlotVo(
                                 userMeetingSchedule.getId(),
                                 userMeetingSchedule.getAvailableDate(),
                                 userMeetingSchedule.getUserId(),
@@ -69,14 +69,14 @@ public class UserMeetingScheduleService {
     }
 
     private TimeBlockVo convertToTimeBlock(
-            final Entry<CompositeKey, List<UserScheduleByTimeSlot>> entry
+            final Entry<CompositeKey, List<UserScheduleByTimeSlotVo>> entry
     ) {
         List<Long> userIds = entry.getValue().stream()
-                .map(UserScheduleByTimeSlot::userId)
+                .map(UserScheduleByTimeSlotVo::userId)
                 .toList();
 
         int weight = entry.getValue().stream()
-                .mapToInt(UserScheduleByTimeSlot::weight)
+                .mapToInt(UserScheduleByTimeSlotVo::weight)
                 .sum();
 
         return new TimeBlockVo(entry.getKey().availableDate(), entry.getKey().time(), weight, userIds);

@@ -3,7 +3,7 @@ package com.asap.server.service.time.vo;
 import com.asap.server.persistence.domain.enums.TimeSlot;
 import java.time.LocalDate;
 
-public record UserScheduleByTimeSlot(
+public record UserScheduleByTimeSlotVo(
         Long id,
         LocalDate availableDate,
         Long userId,
