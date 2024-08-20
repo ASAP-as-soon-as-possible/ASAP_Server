@@ -23,18 +23,4 @@ public class TimeBlockDtoGenerator {
         }
         return timeBlocks;
     }
-
-    public static List<TimeBlock> generator(
-            LocalDate availableDate,
-            TimeSlot startTime,
-            TimeSlot endTime,
-            int weight,
-            List<Long> users
-    ) {
-        List<TimeBlock> timeBlocks = new ArrayList<>();
-        for (int i = startTime.ordinal(); i <= endTime.ordinal(); i++) {
-            timeBlocks.add(new TimeBlock(availableDate, timeSlots[i], weight, users));
-        }
-        return timeBlocks;
-    }
 }
