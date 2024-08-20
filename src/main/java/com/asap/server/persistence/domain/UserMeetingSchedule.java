@@ -3,6 +3,8 @@ package com.asap.server.persistence.domain;
 import com.asap.server.persistence.domain.enums.TimeSlot;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,8 +30,10 @@ public class UserMeetingSchedule {
     @Column(nullable = false)
     private LocalDate availableDate;
     @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
     private TimeSlot startTimeSlot;
     @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
     private TimeSlot endTimeSlot;
     @ColumnDefault(value = "0")
     private int weight;
