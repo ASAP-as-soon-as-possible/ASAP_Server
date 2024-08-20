@@ -12,7 +12,7 @@ public record TimeBlockVo(
         List<Long> userIds
 ) implements Comparable<TimeBlockVo> {
     @Override
-    public int compareTo(@NotNull TimeBlockVo o) {
+    public int compareTo(@NotNull final TimeBlockVo o) {
         if (this.availableDate.equals(o.availableDate)) {
             return Integer.compare(this.timeSlot.getIndex(), o.timeSlot.getIndex());
         }
