@@ -71,7 +71,7 @@ public class UserMeetingScheduleService {
     private TimeBlockVo convertToTimeBlock(
             final Entry<CompositeKey, List<UserScheduleByTimeSlot>> entry
     ) {
-        List<Long> users = entry.getValue().stream()
+        List<Long> userIds = entry.getValue().stream()
                 .map(UserScheduleByTimeSlot::userId)
                 .toList();
 
@@ -79,6 +79,6 @@ public class UserMeetingScheduleService {
                 .mapToInt(UserScheduleByTimeSlot::weight)
                 .sum();
 
-        return new TimeBlockVo(entry.getKey().availableDate(), entry.getKey().time(), weight, users);
+        return new TimeBlockVo(entry.getKey().availableDate(), entry.getKey().time(), weight, userIds);
     }
 }

@@ -9,7 +9,7 @@ public record TimeBlockVo(
         LocalDate availableDate,
         TimeSlot timeSlot,
         int weight,
-        List<Long> users
+        List<Long> userIds
 ) implements Comparable<TimeBlockVo> {
     @Override
     public int compareTo(@NotNull TimeBlockVo o) {
