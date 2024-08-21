@@ -1,15 +1,14 @@
 package com.asap.server.service.meeting.recommend;
 
 import com.asap.server.persistence.domain.enums.Duration;
-import com.asap.server.persistence.repository.timeblock.dto.TimeBlockDto;
 import com.asap.server.service.meeting.recommend.strategy.BestMeetingTimeStrategy;
 import com.asap.server.service.meeting.recommend.strategy.ContinuousMeetingTimeStrategy;
 import com.asap.server.service.meeting.recommend.strategy.MeetingTimeCasesStrategy;
+import com.asap.server.service.time.vo.TimeBlockVo;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.PossibleTimeCaseVo;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +21,7 @@ public class MeetingTimeRecommendService {
     private final BestMeetingTimeStrategy bestMeetingTimeStrategy;
 
     public List<BestMeetingTimeVo> getBestMeetingTime(
-            List<TimeBlockDto> timeBlocks,
+            List<TimeBlockVo> timeBlocks,
             final Duration duration,
             final int userCount
     ) {
@@ -30,8 +29,8 @@ public class MeetingTimeRecommendService {
 
         List<BestMeetingTimeVo> bestMeetingTimes = new ArrayList<>();
         for (PossibleTimeCaseVo timeCase : timeCases) {
-            List<TimeBlockDto> timeBlocksFilteredUserCount = timeBlocks.stream()
-                    .filter(t -> t.userCount() == timeCase.memberCnt())
+            List<TimeBlockVo> timeBlocksFilteredUserCount = timeBlocks.stream()
+                    .filter(t -> t.userIds().size() == timeCase.memberCnt())
                     .toList();
 
             List<BestMeetingTimeVo> candidateMeetingTimes =
@@ -59,7 +58,7 @@ public class MeetingTimeRecommendService {
         return bestMeetingTimes;
     }
 
-    private boolean isRecommendedMeetingTime(TimeBlockDto timeBlock, BestMeetingTimeVo bestMeetingTime) {
+    private boolean isRecommendedMeetingTime(TimeBlockVo timeBlock, BestMeetingTimeVo bestMeetingTime) {
         return timeBlock.availableDate().isEqual(bestMeetingTime.date())
                 && bestMeetingTime.startTime().getIndex() <= timeBlock.timeSlot().getIndex()
                 && bestMeetingTime.endTime().getIndex() >= timeBlock.timeSlot().getIndex();

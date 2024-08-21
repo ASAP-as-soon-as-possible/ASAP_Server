@@ -13,12 +13,10 @@ import com.asap.server.common.utils.DateUtil;
 import com.asap.server.persistence.domain.ConfirmedDateTime;
 import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.Place;
+import com.asap.server.persistence.domain.enums.Role;
 import com.asap.server.persistence.domain.user.Name;
 import com.asap.server.persistence.domain.user.User;
-import com.asap.server.persistence.domain.enums.Role;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;
-import com.asap.server.persistence.repository.timeblock.TimeBlockRepository;
-import com.asap.server.persistence.repository.timeblock.dto.TimeBlockDto;
 import com.asap.server.presentation.controller.dto.request.MeetingConfirmRequestDto;
 import com.asap.server.presentation.controller.dto.request.MeetingSaveRequestDto;
 import com.asap.server.presentation.controller.dto.response.AvailableDatesDto;
@@ -29,6 +27,8 @@ import com.asap.server.presentation.controller.dto.response.MeetingScheduleRespo
 import com.asap.server.presentation.controller.dto.response.MeetingTitleResponseDto;
 import com.asap.server.presentation.controller.dto.response.TimeTableResponseDto;
 import com.asap.server.service.meeting.recommend.MeetingTimeRecommendService;
+import com.asap.server.service.time.UserMeetingScheduleService;
+import com.asap.server.service.time.vo.TimeBlockVo;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.BestMeetingTimeWithUsersVo;
 import java.time.LocalDate;
@@ -50,7 +50,7 @@ public class MeetingService {
     private final AvailableDateService availableDateService;
     private final JwtService jwtService;
     private final MeetingTimeRecommendService meetingTimeRecommendService;
-    private final TimeBlockRepository timeBlockRepository;
+    private final UserMeetingScheduleService userMeetingScheduleService;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
@@ -194,7 +194,8 @@ public class MeetingService {
         if (meeting.isConfirmedMeeting()) throw new ConflictException(MEETING_VALIDATION_FAILED_EXCEPTION);
 
         int userCount = userService.getMeetingUserCount(meeting);
-        List<TimeBlockDto> timeBlocks = timeBlockRepository.findAllTimeBlockByMeeting(meetingId);
+
+        List<TimeBlockVo> timeBlocks = userMeetingScheduleService.getTimeBlocks(meetingId);
 
         List<BestMeetingTimeVo> bestMeetingTimes = meetingTimeRecommendService.getBestMeetingTime(timeBlocks, meeting.getDuration(), userCount);
         List<BestMeetingTimeWithUsersVo> bestMeetingTimeWithUsers = userService.getBestMeetingInUsers(meetingId, bestMeetingTimes);
