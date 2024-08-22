@@ -49,8 +49,6 @@ public class MeetingService {
     private final UserService userService;
     private final AvailableDateService availableDateService;
     private final JwtService jwtService;
-    private final MeetingTimeRecommendService meetingTimeRecommendService;
-    private final UserMeetingScheduleService userMeetingScheduleService;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
@@ -185,21 +183,4 @@ public class MeetingService {
                 .title(meeting.getTitle())
                 .build();
     }
-
-    public BestMeetingTimeResponseDto getBestMeetingTime(final Long meetingId, final Long userId) {
-        Meeting meeting = meetingRepository.findById(meetingId)
-                .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-
-        if (!meeting.authenticateHost(userId)) throw new UnauthorizedException(Error.INVALID_MEETING_HOST_EXCEPTION);
-        if (meeting.isConfirmedMeeting()) throw new ConflictException(MEETING_VALIDATION_FAILED_EXCEPTION);
-
-        int userCount = userService.getMeetingUserCount(meeting);
-
-        List<TimeBlockVo> timeBlocks = userMeetingScheduleService.getTimeBlocks(meetingId);
-
-        List<BestMeetingTimeVo> bestMeetingTimes = meetingTimeRecommendService.getBestMeetingTime(timeBlocks, meeting.getDuration(), userCount);
-        List<BestMeetingTimeWithUsersVo> bestMeetingTimeWithUsers = userService.getBestMeetingInUsers(meetingId, bestMeetingTimes);
-        return BestMeetingTimeResponseDto.of(userCount, bestMeetingTimeWithUsers);
-    }
-
 }
