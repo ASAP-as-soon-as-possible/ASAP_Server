@@ -42,7 +42,7 @@ class MeetingTimeRecommendServiceTest {
         TimeBlockVo timeBlock = new TimeBlockVo(availableDate, SLOT_12_00, 0, List.of(1L));
         List<TimeBlockVo> timeBlocks = List.of(timeBlock);
 
-        BestMeetingTimeVo expected = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_12_30, 0);
+        BestMeetingTimeVo expected = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_12_30, 0, List.of(1L));
 
         // when
         List<BestMeetingTimeVo> result = meetingTimeRecommendService.getBestMeetingTime(timeBlocks, Duration.HALF, 1);
@@ -62,8 +62,8 @@ class MeetingTimeRecommendServiceTest {
         TimeBlockVo timeBlock2 = new TimeBlockVo(availableDate2, SLOT_12_30, 0, List.of(1L));
         List<TimeBlockVo> timeBlocks = List.of(timeBlock, timeBlock2);
 
-        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_12_30, 0);
-        BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate2, SLOT_12_30, SLOT_13_00, 0);
+        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_12_30, 0, List.of(1L));
+        BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate2, SLOT_12_30, SLOT_13_00, 0, List.of(1L));
         List<BestMeetingTimeVo> expected = Arrays.asList(e1, e2, null);
 
         // when
@@ -87,9 +87,9 @@ class MeetingTimeRecommendServiceTest {
         TimeBlockVo timeBlock4 = new TimeBlockVo(availableDate2, SLOT_13_00, 0, List.of(1L, 2L));
         List<TimeBlockVo> timeBlocks = List.of(timeBlock, timeBlock2, timeBlock3, timeBlock4);
 
-        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_12_30, 0);
-        BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, SLOT_13_00, SLOT_13_30, 0);
-        BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate2, SLOT_12_30, SLOT_13_00, 0);
+        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_12_30, 0, List.of(1L, 2L));
+        BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, SLOT_13_00, SLOT_13_30, 0, List.of(1L, 2L));
+        BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate2, SLOT_12_30, SLOT_13_00, 0, List.of(1L, 2L));
         List<BestMeetingTimeVo> expected = List.of(e1, e2, e3);
 
         // when
@@ -119,9 +119,9 @@ class MeetingTimeRecommendServiceTest {
                 new TimeBlockVo(LocalDate.of(2024, 7, 11), TimeSlot.SLOT_13_00, 0, List.of(1L, 2L))
         );
 
-        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_13_00, 0);
-        BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, SLOT_15_00, SLOT_16_00, 0);
-        BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate2, SLOT_12_30, SLOT_13_30, 0);
+        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_13_00, 0, List.of(1L, 2L));
+        BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, SLOT_15_00, SLOT_16_00, 0, List.of(1L, 2L));
+        BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate2, SLOT_12_30, SLOT_13_30, 0, List.of(1L, 2L));
         List<BestMeetingTimeVo> expected = List.of(e1, e2, e3);
 
         // when
@@ -152,9 +152,9 @@ class MeetingTimeRecommendServiceTest {
                 new TimeBlockVo(LocalDate.of(2024, 7, 11), TimeSlot.SLOT_13_00, 6, List.of(1L, 2L))
         );
 
-        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate2, SLOT_12_30, SLOT_13_30, 6);
-        BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_13_00, 0);
-        BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate, SLOT_15_00, SLOT_16_00, 0);
+        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate2, SLOT_12_30, SLOT_13_30, 6, List.of(1L, 2L));
+        BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_13_00, 0, List.of(1L, 2L));
+        BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate, SLOT_15_00, SLOT_16_00, 0, List.of(1L, 2L));
         List<BestMeetingTimeVo> expected = Arrays.asList(e1, e2, e3);
 
         // when
@@ -174,7 +174,7 @@ class MeetingTimeRecommendServiceTest {
         TimeBlockVo timeBlock = new TimeBlockVo(availableDate, SLOT_12_00, 0, List.of(1L, 2L));
         List<TimeBlockVo> timeBlocks = List.of(timeBlock);
 
-        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_12_30, 0);
+        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_12_30, 0, List.of(1L, 2L));
         List<BestMeetingTimeVo> expected = Arrays.asList(e1, null, null);
 
         // when
@@ -199,9 +199,9 @@ class MeetingTimeRecommendServiceTest {
 
         List<TimeBlockVo> timeBlocks = List.of(timeBlock, timeBlock2, timeBlock3, timeBlock4);
 
-        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_13_00, 3);
-        BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate2, SLOT_12_00, SLOT_12_30, 4);
-        BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate3, SLOT_12_00, SLOT_12_30, 4);
+        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_13_00, 3, List.of(1L, 2L, 3L));
+        BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate2, SLOT_12_00, SLOT_12_30, 4, List.of(1L, 2L, 3L));
+        BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate3, SLOT_12_00, SLOT_12_30, 4, List.of(1L, 2L, 3L));
         List<BestMeetingTimeVo> expected = Arrays.asList(e1, e2, e3);
 
         // when
@@ -226,7 +226,7 @@ class MeetingTimeRecommendServiceTest {
                 new TimeBlockVo(LocalDate.of(2024, 7, 10), TimeSlot.SLOT_15_00, 0, List.of(1L, 2L))
         );
 
-        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_13_30, 0);
+        BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, SLOT_12_00, SLOT_13_30, 0, List.of(1L, 2L));
         List<BestMeetingTimeVo> expected = Arrays.asList(e1, null, null);
 
         // when

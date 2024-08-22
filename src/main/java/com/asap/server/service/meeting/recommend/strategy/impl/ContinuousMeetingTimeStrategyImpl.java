@@ -66,13 +66,15 @@ public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeS
         TimeBlockVo endTimeBlock = timeBlocks.get(endIdx - 1);
         if (isSatisfiedDuration(startTimeBlock, endTimeBlock, duration)) {
             int weight = sumTimeBlocksWeight(timeBlocks, startIdx, endIdx);
+            List<Long> userIds = findUserIdsBetween(timeBlocks, startIdx, endIdx);
             TimeSlot endTimeSlot = TimeSlot.getTimeSlot(endTimeBlock.timeSlot().getIndex() + 1);
             response.add(
                     new BestMeetingTimeVo(
                             startTimeBlock.availableDate(),
                             startTimeBlock.timeSlot(),
                             endTimeSlot,
-                            weight
+                            weight,
+                            userIds
                     )
             );
         }
@@ -104,5 +106,16 @@ public class ContinuousMeetingTimeStrategyImpl implements ContinuousMeetingTimeS
                 .mapToInt(TimeBlockVo::weight)
                 .sum();
         return totalWeight / (endIdx - startIdx);
+    }
+
+    private List<Long> findUserIdsBetween(
+            final List<TimeBlockVo> timeBlocks,
+            final int startIdx,
+            final int endIdx
+    ) {
+        return timeBlocks.subList(startIdx, endIdx).stream()
+                .flatMap(timeBlock -> timeBlock.userIds().stream())
+                .distinct()
+                .toList();
     }
 }

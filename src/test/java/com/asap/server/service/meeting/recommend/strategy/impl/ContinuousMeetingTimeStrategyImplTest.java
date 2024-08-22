@@ -46,7 +46,7 @@ class ContinuousMeetingTimeStrategyImplTest {
                 new TimeBlockVo(LocalDate.of(2024, 7, 10), TimeSlot.SLOT_15_00, 0, List.of(1L, 2L)),
                 new TimeBlockVo(LocalDate.of(2024, 7, 10), TimeSlot.SLOT_15_30, 0, List.of(1L, 2L))
         );
-        BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_12_00, SLOT_16_00, 0);
+        BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_12_00, SLOT_16_00, 0, List.of(1L, 2L));
         List<BestMeetingTimeVo> result = List.of(r1);
 
         @DisplayName("회의 진행 시간이 주어졌을 때, 12시부터 16시까지인 BestMeetingTimeVo를 반환한다.")
@@ -86,8 +86,8 @@ class ContinuousMeetingTimeStrategyImplTest {
         @EnumSource(value = Duration.class, names = {"HALF", "HOUR", "HOUR_HALF", "TWO_HOUR"})
         void durationsTest2(Duration duration) {
             // given
-            BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_12_00, SLOT_16_00, 0);
-            BestMeetingTimeVo r2 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_18_00, SLOT_20_00, 0);
+            BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_12_00, SLOT_16_00, 0, List.of(1L, 2L));
+            BestMeetingTimeVo r2 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_18_00, SLOT_20_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> result = List.of(r1, r2);
 
             // when
@@ -102,7 +102,7 @@ class ContinuousMeetingTimeStrategyImplTest {
         @EnumSource(value = Duration.class, names = {"TWO_HOUR_HALF", "THREE_HOUR"})
         void durationsTest3(Duration duration) {
             // given
-            BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_12_00, SLOT_16_00, 0);
+            BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_12_00, SLOT_16_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> result = List.of(r1);
 
             // when
@@ -125,7 +125,7 @@ class ContinuousMeetingTimeStrategyImplTest {
         @Test
         void durationHalfTest() {
             // given
-            BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_12_00, SLOT_12_30, 0);
+            BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_12_00, SLOT_12_30, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> result = List.of(r1);
 
             // when
@@ -164,8 +164,8 @@ class ContinuousMeetingTimeStrategyImplTest {
         @EnumSource(value = Duration.class, names = {"HALF", "HOUR"})
         void durationsTest(Duration duration) {
             // given
-            BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_12_00, SLOT_14_00, 0);
-            BestMeetingTimeVo r2 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 11), SLOT_12_00, SLOT_13_00, 0);
+            BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_12_00, SLOT_14_00, 0, List.of(1L, 2L));
+            BestMeetingTimeVo r2 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 11), SLOT_12_00, SLOT_13_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> result = List.of(r1, r2);
 
             // when
@@ -180,7 +180,7 @@ class ContinuousMeetingTimeStrategyImplTest {
         @EnumSource(value = Duration.class, names = {"HOUR_HALF", "TWO_HOUR"})
         void durationsTest2(Duration duration) {
             // given
-            BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_12_00, SLOT_14_00, 0);
+            BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_12_00, SLOT_14_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> result = List.of(r1);
 
             // when
@@ -223,8 +223,8 @@ class ContinuousMeetingTimeStrategyImplTest {
         @EnumSource(value = Duration.class, names = {"HALF", "HOUR", "HOUR_HALF", "TWO_HOUR"})
         void durationsTest(Duration duration) {
             // given
-            BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_12_00, SLOT_14_00, 0);
-            BestMeetingTimeVo r2 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 11), SLOT_14_30, SLOT_17_00, 0);
+            BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_12_00, SLOT_14_00, 0, List.of(1L, 2L));
+            BestMeetingTimeVo r2 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 11), SLOT_14_30, SLOT_17_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> result = List.of(r1, r2);
 
             // when
@@ -239,7 +239,7 @@ class ContinuousMeetingTimeStrategyImplTest {
         @EnumSource(value = Duration.class, names = {"TWO_HOUR_HALF"})
         void durationTwoHourHalfTest(Duration duration) {
             // given
-            BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 11), SLOT_14_30, SLOT_17_00, 0);
+            BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 11), SLOT_14_30, SLOT_17_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> result = List.of(r1);
 
             // when
@@ -276,8 +276,8 @@ class ContinuousMeetingTimeStrategyImplTest {
                     new TimeBlockVo(LocalDate.of(2024, 7, 11), TimeSlot.SLOT_16_00, 2, List.of(1L, 2L))
             );
 
-            BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_12_00, SLOT_14_00, 4);
-            BestMeetingTimeVo r2 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 11), SLOT_16_00, SLOT_16_30, 2);
+            BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_12_00, SLOT_14_00, 4, List.of(1L, 2L));
+            BestMeetingTimeVo r2 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 11), SLOT_16_00, SLOT_16_30, 2, List.of(1L, 2L));
             List<BestMeetingTimeVo> result = List.of(r1, r2);
 
             // when
@@ -300,9 +300,9 @@ class ContinuousMeetingTimeStrategyImplTest {
                     new TimeBlockVo(LocalDate.of(2024, 7, 12), TimeSlot.SLOT_16_30, 1, List.of(1L, 2L))
             );
 
-            BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_12_00, SLOT_14_00, 2);
-            BestMeetingTimeVo r2 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 11), SLOT_16_00, SLOT_16_30, 4);
-            BestMeetingTimeVo r3 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 12), SLOT_16_30, SLOT_17_00, 1);
+            BestMeetingTimeVo r1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_12_00, SLOT_14_00, 2, List.of(1L, 2L));
+            BestMeetingTimeVo r2 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 11), SLOT_16_00, SLOT_16_30, 4, List.of(1L, 2L));
+            BestMeetingTimeVo r3 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 12), SLOT_16_30, SLOT_17_00, 1, List.of(1L, 2L));
             List<BestMeetingTimeVo> result = List.of(r2, r1, r3);
 
             // when
@@ -324,7 +324,7 @@ class ContinuousMeetingTimeStrategyImplTest {
                     new TimeBlockVo(LocalDate.of(2024, 7, 10), TimeSlot.SLOT_6_00, 0, List.of(1L, 2L))
             );
 
-            BestMeetingTimeVo e1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_6_00, SLOT_6_30, 0);
+            BestMeetingTimeVo e1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_6_00, SLOT_6_30, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> expected = List.of(e1);
 
             // when
@@ -342,7 +342,7 @@ class ContinuousMeetingTimeStrategyImplTest {
                     new TimeBlockVo(LocalDate.of(2024, 7, 10), TimeSlot.SLOT_23_30, 0, List.of(1L, 2L))
             );
 
-            BestMeetingTimeVo e1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_23_30, SLOT_24_00, 0);
+            BestMeetingTimeVo e1 = new BestMeetingTimeVo(LocalDate.of(2024, 7, 10), SLOT_23_30, SLOT_24_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> expected = List.of(e1);
 
             // when

@@ -27,12 +27,12 @@ public class BestMeetingTimeStrategyImpl implements BestMeetingTimeStrategy {
 
     private BestMeetingTimeVo createFirstMeetingTime(BestMeetingTimeVo candidate, Duration duration) {
         TimeSlot endTimeSlot = TimeSlot.getTimeSlot(candidate.startTime().getIndex() + duration.getNeedBlock());
-        return new BestMeetingTimeVo(candidate.date(), candidate.startTime(), endTimeSlot, candidate.weight());
+        return new BestMeetingTimeVo(candidate.date(), candidate.startTime(), endTimeSlot, candidate.weight(), candidate.userIds());
     }
 
     private BestMeetingTimeVo createSecondMeetingTime(BestMeetingTimeVo candidate, Duration duration) {
         TimeSlot startTimeSlot = TimeSlot.getTimeSlot(candidate.endTime().getIndex() - duration.getNeedBlock());
-        return new BestMeetingTimeVo(candidate.date(), startTimeSlot, candidate.endTime(), candidate.weight());
+        return new BestMeetingTimeVo(candidate.date(), startTimeSlot, candidate.endTime(), candidate.weight(), candidate.userIds());
     }
 
     private boolean isTimeBlockSufficientlyLong(BestMeetingTimeVo candidate, Duration duration) {
