@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MeetingRetrieveService {
     private final MeetingRepository meetingRepository;
-    private final UserService userService;
+    private final UserRetrieveService userRetrieveService;
     private final MeetingTimeRecommendService meetingTimeRecommendService;
     private final UserMeetingScheduleService userMeetingScheduleService;
 
@@ -39,7 +39,7 @@ public class MeetingRetrieveService {
             throw new ConflictException(MEETING_VALIDATION_FAILED_EXCEPTION);
         }
 
-        int userCount = userService.getMeetingUserCount(meeting);
+        int userCount = userRetrieveService.getMeetingUserCount(meeting);
 
         List<TimeBlockVo> timeBlocks = userMeetingScheduleService.getTimeBlocks(meetingId);
 

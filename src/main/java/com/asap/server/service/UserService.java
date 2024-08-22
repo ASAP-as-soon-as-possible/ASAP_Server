@@ -147,10 +147,6 @@ public class UserService {
         userRepository.updateUserIsFixedByMeeting(meeting, userIds);
     }
 
-    public int getMeetingUserCount(final Meeting meeting) {
-        return userRepository.countByMeeting(meeting);
-    }
-
     public List<BestMeetingTimeWithUsersVo> getBestMeetingInUsers(
             final Long meetingId,
             final List<BestMeetingTimeVo> bestMeetingTimes
