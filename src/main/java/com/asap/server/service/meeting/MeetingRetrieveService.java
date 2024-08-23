@@ -20,10 +20,12 @@ import com.asap.server.service.time.vo.BestMeetingTimeWithUsers;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MeetingRetrieveService {
     private final MeetingRepository meetingRepository;
     private final UserRetrieveService userRetrieveService;
@@ -52,10 +54,15 @@ public class MeetingRetrieveService {
         );
 
         Map<Long, User> userIdToUserMap = userRetrieveService.getUserIdToUserMap(meetingId);
+        log.info(
+                "user count is " + userCount + "\n " +
+                        "timeBlocks is " + timeBlocks + "\n " +
+                        "bestMeetingTimes is " + bestMeetingTimes + "\n" +
+                        "userIdToUserMap is " + userIdToUserMap + "\n"
+        );
         List<BestMeetingTimeWithUsers> bestMeetingTimeWithUsers = bestMeetingTimes.stream()
                 .map(bestMeetingTime -> mapToBestMeetingTimeWithUsers(bestMeetingTime, userIdToUserMap))
                 .toList();
-
         return BestMeetingTimeDto.of(userCount, bestMeetingTimeWithUsers);
     }
 
