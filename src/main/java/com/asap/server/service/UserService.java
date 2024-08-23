@@ -11,21 +11,18 @@ import com.asap.server.common.exception.model.UnauthorizedException;
 import com.asap.server.common.jwt.JwtService;
 import com.asap.server.persistence.domain.AvailableDate;
 import com.asap.server.persistence.domain.Meeting;
-import com.asap.server.persistence.domain.user.Name;
-import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.domain.enums.Role;
 import com.asap.server.persistence.domain.enums.TimeSlot;
+import com.asap.server.persistence.domain.user.Name;
+import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;
 import com.asap.server.persistence.repository.user.UserRepository;
 import com.asap.server.presentation.controller.dto.request.UserRequestDto;
 import com.asap.server.presentation.controller.dto.response.UserMeetingTimeResponseDto;
 import com.asap.server.presentation.controller.dto.response.UserTimeResponseDto;
+import com.asap.server.service.time.UserMeetingScheduleService;
 import com.asap.server.service.time.dto.UserMeetingScheduleRegisterDto;
 import com.asap.server.service.time.dto.UserTimeRegisterDto;
-import com.asap.server.service.time.UserMeetingScheduleService;
-import com.asap.server.service.vo.BestMeetingTimeVo;
-import com.asap.server.service.vo.BestMeetingTimeWithUsersVo;
-import com.asap.server.service.vo.UserVo;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,7 +110,7 @@ public class UserService {
                 .stream()
                 .map(timeSlot -> timeBlockService.searchTimeBlock(timeSlot, availableDate, registerDto.priority())).toList()
                 .forEach(timeBlock -> timeBlock.addTimeBlockUsers(timeBlockUserService.create(timeBlock, user)));
-        userMeetingScheduleService.createUserMeetingSchedule(meeting.getId(), user.getId(), registerDto);
+        userMeetingScheduleService.createUserMeetingSchedule(user.getId(), meeting.getId(), registerDto);
     }
 
     private void isDuplicatedDate(final List<UserMeetingScheduleRegisterDto> registerDto) {
@@ -145,32 +142,5 @@ public class UserService {
                 .boxed()
                 .collect(Collectors.toList());
         userRepository.updateUserIsFixedByMeeting(meeting, userIds);
-    }
-
-    public int getMeetingUserCount(final Meeting meeting) {
-        return userRepository.countByMeeting(meeting);
-    }
-
-    public List<BestMeetingTimeWithUsersVo> getBestMeetingInUsers(
-            final Long meetingId,
-            final List<BestMeetingTimeVo> bestMeetingTimes
-    ) {
-        return bestMeetingTimes.stream()
-                .map(bestMeetingTime -> getBestMeetingTimeInUsers(meetingId, bestMeetingTime))
-                .collect(Collectors.toList());
-    }
-
-    private BestMeetingTimeWithUsersVo getBestMeetingTimeInUsers(
-            final Long meetingId,
-            final BestMeetingTimeVo bestMeetingTime
-    ) {
-        if (bestMeetingTime == null) {
-            return null;
-        }
-        List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(bestMeetingTime.startTime().ordinal(),
-                bestMeetingTime.endTime().ordinal() - 1);
-        List<UserVo> users = userRepository.findByAvailableDateAndTimeSlots(meetingId, bestMeetingTime.date(),
-                timeSlots);
-        return BestMeetingTimeWithUsersVo.of(bestMeetingTime, users);
     }
 }

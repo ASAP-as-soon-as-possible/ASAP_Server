@@ -17,4 +17,6 @@ public interface UserRepository extends Repository<User, Long>, UserRepositoryCu
     List<User> findByMeeting(final Meeting meeting);
 
     int countByMeeting(final Meeting meeting);
+
+    List<User> findAllByMeetingId(final long meetingId);
 }

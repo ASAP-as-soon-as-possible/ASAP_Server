@@ -1,8 +1,8 @@
-package com.asap.server.service.meeting.recommend.strategy.impl;
+package com.asap.server.service.time.strategy.impl;
 
 import com.asap.server.persistence.domain.enums.Duration;
-import com.asap.server.service.meeting.recommend.strategy.MeetingTimeCasesStrategy;
-import com.asap.server.service.vo.PossibleTimeCaseVo;
+import com.asap.server.service.time.strategy.MeetingTimeCasesStrategy;
+import com.asap.server.service.time.vo.PossibleTimeCaseVo;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

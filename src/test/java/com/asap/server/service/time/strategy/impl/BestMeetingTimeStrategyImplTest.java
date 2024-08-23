@@ -1,11 +1,11 @@
-package com.asap.server.service.meeting.recommend.strategy.impl;
+package com.asap.server.service.time.strategy.impl;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.asap.server.persistence.domain.enums.Duration;
 import com.asap.server.persistence.domain.enums.TimeSlot;
-import com.asap.server.service.meeting.recommend.strategy.BestMeetingTimeStrategy;
-import com.asap.server.service.vo.BestMeetingTimeVo;
+import com.asap.server.service.time.strategy.BestMeetingTimeStrategy;
+import com.asap.server.service.time.vo.BestMeetingTimeVo;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -26,10 +26,10 @@ class BestMeetingTimeStrategyImplTest {
             // given
             LocalDate availableDate = LocalDate.of(2023, 7, 10);
             BestMeetingTimeVo bestMeetingTimeVo =
-                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_00, 0);
+                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> candidateMeetingTimes = List.of(bestMeetingTimeVo);
 
-            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_14_30, 0);
+            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_14_30, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> expected = List.of(e1);
 
             // when
@@ -45,11 +45,11 @@ class BestMeetingTimeStrategyImplTest {
             // given
             LocalDate availableDate = LocalDate.of(2023, 7, 10);
             BestMeetingTimeVo bestMeetingTimeVo =
-                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_17_00, 0);
+                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_17_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> candidateMeetingTimes = List.of(bestMeetingTimeVo);
 
-            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_14_30, 0);
-            BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_16_30, TimeSlot.SLOT_17_00, 0);
+            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_14_30, 0, List.of(1L, 2L));
+            BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_16_30, TimeSlot.SLOT_17_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> expected = List.of(e1, e2);
 
             // when
@@ -65,14 +65,14 @@ class BestMeetingTimeStrategyImplTest {
             // given
             LocalDate availableDate = LocalDate.of(2023, 7, 10);
             BestMeetingTimeVo bestMeetingTimeVo =
-                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_6_00, TimeSlot.SLOT_6_30, 0);
+                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_6_00, TimeSlot.SLOT_6_30, 0, List.of(1L, 2L));
             BestMeetingTimeVo bestMeetingTimeVo2 =
-                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_21_00, TimeSlot.SLOT_24_00, 0);
+                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_21_00, TimeSlot.SLOT_24_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> candidateMeetingTimes = List.of(bestMeetingTimeVo, bestMeetingTimeVo2);
 
-            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_6_00, TimeSlot.SLOT_6_30, 0);
-            BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_21_00, TimeSlot.SLOT_21_30, 0);
-            BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_23_30, TimeSlot.SLOT_24_00, 0);
+            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_6_00, TimeSlot.SLOT_6_30, 0, List.of(1L, 2L));
+            BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_21_00, TimeSlot.SLOT_21_30, 0, List.of(1L, 2L));
+            BestMeetingTimeVo e3 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_23_30, TimeSlot.SLOT_24_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> expected = List.of(e1, e2, e3);
 
             // when
@@ -94,10 +94,10 @@ class BestMeetingTimeStrategyImplTest {
             // given
             LocalDate availableDate = LocalDate.of(2023, 7, 10);
             BestMeetingTimeVo bestMeetingTimeVo =
-                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_00, 0);
+                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> candidateMeetingTimes = List.of(bestMeetingTimeVo);
 
-            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_15_00, 0);
+            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_15_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> expected = List.of(e1);
 
             // when
@@ -113,11 +113,11 @@ class BestMeetingTimeStrategyImplTest {
             // given
             LocalDate availableDate = LocalDate.of(2023, 7, 10);
             BestMeetingTimeVo bestMeetingTimeVo =
-                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_18_00, 0);
+                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_18_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> candidateMeetingTimes = List.of(bestMeetingTimeVo);
 
-            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_15_00, 0);
-            BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_17_00, TimeSlot.SLOT_18_00, 0);
+            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_15_00, 0, List.of(1L, 2L));
+            BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_17_00, TimeSlot.SLOT_18_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> expected = List.of(e1, e2);
 
             // when
@@ -139,10 +139,10 @@ class BestMeetingTimeStrategyImplTest {
             // given
             LocalDate availableDate = LocalDate.of(2023, 7, 10);
             BestMeetingTimeVo bestMeetingTimeVo =
-                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_30, 0);
+                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_30, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> candidateMeetingTimes = List.of(bestMeetingTimeVo);
 
-            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_15_30, 0);
+            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_15_30, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> expected = List.of(e1);
 
             // when
@@ -158,11 +158,11 @@ class BestMeetingTimeStrategyImplTest {
             // given
             LocalDate availableDate = LocalDate.of(2023, 7, 10);
             BestMeetingTimeVo bestMeetingTimeVo =
-                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_19_00, 0);
+                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_19_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> candidateMeetingTimes = List.of(bestMeetingTimeVo);
 
-            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_15_30, 0);
-            BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_17_30, TimeSlot.SLOT_19_00, 0);
+            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_15_30, 0, List.of(1L, 2L));
+            BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_17_30, TimeSlot.SLOT_19_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> expected = List.of(e1, e2);
 
             // when
@@ -184,10 +184,10 @@ class BestMeetingTimeStrategyImplTest {
             // given
             LocalDate availableDate = LocalDate.of(2023, 7, 10);
             BestMeetingTimeVo bestMeetingTimeVo =
-                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_00, 0);
+                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> candidateMeetingTimes = List.of(bestMeetingTimeVo);
 
-            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_00, 0);
+            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> expected = List.of(e1);
 
             // when
@@ -204,11 +204,11 @@ class BestMeetingTimeStrategyImplTest {
             // given
             LocalDate availableDate = LocalDate.of(2023, 7, 10);
             BestMeetingTimeVo bestMeetingTimeVo =
-                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_20_00, 0);
+                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_20_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> candidateMeetingTimes = List.of(bestMeetingTimeVo);
 
-            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_00, 0);
-            BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_18_00, TimeSlot.SLOT_20_00, 0);
+            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_00, 0, List.of(1L, 2L));
+            BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_18_00, TimeSlot.SLOT_20_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> expected = List.of(e1, e2);
 
             // when
@@ -230,10 +230,10 @@ class BestMeetingTimeStrategyImplTest {
             // given
             LocalDate availableDate = LocalDate.of(2023, 7, 10);
             BestMeetingTimeVo bestMeetingTimeVo =
-                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_17_00, 0);
+                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_17_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> candidateMeetingTimes = List.of(bestMeetingTimeVo);
 
-            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_30, 0);
+            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_30, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> expected = List.of(e1);
 
             // when
@@ -249,11 +249,11 @@ class BestMeetingTimeStrategyImplTest {
             // given
             LocalDate availableDate = LocalDate.of(2023, 7, 10);
             BestMeetingTimeVo bestMeetingTimeVo =
-                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_21_00, 0);
+                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_21_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> candidateMeetingTimes = List.of(bestMeetingTimeVo);
 
-            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_30, 0);
-            BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_18_30, TimeSlot.SLOT_21_00, 0);
+            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_16_30, 0, List.of(1L, 2L));
+            BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_18_30, TimeSlot.SLOT_21_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> expected = List.of(e1, e2);
 
             // when
@@ -275,10 +275,10 @@ class BestMeetingTimeStrategyImplTest {
             // given
             LocalDate availableDate = LocalDate.of(2023, 7, 10);
             BestMeetingTimeVo bestMeetingTimeVo =
-                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_17_00, 0);
+                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_17_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> candidateMeetingTimes = List.of(bestMeetingTimeVo);
 
-            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_17_00, 0);
+            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_17_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> expected = List.of(e1);
 
             // when
@@ -294,11 +294,11 @@ class BestMeetingTimeStrategyImplTest {
             // given
             LocalDate availableDate = LocalDate.of(2023, 7, 10);
             BestMeetingTimeVo bestMeetingTimeVo =
-                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_22_00, 0);
+                    new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_22_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> candidateMeetingTimes = List.of(bestMeetingTimeVo);
 
-            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_17_00, 0);
-            BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_19_00, TimeSlot.SLOT_22_00, 0);
+            BestMeetingTimeVo e1 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_14_00, TimeSlot.SLOT_17_00, 0, List.of(1L, 2L));
+            BestMeetingTimeVo e2 = new BestMeetingTimeVo(availableDate, TimeSlot.SLOT_19_00, TimeSlot.SLOT_22_00, 0, List.of(1L, 2L));
             List<BestMeetingTimeVo> expected = List.of(e1, e2);
 
             // when

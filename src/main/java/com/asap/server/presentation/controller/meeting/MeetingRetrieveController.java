@@ -11,6 +11,7 @@ import com.asap.server.presentation.controller.dto.response.MeetingTitleResponse
 import com.asap.server.presentation.controller.dto.response.TimeTableResponseDto;
 import com.asap.server.presentation.controller.meeting.docs.MeetingRetrieveControllerDocs;
 import com.asap.server.service.MeetingService;
+import com.asap.server.service.meeting.MeetingRetrieveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MeetingRetrieveController implements MeetingRetrieveControllerDocs {
     private final MeetingService meetingService;
+    private final MeetingRetrieveService meetingRetrieveService;
 
     @GetMapping("/{meetingId}/schedule")
     @Override
@@ -69,7 +71,7 @@ public class MeetingRetrieveController implements MeetingRetrieveControllerDocs 
     ) {
         return SuccessResponse.success(
                 Success.BEST_MEETING_SUCCESS,
-                meetingService.getBestMeetingTime(meetingId, userId)
+                BestMeetingTimeResponseDto.of(meetingRetrieveService.getBestMeetingTime(meetingId, userId))
         );
     }
 }
