@@ -1,7 +1,7 @@
 package com.asap.server.service.meeting.dto;
 
 import com.asap.server.presentation.controller.dto.response.MeetingTimeResponseDto;
-import com.asap.server.service.vo.BestMeetingTimeWithUsersVo;
+import com.asap.server.service.time.vo.BestMeetingTimeWithUsers;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,7 +16,7 @@ public record BestMeetingTimeDto(
 
     public static BestMeetingTimeDto of(
             final int memberCount,
-            final List<BestMeetingTimeWithUsersVo> bestMeetingTimes
+            final List<BestMeetingTimeWithUsers> bestMeetingTimes
     ) {
         return new BestMeetingTimeDto(
                 memberCount,

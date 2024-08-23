@@ -1,4 +1,4 @@
-package com.asap.server.service.meeting.recommend;
+package com.asap.server.service.time;
 
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_12_00;
 import static com.asap.server.persistence.domain.enums.TimeSlot.SLOT_12_30;
@@ -10,11 +10,12 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.asap.server.persistence.domain.enums.Duration;
 import com.asap.server.persistence.domain.enums.TimeSlot;
-import com.asap.server.service.meeting.recommend.strategy.impl.BestMeetingTimeStrategyImpl;
-import com.asap.server.service.meeting.recommend.strategy.impl.ContinuousMeetingTimeStrategyImpl;
-import com.asap.server.service.meeting.recommend.strategy.impl.MeetingTimeCasesStrategyImpl;
+import com.asap.server.service.time.MeetingTimeRecommendService;
+import com.asap.server.service.time.strategy.impl.BestMeetingTimeStrategyImpl;
+import com.asap.server.service.time.strategy.impl.ContinuousMeetingTimeStrategyImpl;
+import com.asap.server.service.time.strategy.impl.MeetingTimeCasesStrategyImpl;
 import com.asap.server.service.time.vo.TimeBlockVo;
-import com.asap.server.service.vo.BestMeetingTimeVo;
+import com.asap.server.service.time.vo.BestMeetingTimeVo;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;

@@ -9,15 +9,14 @@ import com.asap.server.common.exception.model.UnauthorizedException;
 import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;
-import com.asap.server.presentation.controller.dto.response.BestMeetingTimeResponseDto;
 import com.asap.server.service.meeting.dto.BestMeetingTimeDto;
-import com.asap.server.service.meeting.recommend.MeetingTimeRecommendService;
+import com.asap.server.service.meeting.dto.UserDto;
+import com.asap.server.service.time.MeetingTimeRecommendService;
 import com.asap.server.service.time.UserMeetingScheduleService;
 import com.asap.server.service.time.vo.TimeBlockVo;
 import com.asap.server.service.user.UserRetrieveService;
-import com.asap.server.service.vo.BestMeetingTimeVo;
-import com.asap.server.service.vo.BestMeetingTimeWithUsersVo;
-import com.asap.server.service.vo.UserVo;
+import com.asap.server.service.time.vo.BestMeetingTimeVo;
+import com.asap.server.service.time.vo.BestMeetingTimeWithUsers;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -53,14 +52,14 @@ public class MeetingRetrieveService {
         );
 
         Map<Long, User> userIdToUserMap = userRetrieveService.getUserIdToUserMap(meetingId);
-        List<BestMeetingTimeWithUsersVo> bestMeetingTimeWithUsers = bestMeetingTimes.stream()
+        List<BestMeetingTimeWithUsers> bestMeetingTimeWithUsers = bestMeetingTimes.stream()
                 .map(bestMeetingTime -> mapToBestMeetingTimeWithUsers(bestMeetingTime, userIdToUserMap))
                 .toList();
 
         return BestMeetingTimeDto.of(userCount, bestMeetingTimeWithUsers);
     }
 
-    private BestMeetingTimeWithUsersVo mapToBestMeetingTimeWithUsers(
+    private BestMeetingTimeWithUsers mapToBestMeetingTimeWithUsers(
             final BestMeetingTimeVo bestMeetingTime,
             final Map<Long, User> userIdToUserMap
     ) {
@@ -68,19 +67,19 @@ public class MeetingRetrieveService {
             return null;
         }
 
-        List<UserVo> userVos = bestMeetingTime.userIds().stream()
+        List<UserDto> userDtos = bestMeetingTime.userIds().stream()
                 .map(userId -> {
                     User user = userIdToUserMap.get(userId);
-                    return new UserVo(user.getId(), user.getName());
+                    return new UserDto(user.getId(), user.getName());
                 })
                 .toList();
 
-        return new BestMeetingTimeWithUsersVo(
+        return new BestMeetingTimeWithUsers(
                 bestMeetingTime.date(),
                 bestMeetingTime.startTime(),
                 bestMeetingTime.endTime(),
                 bestMeetingTime.weight(),
-                userVos
+                userDtos
         );
     }
 }

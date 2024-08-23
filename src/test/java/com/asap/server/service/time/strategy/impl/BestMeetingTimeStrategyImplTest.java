@@ -1,11 +1,11 @@
-package com.asap.server.service.meeting.recommend.strategy.impl;
+package com.asap.server.service.time.strategy.impl;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.asap.server.persistence.domain.enums.Duration;
 import com.asap.server.persistence.domain.enums.TimeSlot;
-import com.asap.server.service.meeting.recommend.strategy.BestMeetingTimeStrategy;
-import com.asap.server.service.vo.BestMeetingTimeVo;
+import com.asap.server.service.time.strategy.BestMeetingTimeStrategy;
+import com.asap.server.service.time.vo.BestMeetingTimeVo;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

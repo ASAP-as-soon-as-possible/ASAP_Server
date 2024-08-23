@@ -9,15 +9,14 @@ import com.asap.server.persistence.domain.enums.TimeSlot;
 import com.asap.server.persistence.domain.user.Name;
 import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;
-import com.asap.server.presentation.controller.dto.response.BestMeetingTimeResponseDto;
 import com.asap.server.service.meeting.dto.BestMeetingTimeDto;
-import com.asap.server.service.meeting.recommend.MeetingTimeRecommendService;
+import com.asap.server.service.meeting.dto.UserDto;
+import com.asap.server.service.time.MeetingTimeRecommendService;
 import com.asap.server.service.time.UserMeetingScheduleService;
 import com.asap.server.service.time.vo.TimeBlockVo;
 import com.asap.server.service.user.UserRetrieveService;
-import com.asap.server.service.vo.BestMeetingTimeVo;
-import com.asap.server.service.vo.BestMeetingTimeWithUsersVo;
-import com.asap.server.service.vo.UserVo;
+import com.asap.server.service.time.vo.BestMeetingTimeVo;
+import com.asap.server.service.time.vo.BestMeetingTimeWithUsers;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -80,15 +79,15 @@ class MeetingRetrieveServiceTest {
             );
             when(userRetrieveService.getUserIdToUserMap(1L)).thenReturn(Map.of(1L, user, 2L, user2));
 
-            List<BestMeetingTimeWithUsersVo> bestMeetingTimeWithUsers = Arrays.asList(
-                    new BestMeetingTimeWithUsersVo(
+            List<BestMeetingTimeWithUsers> bestMeetingTimeWithUsers = Arrays.asList(
+                    new BestMeetingTimeWithUsers(
                             LocalDate.of(2024, 7, 9),
                             TimeSlot.SLOT_12_00,
                             TimeSlot.SLOT_12_30,
                             0,
                             List.of(
-                                    new UserVo(1L, "KWY"),
-                                    new UserVo(2L, "DSH")
+                                    new UserDto(1L, "KWY"),
+                                    new UserDto(2L, "DSH")
                             )
                     ),
                     null,
@@ -138,25 +137,25 @@ class MeetingRetrieveServiceTest {
             );
             when(userRetrieveService.getUserIdToUserMap(1L)).thenReturn(Map.of(1L, user, 2L, user2));
 
-            List<BestMeetingTimeWithUsersVo> bestMeetingTimeWithUsers = Arrays.asList(
-                    new BestMeetingTimeWithUsersVo(
+            List<BestMeetingTimeWithUsers> bestMeetingTimeWithUsers = Arrays.asList(
+                    new BestMeetingTimeWithUsers(
                             LocalDate.of(2024, 7, 9),
                             TimeSlot.SLOT_12_00,
                             TimeSlot.SLOT_12_30,
                             0,
                             List.of(
-                                    new UserVo(1L, "KWY"),
-                                    new UserVo(2L, "DSH")
+                                    new UserDto(1L, "KWY"),
+                                    new UserDto(2L, "DSH")
                             )
                     ),
-                    new BestMeetingTimeWithUsersVo(
+                    new BestMeetingTimeWithUsers(
                             LocalDate.of(2024, 7, 9),
                             TimeSlot.SLOT_13_00,
                             TimeSlot.SLOT_13_30,
                             0,
                             List.of(
-                                    new UserVo(1L, "KWY"),
-                                    new UserVo(2L, "DSH")
+                                    new UserDto(1L, "KWY"),
+                                    new UserDto(2L, "DSH")
                             )
                     ),
                     null
@@ -207,35 +206,35 @@ class MeetingRetrieveServiceTest {
             );
             when(userRetrieveService.getUserIdToUserMap(1L)).thenReturn(Map.of(1L, user, 2L, user2));
 
-            List<BestMeetingTimeWithUsersVo> bestMeetingTimeWithUsers = Arrays.asList(
-                    new BestMeetingTimeWithUsersVo(
+            List<BestMeetingTimeWithUsers> bestMeetingTimeWithUsers = Arrays.asList(
+                    new BestMeetingTimeWithUsers(
                             LocalDate.of(2024, 7, 9),
                             TimeSlot.SLOT_12_00,
                             TimeSlot.SLOT_12_30,
                             0,
                             List.of(
-                                    new UserVo(1L, "KWY"),
-                                    new UserVo(2L, "DSH")
+                                    new UserDto(1L, "KWY"),
+                                    new UserDto(2L, "DSH")
                             )
                     ),
-                    new BestMeetingTimeWithUsersVo(
+                    new BestMeetingTimeWithUsers(
                             LocalDate.of(2024, 7, 9),
                             TimeSlot.SLOT_13_00,
                             TimeSlot.SLOT_13_30,
                             0,
                             List.of(
-                                    new UserVo(1L, "KWY"),
-                                    new UserVo(2L, "DSH")
+                                    new UserDto(1L, "KWY"),
+                                    new UserDto(2L, "DSH")
                             )
                     ),
-                    new BestMeetingTimeWithUsersVo(
+                    new BestMeetingTimeWithUsers(
                             LocalDate.of(2024, 7, 9),
                             TimeSlot.SLOT_14_00,
                             TimeSlot.SLOT_14_30,
                             0,
                             List.of(
-                                    new UserVo(1L, "KWY"),
-                                    new UserVo(2L, "DSH")
+                                    new UserDto(1L, "KWY"),
+                                    new UserDto(2L, "DSH")
                             )
                     )
             );

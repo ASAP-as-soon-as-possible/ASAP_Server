@@ -23,9 +23,9 @@ import com.asap.server.presentation.controller.dto.response.UserTimeResponseDto;
 import com.asap.server.service.time.UserMeetingScheduleService;
 import com.asap.server.service.time.dto.UserMeetingScheduleRegisterDto;
 import com.asap.server.service.time.dto.UserTimeRegisterDto;
-import com.asap.server.service.vo.BestMeetingTimeVo;
-import com.asap.server.service.vo.BestMeetingTimeWithUsersVo;
-import com.asap.server.service.vo.UserVo;
+import com.asap.server.service.time.vo.BestMeetingTimeVo;
+import com.asap.server.service.time.vo.BestMeetingTimeWithUsers;
+import com.asap.server.service.meeting.dto.UserDto;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -147,7 +147,7 @@ public class UserService {
         userRepository.updateUserIsFixedByMeeting(meeting, userIds);
     }
 
-    public List<BestMeetingTimeWithUsersVo> getBestMeetingInUsers(
+    public List<BestMeetingTimeWithUsers> getBestMeetingInUsers(
             final Long meetingId,
             final List<BestMeetingTimeVo> bestMeetingTimes
     ) {
@@ -156,7 +156,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    private BestMeetingTimeWithUsersVo getBestMeetingTimeInUsers(
+    private BestMeetingTimeWithUsers getBestMeetingTimeInUsers(
             final Long meetingId,
             final BestMeetingTimeVo bestMeetingTime
     ) {
@@ -165,8 +165,8 @@ public class UserService {
         }
         List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(bestMeetingTime.startTime().ordinal(),
                 bestMeetingTime.endTime().ordinal() - 1);
-        List<UserVo> users = userRepository.findByAvailableDateAndTimeSlots(meetingId, bestMeetingTime.date(),
+        List<UserDto> users = userRepository.findByAvailableDateAndTimeSlots(meetingId, bestMeetingTime.date(),
                 timeSlots);
-        return BestMeetingTimeWithUsersVo.of(bestMeetingTime, users);
+        return BestMeetingTimeWithUsers.of(bestMeetingTime, users);
     }
 }

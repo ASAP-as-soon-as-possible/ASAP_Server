@@ -7,8 +7,8 @@ import static com.asap.server.persistence.domain.user.QUser.user;
 
 import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.enums.TimeSlot;
+import com.asap.server.service.meeting.dto.UserDto;
 import com.asap.server.service.vo.QUserVo;
-import com.asap.server.service.vo.UserVo;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
 import java.util.List;
@@ -30,7 +30,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<UserVo> findByAvailableDateAndTimeSlots(
+    public List<UserDto> findByAvailableDateAndTimeSlots(
             Long meetingId,
             LocalDate date,
             List<TimeSlot> timeSlots
