@@ -10,6 +10,7 @@ import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;
 import com.asap.server.presentation.controller.dto.response.BestMeetingTimeResponseDto;
+import com.asap.server.service.meeting.dto.BestMeetingTimeDto;
 import com.asap.server.service.meeting.recommend.MeetingTimeRecommendService;
 import com.asap.server.service.time.UserMeetingScheduleService;
 import com.asap.server.service.time.vo.TimeBlockVo;
@@ -30,7 +31,7 @@ public class MeetingRetrieveService {
     private final MeetingTimeRecommendService meetingTimeRecommendService;
     private final UserMeetingScheduleService userMeetingScheduleService;
 
-    public BestMeetingTimeResponseDto getBestMeetingTime(final Long meetingId, final Long userId) {
+    public BestMeetingTimeDto getBestMeetingTime(final Long meetingId, final Long userId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
@@ -55,7 +56,8 @@ public class MeetingRetrieveService {
         List<BestMeetingTimeWithUsersVo> bestMeetingTimeWithUsers = bestMeetingTimes.stream()
                 .map(bestMeetingTime -> mapToBestMeetingTimeWithUsers(bestMeetingTime, userIdToUserMap))
                 .toList();
-        return BestMeetingTimeResponseDto.of(userCount, bestMeetingTimeWithUsers);
+
+        return BestMeetingTimeDto.of(userCount, bestMeetingTimeWithUsers);
     }
 
     private BestMeetingTimeWithUsersVo mapToBestMeetingTimeWithUsers(

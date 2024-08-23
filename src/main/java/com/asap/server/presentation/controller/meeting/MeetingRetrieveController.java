@@ -71,7 +71,7 @@ public class MeetingRetrieveController implements MeetingRetrieveControllerDocs 
     ) {
         return SuccessResponse.success(
                 Success.BEST_MEETING_SUCCESS,
-                meetingRetrieveService.getBestMeetingTime(meetingId, userId)
+                BestMeetingTimeResponseDto.of(meetingRetrieveService.getBestMeetingTime(meetingId, userId))
         );
     }
 }

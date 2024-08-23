@@ -1,35 +1,18 @@
 package com.asap.server.presentation.controller.dto.response;
 
-import com.asap.server.service.vo.BestMeetingTimeWithUsersVo;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-
-import java.util.Arrays;
+import com.asap.server.service.meeting.dto.BestMeetingTimeDto;
 import java.util.List;
 
-@Getter
-@ToString
-@AllArgsConstructor
-@EqualsAndHashCode
-public class BestMeetingTimeResponseDto {
-    private int memberCount;
-    private MeetingTimeResponseDto bestDateTime;
-    private List<MeetingTimeResponseDto> otherDateTimes;
-
-    private static final int FIRST_BEST_MEETING_INDEX = 0;
-    private static final int SECOND_BEST_MEETING_INDEX = 1;
-    private static final int THIRD_BEST_MEETING_INDEX = 2;
-
-    public static BestMeetingTimeResponseDto of(int memberCount, List<BestMeetingTimeWithUsersVo> bestMeetingTimes) {
+public record BestMeetingTimeResponseDto(
+        int memberCount,
+        MeetingTimeResponseDto bestDateTime,
+        List<MeetingTimeResponseDto> otherDateTimes
+) {
+    public static BestMeetingTimeResponseDto of(final BestMeetingTimeDto bestMeetingTimeDto) {
         return new BestMeetingTimeResponseDto(
-                memberCount,
-                MeetingTimeResponseDto.of(bestMeetingTimes.get(FIRST_BEST_MEETING_INDEX)),
-                Arrays.asList(
-                        MeetingTimeResponseDto.of(bestMeetingTimes.get(SECOND_BEST_MEETING_INDEX)),
-                        MeetingTimeResponseDto.of(bestMeetingTimes.get(THIRD_BEST_MEETING_INDEX))
-                )
+                bestMeetingTimeDto.memberCount(),
+                bestMeetingTimeDto.bestDateTime(),
+                bestMeetingTimeDto.otherDateTimes()
         );
     }
 }

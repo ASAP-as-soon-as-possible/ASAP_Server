@@ -10,6 +10,7 @@ import com.asap.server.persistence.domain.user.Name;
 import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;
 import com.asap.server.presentation.controller.dto.response.BestMeetingTimeResponseDto;
+import com.asap.server.service.meeting.dto.BestMeetingTimeDto;
 import com.asap.server.service.meeting.recommend.MeetingTimeRecommendService;
 import com.asap.server.service.time.UserMeetingScheduleService;
 import com.asap.server.service.time.vo.TimeBlockVo;
@@ -93,10 +94,10 @@ class MeetingRetrieveServiceTest {
                     null,
                     null
             );
-            BestMeetingTimeResponseDto expected = BestMeetingTimeResponseDto.of(2, bestMeetingTimeWithUsers);
+            BestMeetingTimeDto expected = BestMeetingTimeDto.of(2, bestMeetingTimeWithUsers);
 
             // when
-            BestMeetingTimeResponseDto result = meetingRetrieveService.getBestMeetingTime(1L, 1L);
+            BestMeetingTimeDto result = meetingRetrieveService.getBestMeetingTime(1L, 1L);
 
             // then
             assertThat(expected).isEqualTo(result);
@@ -160,10 +161,10 @@ class MeetingRetrieveServiceTest {
                     ),
                     null
             );
-            BestMeetingTimeResponseDto expected = BestMeetingTimeResponseDto.of(2, bestMeetingTimeWithUsers);
+            BestMeetingTimeDto expected = BestMeetingTimeDto.of(2, bestMeetingTimeWithUsers);
 
             // when
-            BestMeetingTimeResponseDto result = meetingRetrieveService.getBestMeetingTime(1L, 1L);
+            BestMeetingTimeDto result = meetingRetrieveService.getBestMeetingTime(1L, 1L);
 
             // then
             assertThat(expected).isEqualTo(result);
@@ -238,10 +239,10 @@ class MeetingRetrieveServiceTest {
                             )
                     )
             );
-            BestMeetingTimeResponseDto expected = BestMeetingTimeResponseDto.of(2, bestMeetingTimeWithUsers);
+            BestMeetingTimeDto expected = BestMeetingTimeDto.of(2, bestMeetingTimeWithUsers);
 
             // when
-            BestMeetingTimeResponseDto result = meetingRetrieveService.getBestMeetingTime(1L, 1L);
+            BestMeetingTimeDto result = meetingRetrieveService.getBestMeetingTime(1L, 1L);
 
             // then
             assertThat(expected).isEqualTo(result);
