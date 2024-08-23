@@ -5,12 +5,14 @@ import com.asap.server.service.vo.BestMeetingTimeWithUsersVo;
 import com.asap.server.service.vo.UserVo;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString
 @AllArgsConstructor
+@EqualsAndHashCode
 public class MeetingTimeResponseDto {
     private String month;
     private String day;

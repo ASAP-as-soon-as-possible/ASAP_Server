@@ -7,6 +7,7 @@ import com.asap.server.common.exception.model.ConflictException;
 import com.asap.server.common.exception.model.NotFoundException;
 import com.asap.server.common.exception.model.UnauthorizedException;
 import com.asap.server.persistence.domain.Meeting;
+import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;
 import com.asap.server.presentation.controller.dto.response.BestMeetingTimeResponseDto;
 import com.asap.server.service.UserService;
@@ -16,7 +17,9 @@ import com.asap.server.service.time.vo.TimeBlockVo;
 import com.asap.server.service.user.UserRetrieveService;
 import com.asap.server.service.vo.BestMeetingTimeVo;
 import com.asap.server.service.vo.BestMeetingTimeWithUsersVo;
+import com.asap.server.service.vo.UserVo;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -48,10 +51,29 @@ public class MeetingRetrieveService {
                 meeting.getDuration(),
                 userCount
         );
-        List<BestMeetingTimeWithUsersVo> bestMeetingTimeWithUsers = userService.getBestMeetingInUsers(
-                meetingId,
-                bestMeetingTimes
-        );
+
+        Map<Long, User> userIdToUserMap = userRetrieveService.getUserIdToUserMap(meetingId);
+        List<BestMeetingTimeWithUsersVo> bestMeetingTimeWithUsers = bestMeetingTimes.stream()
+                .map(bestMeetingTime -> {
+                    if (bestMeetingTime == null) {
+                        return null;
+                    }
+
+                    List<UserVo> userVos = bestMeetingTime.userIds().stream()
+                            .map(userId2 -> {
+                                User user = userIdToUserMap.get(userId2);
+                                return new UserVo(user.getId(), user.getName());
+                            })
+                            .toList();
+
+                    return new BestMeetingTimeWithUsersVo(
+                            bestMeetingTime.date(),
+                            bestMeetingTime.startTime(),
+                            bestMeetingTime.endTime(),
+                            bestMeetingTime.weight(),
+                            userVos
+                    );
+                }).toList();
         return BestMeetingTimeResponseDto.of(userCount, bestMeetingTimeWithUsers);
     }
 }

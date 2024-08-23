@@ -2,6 +2,7 @@ package com.asap.server.presentation.controller.dto.response;
 
 import com.asap.server.service.vo.BestMeetingTimeWithUsersVo;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -11,6 +12,7 @@ import java.util.List;
 @Getter
 @ToString
 @AllArgsConstructor
+@EqualsAndHashCode
 public class BestMeetingTimeResponseDto {
     private int memberCount;
     private MeetingTimeResponseDto bestDateTime;
