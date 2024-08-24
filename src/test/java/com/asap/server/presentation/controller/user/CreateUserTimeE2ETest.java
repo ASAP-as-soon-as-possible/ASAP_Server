@@ -1,6 +1,7 @@
 package com.asap.server.presentation.controller.user;
 
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -90,6 +91,12 @@ public class CreateUserTimeE2ETest {
                     ).andExpect(jsonPath("$.code").value(201))
                     .andExpect(jsonPath("$.message").value("참여자 회의 가능 시간 입력을 성공하였습니다."))
                     .andExpect(jsonPath("$.data.role").value("MEMBER"));
+
+            String jpql = "SELECT ums FROM UserMeetingSchedule ums WHERE ums.meetingId=" + meeting.getId();
+            List<UserMeetingSchedule> result =
+                    em.createQuery(jpql, UserMeetingSchedule.class).getResultList();
+
+            assertThat(result.size()).isEqualTo(3);
         }
 
         @Test
@@ -185,6 +192,12 @@ public class CreateUserTimeE2ETest {
                                     .header("Authorization", "Bearer " + hostJwtToken)
                     ).andExpect(jsonPath("$.code").value(201))
                     .andExpect(jsonPath("$.message").value("방장의 회의 가능 시간이 성공적으로 입력되었습니다."));
+
+            String jpql = "SELECT ums FROM UserMeetingSchedule ums WHERE ums.meetingId=" + meeting.getId();
+            List<UserMeetingSchedule> result =
+                    em.createQuery(jpql, UserMeetingSchedule.class).getResultList();
+
+            assertThat(result.size()).isEqualTo(3);
         }
 
         @Test
@@ -322,7 +335,7 @@ public class CreateUserTimeE2ETest {
             UserMeetingSchedule userMeetingSchedule = UserMeetingSchedule.builder()
                     .meetingId(meeting.getId())
                     .userId(user.getId())
-                    .availableDate(LocalDate.of(2024,7,9))
+                    .availableDate(LocalDate.of(2024, 7, 9))
                     .weight(0)
                     .startTimeSlot(TimeSlot.SLOT_11_00)
                     .endTimeSlot(TimeSlot.SLOT_16_30)

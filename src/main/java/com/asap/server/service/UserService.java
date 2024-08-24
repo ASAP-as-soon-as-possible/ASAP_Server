@@ -54,20 +54,21 @@ public class UserService {
     @Transactional
     public UserMeetingTimeResponseDto createHostTime(
             final Long meetingId,
-            final Long userId,
+            final Long hostId,
             final List<UserMeetingScheduleRegisterDto> requestDtos
     ) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-        if (!meeting.authenticateHost(userId)) {
+
+        if (!meeting.authenticateHost(hostId)) {
             throw new UnauthorizedException(INVALID_MEETING_HOST_EXCEPTION);
         }
+
         if (!userMeetingScheduleService.isEmptyHostTimeBlock(meeting.getHost().getId())) {
             throw new ConflictException(Error.HOST_TIME_EXIST_EXCEPTION);
         }
 
-        isDuplicatedDate(requestDtos);
-        requestDtos.forEach(requestDto -> createUserTimeBlock(meeting, meeting.getHost(), requestDto));
+        createUserTimeBlock(meetingId, hostId, requestDtos);
 
         String accessToken = jwtService.issuedToken(meeting.getHost().getId().toString());
 
@@ -78,32 +79,39 @@ public class UserService {
     }
 
     @Transactional
-    public UserTimeResponseDto createUserTime(final Long meetingId,
-                                              final UserTimeRegisterDto registerDto) {
+    public UserTimeResponseDto createUserTime(
+            final Long meetingId,
+            final UserTimeRegisterDto registerDto
+    ) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
         User user = createUser(meeting, new Name(registerDto.name()), Role.MEMBER);
-        isDuplicatedDate(registerDto.availableSchedules());
-        registerDto.availableSchedules().forEach(availableTime -> createUserTimeBlock(meeting, user, availableTime));
+
+        createUserTimeBlock(meetingId, user.getId(), registerDto.availableSchedules());
+
         return UserTimeResponseDto.builder()
                 .role(Role.MEMBER.getRole())
                 .build();
     }
 
     private void createUserTimeBlock(
-            final Meeting meeting,
-            final User user,
-            final UserMeetingScheduleRegisterDto registerDto
+            final long meetingId,
+            final long userId,
+            final List<UserMeetingScheduleRegisterDto> availableDates
     ) {
-        userMeetingScheduleService.createUserMeetingSchedule(user.getId(), meeting.getId(), registerDto);
+        isDuplicatedDate(availableDates);
+        availableDates.forEach(
+                requestDto -> userMeetingScheduleService.createUserMeetingSchedule(userId, meetingId, requestDto)
+        );
     }
 
     private void isDuplicatedDate(final List<UserMeetingScheduleRegisterDto> registerDto) {
         Map<String, List<TimeSlot>> meetingTimeAvailable = new HashMap<>();
         for (UserMeetingScheduleRegisterDto requestDto : registerDto) {
             String col = String.format("%s %s", requestDto.month(), requestDto.day());
-            List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(requestDto.startTime().ordinal(), requestDto.endTime().ordinal() - 1);
+            List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(requestDto.startTime().ordinal(),
+                    requestDto.endTime().ordinal() - 1);
             if (meetingTimeAvailable.containsKey(col)) {
                 if (meetingTimeAvailable.get(col).stream().anyMatch(timeSlots::contains)) {
                     throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
