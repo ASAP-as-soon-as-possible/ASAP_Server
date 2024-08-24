@@ -1,7 +1,7 @@
 package com.asap.server.presentation.controller.dto.request;
 
 import com.asap.server.persistence.domain.enums.TimeSlot;
-import com.asap.server.service.time.dto.UserMeetingScheduleRegisterDto;
+import com.asap.server.service.time.dto.register.UserMeetingScheduleRegisterDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
