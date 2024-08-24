@@ -8,14 +8,13 @@ import com.asap.server.service.time.dto.register.UserMeetingScheduleRegisterDto;
 import com.asap.server.service.time.vo.TimeBlockVo;
 import com.asap.server.service.time.vo.UserScheduleByTimeSlotVo;
 import com.asap.server.service.time.vo.UserScheduleByTimeSlotVo.CompositeKey;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +49,10 @@ public class UserMeetingScheduleService {
                 .map(this::convertToTimeBlock)
                 .sorted()
                 .toList();
+    }
+
+    public boolean isEmptyHostTimeBlock(final long hostId) {
+        return userMeetingScheduleRepository.countAllByUserId(hostId) == 0;
     }
 
     private Stream<UserScheduleByTimeSlotVo> convertToUserScheduleByTimeSlot(

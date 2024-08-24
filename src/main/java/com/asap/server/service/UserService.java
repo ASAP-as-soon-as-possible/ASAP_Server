@@ -62,8 +62,10 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
         if (!meeting.authenticateHost(userId)) {
             throw new UnauthorizedException(INVALID_MEETING_HOST_EXCEPTION);
-        if (!timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost()))
+        }
+        if (!userMeetingScheduleService.isEmptyHostTimeBlock(meeting.getHost().getId())) {
             throw new ConflictException(Error.HOST_TIME_EXIST_EXCEPTION);
+        }
 
         isDuplicatedDate(requestDtos);
         requestDtos.forEach(requestDto -> createUserTimeBlock(meeting, meeting.getHost(), requestDto));
