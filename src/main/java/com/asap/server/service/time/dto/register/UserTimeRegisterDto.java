@@ -1,4 +1,4 @@
-package com.asap.server.service.time.dto;
+package com.asap.server.service.time.dto.register;
 
 import java.util.List;
 
