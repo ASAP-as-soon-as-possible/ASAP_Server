@@ -33,6 +33,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 public class CreateUserTimeE2ETest {
@@ -52,7 +53,6 @@ public class CreateUserTimeE2ETest {
     class MemberCreateUserTimeTest {
         @Test
         @DisplayName("[성공 케이스] 멤버가 회의 시간을 성공적으로 등록할 수 있다.")
-        @Transactional
         void test() throws Exception {
             // given
             UserMeetingTimeSaveRequestDto userMeetingTimeSaveRequestDto = new UserMeetingTimeSaveRequestDto("7", "9",
@@ -101,7 +101,6 @@ public class CreateUserTimeE2ETest {
 
         @Test
         @DisplayName("[오류 케이스] 멤버가 특정 요일에 중복된 시간을 입력하면 400 에러를 반환한다.")
-        @Transactional
         void test2() throws Exception {
             // given
             UserMeetingTimeSaveRequestDto userMeetingTimeSaveRequestDto = new UserMeetingTimeSaveRequestDto("7", "9",
@@ -144,7 +143,6 @@ public class CreateUserTimeE2ETest {
     class HostCreateUserTimeTest {
         @Test
         @DisplayName("[성공 케이스] 방장이 회의 시간을 성공적으로 등록할 수 있다.")
-        @Transactional
         void test() throws Exception {
             // given
             UserMeetingTimeSaveRequestDto userMeetingTimeSaveRequestDto = new UserMeetingTimeSaveRequestDto("7", "9",
@@ -202,7 +200,6 @@ public class CreateUserTimeE2ETest {
 
         @Test
         @DisplayName("[오류 케이스] 방장이 특정 요일에 중복된 시간을 입력하면 400 에러를 반환한다.")
-        @Transactional
         void test2() throws Exception {
             // given
             UserMeetingTimeSaveRequestDto userMeetingTimeSaveRequestDto = new UserMeetingTimeSaveRequestDto("7", "9",
@@ -251,7 +248,6 @@ public class CreateUserTimeE2ETest {
 
         @Test
         @DisplayName("[오류 케이스] 요청자가 방장이 아닐 경우 401 에러를 반환한다.")
-        @Transactional
         void test3() throws Exception {
             // given
             UserMeetingTimeSaveRequestDto userMeetingTimeSaveRequestDto = new UserMeetingTimeSaveRequestDto("7", "9",
@@ -300,7 +296,6 @@ public class CreateUserTimeE2ETest {
 
         @Test
         @DisplayName("[오류 케이스] 방장이 이미 시간을 입력했을 경우, 추가 입력 요청 시 409 에러를 반환한다.")
-        @Transactional
         void test4() throws Exception {
             // given
             UserMeetingTimeSaveRequestDto userMeetingTimeSaveRequestDto = new UserMeetingTimeSaveRequestDto("7", "9",
