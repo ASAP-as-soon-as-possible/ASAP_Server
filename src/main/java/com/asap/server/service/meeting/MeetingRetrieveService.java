@@ -1,7 +1,5 @@
 package com.asap.server.service.meeting;
 
-import static com.asap.server.common.exception.Error.MEETING_VALIDATION_FAILED_EXCEPTION;
-
 import com.asap.server.common.exception.Error;
 import com.asap.server.common.exception.model.ConflictException;
 import com.asap.server.common.exception.model.NotFoundException;
@@ -20,19 +18,19 @@ import com.asap.server.service.time.vo.BestMeetingTimeVo;
 import com.asap.server.service.time.vo.BestMeetingTimeWithUsers;
 import com.asap.server.service.time.vo.TimeBlockVo;
 import com.asap.server.service.user.UserRetrieveService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import static com.asap.server.common.exception.Error.MEETING_VALIDATION_FAILED_EXCEPTION;
+import static java.util.function.Predicate.isEqual;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class MeetingRetrieveService {
     private final MeetingRepository meetingRepository;
@@ -93,7 +91,7 @@ public class MeetingRetrieveService {
     }
 
     @Transactional(readOnly = true)
-    public TimeTableRetrieveDto getTimeTable(final Long meetingId, final Long userId) {
+    public TimeTableRetrieveDto getTimeTable(final Long userId, final Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
@@ -103,18 +101,20 @@ public class MeetingRetrieveService {
         if (meeting.isConfirmedMeeting()) {
             throw new ConflictException(MEETING_VALIDATION_FAILED_EXCEPTION);
         }
+        Map<Long, User> userIdToUserMap = userRetrieveService.getUserIdToUserMap(meetingId);
 
-        List<String> userNames = userRetrieveService.getUsersFromMeetingId(meetingId).stream().map(User::getName).toList();
+        List<String> userNames = userIdToUserMap.keySet().stream()
+                .sorted()
+                .map(id -> userIdToUserMap.get(id).getName())
+                .toList();
 
-        return TimeTableRetrieveDto.of(userNames, getAvailableDatesDto(meetingId, userNames.size()));
+        return TimeTableRetrieveDto.of(userNames, getAvailableDatesDto(meetingId, userNames.size(), userIdToUserMap));
 
     }
 
-    private List<AvailableDatesRetrieveDto> getAvailableDatesDto(final Long meetingId, final int totalUserCount) {
+    private List<AvailableDatesRetrieveDto> getAvailableDatesDto(final Long meetingId, final int totalUserCount, final Map<Long, User> userIdToUserMap) {
         List<TimeBlockVo> timeBlockVos = userMeetingScheduleService.getTimeBlocks(meetingId);
-        log.info("Query----- Start");
-        Map<LocalDate, List<TimeBlockRetrieveDto>> timeSlotDtoMappedByDate = getTimeTableMapFromTimeBlockVo(timeBlockVos, totalUserCount);
-        log.info("Query----- Start");
+        Map<LocalDate, List<TimeBlockRetrieveDto>> timeSlotDtoMappedByDate = getTimeTableMapFromTimeBlockVo(timeBlockVos, totalUserCount, userIdToUserMap);
         return timeSlotDtoMappedByDate.keySet().stream().map(
                 date -> AvailableDatesRetrieveDto.of(
                         date,
@@ -123,13 +123,16 @@ public class MeetingRetrieveService {
         ).toList();
     }
 
-    private Map<LocalDate, List<TimeBlockRetrieveDto>> getTimeTableMapFromTimeBlockVo(final List<TimeBlockVo> timeBlockVo, final int totalUserCount) {
+    private Map<LocalDate, List<TimeBlockRetrieveDto>> getTimeTableMapFromTimeBlockVo(final List<TimeBlockVo> timeBlockVo, final int totalUserCount, final Map<Long, User> userIdToUserMap) {
         return timeBlockVo.stream()
                 .collect(Collectors.groupingBy(
                         TimeBlockVo::availableDate,
                         Collectors.mapping(t -> new TimeBlockRetrieveDto(
                                         t.timeSlot().getTime(),
-                                        userRetrieveService.getUserNamesFromId(t.userIds()),
+                                        t.userIds().stream()
+                                                .filter(userIdToUserMap::containsKey)
+                                                .map(id -> userIdToUserMap.get(id).getName())
+                                                .toList(),
                                         setColorLevel(totalUserCount, t.userIds().size())
                                 ),
                                 Collectors.toList()
