@@ -25,12 +25,4 @@ public class UserRetrieveService {
                 .findAllByMeetingId(meetingId).stream()
                 .collect(Collectors.toMap(User::getId, user -> user));
     }
-
-    public List<String> getUserNamesFromId(final List<Long> userIds) {
-        return userRepository.findAllByIdIn(userIds).stream().map(User::getName).toList();
-    }
-
-    public List<User> getUsersFromMeetingId(final Long meetingId) {
-        return userRepository.findAllByMeetingId(meetingId);
-    }
 }
