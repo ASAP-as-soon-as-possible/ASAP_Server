@@ -1,19 +1,24 @@
 package com.asap.server.presentation.controller.dto.response;
 
-import lombok.AllArgsConstructor;
+import com.asap.server.service.time.dto.retrieve.AvailableDatesRetrieveDto;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
 
 import java.util.List;
 
-@Getter
-@ToString
-@AllArgsConstructor
 @Builder
-public class AvailableDatesDto {
-    private String month;
-    private String day;
-    private String dayOfWeek;
-    private List<TimeSlotDto> timeSlots;
+public record AvailableDatesDto(
+        String month,
+        String day,
+        String dayOfWeek,
+        List<TimeSlotDto> timeSlots
+) {
+    public static List<AvailableDatesDto> of(final List<AvailableDatesRetrieveDto> retrieveDtos) {
+        return retrieveDtos.stream().map(
+                dto -> new AvailableDatesDto(
+                        dto.month(),
+                        dto.day(),
+                        dto.dayOfWeek(),
+                        TimeSlotDto.of(dto.timeSlots())
+                )).toList();
+    }
 }

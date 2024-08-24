@@ -1,6 +1,6 @@
 package com.asap.server.presentation.controller.dto.request;
 
-import com.asap.server.service.time.dto.UserTimeRegisterDto;
+import com.asap.server.service.time.dto.register.UserTimeRegisterDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 

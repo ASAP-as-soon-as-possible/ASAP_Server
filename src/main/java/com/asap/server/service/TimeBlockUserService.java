@@ -39,7 +39,6 @@ public class TimeBlockUserService {
                 .time(timeBlock.getTimeSlot().getTime())
                 .userNames(findUsersByTimeBlock(timeBlock).stream().map(User::getName).collect(Collectors.toList()))
                 .build();
-        timeSlotDto.setColorLevel(memberCount);
         return timeSlotDto;
     }
 

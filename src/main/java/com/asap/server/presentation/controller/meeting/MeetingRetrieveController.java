@@ -52,7 +52,10 @@ public class MeetingRetrieveController implements MeetingRetrieveControllerDocs 
             @MeetingPathVariable final Long meetingId,
             @UserId final Long userId
     ) {
-        return SuccessResponse.success(Success.FIND_TIME_TABLE_SUCCESS, meetingService.getTimeTable(userId, meetingId));
+        return SuccessResponse.success(
+                Success.FIND_TIME_TABLE_SUCCESS,
+                TimeTableResponseDto.of(meetingRetrieveService.getTimeTable(userId, meetingId))
+        );
     }
 
     @GetMapping("/{meetingId}")
