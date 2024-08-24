@@ -14,7 +14,7 @@ import com.asap.server.service.meeting.dto.UserDto;
 import com.asap.server.service.time.MeetingTimeRecommendService;
 import com.asap.server.service.time.UserMeetingScheduleService;
 import com.asap.server.service.time.dto.retrieve.AvailableDatesRetrieveDto;
-import com.asap.server.service.time.dto.retrieve.TimeSlotRetrieveDto;
+import com.asap.server.service.time.dto.retrieve.TimeBlockRetrieveDto;
 import com.asap.server.service.time.dto.retrieve.TimeTableRetrieveDto;
 import com.asap.server.service.time.vo.BestMeetingTimeVo;
 import com.asap.server.service.time.vo.BestMeetingTimeWithUsers;
@@ -27,10 +27,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class MeetingRetrieveService {
     private final MeetingRepository meetingRepository;
@@ -110,9 +112,9 @@ public class MeetingRetrieveService {
 
     private List<AvailableDatesRetrieveDto> getAvailableDatesDto(final Long meetingId, final int totalUserCount) {
         List<TimeBlockVo> timeBlockVos = userMeetingScheduleService.getTimeBlocks(meetingId);
-
-        Map<LocalDate, List<TimeSlotRetrieveDto>> timeSlotDtoMappedByDate = getTimeTableMapFromTimeBlockVo(timeBlockVos, totalUserCount);
-
+        log.info("Query----- Start");
+        Map<LocalDate, List<TimeBlockRetrieveDto>> timeSlotDtoMappedByDate = getTimeTableMapFromTimeBlockVo(timeBlockVos, totalUserCount);
+        log.info("Query----- Start");
         return timeSlotDtoMappedByDate.keySet().stream().map(
                 date -> AvailableDatesRetrieveDto.of(
                         date,
@@ -121,11 +123,11 @@ public class MeetingRetrieveService {
         ).toList();
     }
 
-    private Map<LocalDate, List<TimeSlotRetrieveDto>> getTimeTableMapFromTimeBlockVo(final List<TimeBlockVo> timeBlockVo, final int totalUserCount) {
+    private Map<LocalDate, List<TimeBlockRetrieveDto>> getTimeTableMapFromTimeBlockVo(final List<TimeBlockVo> timeBlockVo, final int totalUserCount) {
         return timeBlockVo.stream()
                 .collect(Collectors.groupingBy(
                         TimeBlockVo::availableDate,
-                        Collectors.mapping(t -> new TimeSlotRetrieveDto(
+                        Collectors.mapping(t -> new TimeBlockRetrieveDto(
                                         t.timeSlot().getTime(),
                                         userRetrieveService.getUserNamesFromId(t.userIds()),
                                         setColorLevel(totalUserCount, t.userIds().size())
@@ -135,7 +137,7 @@ public class MeetingRetrieveService {
                 ));
     }
 
-    public int setColorLevel(final int memberCount, final int availableUserCount) {
+    private int setColorLevel(final int memberCount, final int availableUserCount) {
         double ratio = (double) availableUserCount / memberCount;
 
         if (ratio <= 0.2) {

@@ -9,9 +9,9 @@ public record AvailableDatesRetrieveDto(
         String month,
         String day,
         String dayOfWeek,
-        List<TimeSlotRetrieveDto> timeSlots
+        List<TimeBlockRetrieveDto> timeSlots
 ) {
-    public static AvailableDatesRetrieveDto of(final LocalDate date, final List<TimeSlotRetrieveDto> timeSlots) {
+    public static AvailableDatesRetrieveDto of(final LocalDate date, final List<TimeBlockRetrieveDto> timeSlots) {
         return new AvailableDatesRetrieveDto(
                 DateUtil.getMonth(date),
                 DateUtil.getDay(date),
