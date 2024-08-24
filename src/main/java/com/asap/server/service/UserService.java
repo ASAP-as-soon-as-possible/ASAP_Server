@@ -1,7 +1,6 @@
 package com.asap.server.service;
 
 import static com.asap.server.common.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
-import static com.asap.server.common.exception.Error.USER_NOT_FOUND_EXCEPTION;
 
 import com.asap.server.common.exception.Error;
 import com.asap.server.common.exception.model.BadRequestException;
