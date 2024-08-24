@@ -259,7 +259,7 @@ class MeetingRetrieveServiceTest {
     class MeetingTimeTableTest {
 
         @Test
-        @DisplayName("회의 참여자 2명 중 2명이 가능한 시간대에 대해 colorLevel 5를, 1명이 가능한 시간대에 대해 1을 반환한다")
+        @DisplayName("각 참여자 수에 맞는 colorLevel을 반환한다.")
         void testTimeTable() {
 
             // given
@@ -299,12 +299,7 @@ class MeetingRetrieveServiceTest {
 
             when(meetingRepository.findById(1L)).thenReturn(Optional.of(meeting));
             when(userMeetingScheduleService.getTimeBlocks(1L)).thenReturn(timeBlocks);
-            when(userRetrieveService.getUsersFromMeetingId(1L)).thenReturn(List.of(user, user2, user3, user4, user5));
-            when(userRetrieveService.getUserNamesFromId(List.of(1L, 2L, 3L, 4L, 5L))).thenReturn(List.of("KWY", "DSH", "SJW", "SCW", "KTH"));
-            when(userRetrieveService.getUserNamesFromId(List.of(1L, 2L, 3L, 4L))).thenReturn(List.of("KWY", "DSH", "SJW", "SCW"));
-            when(userRetrieveService.getUserNamesFromId(List.of(1L, 2L, 3L))).thenReturn(List.of("KWY", "DSH", "SJW"));
-            when(userRetrieveService.getUserNamesFromId(List.of(1L, 2L))).thenReturn(List.of("KWY", "DSH"));
-            when(userRetrieveService.getUserNamesFromId(List.of(1L))).thenReturn(List.of("KWY"));
+            when(userRetrieveService.getUserIdToUserMap(1L)).thenReturn(Map.of(1L, user, 2L, user2, 3L, user3, 4L, user4, 5L, user5));
 
 
             List<TimeBlockRetrieveDto> expectedTimeSlotDto = List.of(
