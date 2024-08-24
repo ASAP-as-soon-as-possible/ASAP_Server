@@ -9,7 +9,6 @@ import com.asap.server.common.exception.model.ConflictException;
 import com.asap.server.common.exception.model.NotFoundException;
 import com.asap.server.common.exception.model.UnauthorizedException;
 import com.asap.server.common.jwt.JwtService;
-import com.asap.server.persistence.domain.AvailableDate;
 import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.enums.Role;
 import com.asap.server.persistence.domain.enums.TimeSlot;
@@ -36,9 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final TimeBlockService timeBlockService;
-    private final TimeBlockUserService timeBlockUserService;
-    private final AvailableDateService availableDateService;
     private final MeetingRepository meetingRepository;
     private final JwtService jwtService;
     private final UserMeetingScheduleService userMeetingScheduleService;
@@ -57,12 +53,14 @@ public class UserService {
     }
 
     @Transactional
-    public UserMeetingTimeResponseDto createHostTime(final Long meetingId,
-                                                     final Long userId,
-                                                     final List<UserMeetingScheduleRegisterDto> requestDtos) {
+    public UserMeetingTimeResponseDto createHostTime(
+            final Long meetingId,
+            final Long userId,
+            final List<UserMeetingScheduleRegisterDto> requestDtos
+    ) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-        if (!meeting.authenticateHost(userId))
+        if (!meeting.authenticateHost(userId)) {
             throw new UnauthorizedException(INVALID_MEETING_HOST_EXCEPTION);
         if (!timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost()))
             throw new ConflictException(Error.HOST_TIME_EXIST_EXCEPTION);
@@ -102,14 +100,11 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    private void createUserTimeBlock(final Meeting meeting,
-                                     final User user,
-                                     final UserMeetingScheduleRegisterDto registerDto) {
-        AvailableDate availableDate = availableDateService.findByMeetingAndDate(meeting, registerDto.month(), registerDto.day());
-        TimeSlot.getTimeSlots(registerDto.startTime().ordinal(), registerDto.endTime().ordinal() - 1)
-                .stream()
-                .map(timeSlot -> timeBlockService.searchTimeBlock(timeSlot, availableDate, registerDto.priority())).toList()
-                .forEach(timeBlock -> timeBlock.addTimeBlockUsers(timeBlockUserService.create(timeBlock, user)));
+    private void createUserTimeBlock(
+            final Meeting meeting,
+            final User user,
+            final UserMeetingScheduleRegisterDto registerDto
+    ) {
         userMeetingScheduleService.createUserMeetingSchedule(user.getId(), meeting.getId(), registerDto);
     }
 
