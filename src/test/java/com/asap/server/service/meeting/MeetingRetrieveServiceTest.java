@@ -3,6 +3,7 @@ package com.asap.server.service.meeting;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
 
+import com.asap.server.common.utils.DateUtil;
 import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.enums.Duration;
 import com.asap.server.persistence.domain.enums.TimeSlot;
@@ -13,15 +14,20 @@ import com.asap.server.service.meeting.dto.BestMeetingTimeDto;
 import com.asap.server.service.meeting.dto.UserDto;
 import com.asap.server.service.time.MeetingTimeRecommendService;
 import com.asap.server.service.time.UserMeetingScheduleService;
+import com.asap.server.service.time.dto.retrieve.AvailableDatesRetrieveDto;
+import com.asap.server.service.time.dto.retrieve.TimeSlotRetrieveDto;
+import com.asap.server.service.time.dto.retrieve.TimeTableRetrieveDto;
 import com.asap.server.service.time.vo.TimeBlockVo;
 import com.asap.server.service.user.UserRetrieveService;
 import com.asap.server.service.time.vo.BestMeetingTimeVo;
 import com.asap.server.service.time.vo.BestMeetingTimeWithUsers;
+
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -246,5 +252,67 @@ class MeetingRetrieveServiceTest {
             // then
             assertThat(expected).isEqualTo(result);
         }
+    }
+
+    @Nested
+    @DisplayName("회의 종합 일정 시간표 테스트")
+    class MeetingTimeTableTest {
+
+        @Test
+        @DisplayName("회의 참여자 2명 중 2명이 가능한 시간대에 대해 colorLevel 5를, 1명이 가능한 시간대에 대해 1을 반환한다")
+        void testTimeTable() {
+
+            // given
+            Meeting meeting = Meeting.builder()
+                    .id(1L)
+                    .host(User.builder().id(1L).build())
+                    .duration(Duration.HALF)
+                    .build();
+            User user = User.builder()
+                    .id(1L)
+                    .name(new Name("KWY"))
+                    .build();
+            User user2 = User.builder()
+                    .id(2L)
+                    .name(new Name("DSH"))
+                    .build();
+            LocalDate date = LocalDate.of(2024, 7, 9);
+            List<TimeBlockVo> timeBlocks = List.of(
+                    new TimeBlockVo(date, TimeSlot.SLOT_12_00, 0, List.of(1L, 2L)),
+                    new TimeBlockVo(date, TimeSlot.SLOT_13_00, 0, List.of(1L)),
+                    new TimeBlockVo(date, TimeSlot.SLOT_14_00, 0, List.of(1L, 2L))
+            );
+
+            when(meetingRepository.findById(1L)).thenReturn(Optional.of(meeting));
+            when(userMeetingScheduleService.getTimeBlocks(1L)).thenReturn(timeBlocks);
+            when(userRetrieveService.getUsersFromMeetingId(1L)).thenReturn(List.of(user, user2));
+            when(userRetrieveService.getUserNamesFromId(List.of(1L, 2L))).thenReturn(List.of(new String[]{"KWY", "DSH"}));
+            when(userRetrieveService.getUserNamesFromId(List.of(1L))).thenReturn(List.of(new String[]{"KWY"}));
+
+
+            List<TimeSlotRetrieveDto> expectedTimeSlotDto = List.of(
+                    new TimeSlotRetrieveDto("12:00", List.of("KWY", "DSH"), 5),
+                    new TimeSlotRetrieveDto("13:00", List.of("KWY"), 3),
+                    new TimeSlotRetrieveDto("14:00", List.of("KWY", "DSH"), 5)
+            );
+
+            List<AvailableDatesRetrieveDto> expectedAvailableDto = List.of(
+                    new AvailableDatesRetrieveDto(
+                            DateUtil.getMonth(date),
+                            DateUtil.getDay(date),
+                            DateUtil.getDayOfWeek(date),
+                            expectedTimeSlotDto
+                    )
+            );
+            TimeTableRetrieveDto expected = TimeTableRetrieveDto.of(
+                    List.of(new String[]{"KWY", "DSH"}),
+                    expectedAvailableDto
+            );
+
+            TimeTableRetrieveDto result = meetingRetrieveService.getTimeTable(1L, 1L);
+
+            assertThat(expected).isEqualTo(result);
+        }
+
     }
 }
