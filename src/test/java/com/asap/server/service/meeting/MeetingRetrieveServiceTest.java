@@ -15,7 +15,7 @@ import com.asap.server.service.meeting.dto.UserDto;
 import com.asap.server.service.time.MeetingTimeRecommendService;
 import com.asap.server.service.time.UserMeetingScheduleService;
 import com.asap.server.service.time.dto.retrieve.AvailableDatesRetrieveDto;
-import com.asap.server.service.time.dto.retrieve.TimeSlotRetrieveDto;
+import com.asap.server.service.time.dto.retrieve.TimeBlockRetrieveDto;
 import com.asap.server.service.time.dto.retrieve.TimeTableRetrieveDto;
 import com.asap.server.service.time.vo.TimeBlockVo;
 import com.asap.server.service.user.UserRetrieveService;
@@ -276,24 +276,43 @@ class MeetingRetrieveServiceTest {
                     .id(2L)
                     .name(new Name("DSH"))
                     .build();
+            User user3 = User.builder()
+                    .id(3L)
+                    .name(new Name("SJW"))
+                    .build();
+            User user4 = User.builder()
+                    .id(4L)
+                    .name(new Name("SCW"))
+                    .build();
+            User user5 = User.builder()
+                    .id(5L)
+                    .name(new Name("KTH"))
+                    .build();
             LocalDate date = LocalDate.of(2024, 7, 9);
             List<TimeBlockVo> timeBlocks = List.of(
-                    new TimeBlockVo(date, TimeSlot.SLOT_12_00, 0, List.of(1L, 2L)),
-                    new TimeBlockVo(date, TimeSlot.SLOT_13_00, 0, List.of(1L)),
-                    new TimeBlockVo(date, TimeSlot.SLOT_14_00, 0, List.of(1L, 2L))
+                    new TimeBlockVo(date, TimeSlot.SLOT_12_00, 0, List.of(1L, 2L, 3L, 4L, 5L)),
+                    new TimeBlockVo(date, TimeSlot.SLOT_13_00, 0, List.of(1L, 2L, 3L, 4L)),
+                    new TimeBlockVo(date, TimeSlot.SLOT_14_00, 0, List.of(1L, 2L, 3L)),
+                    new TimeBlockVo(date, TimeSlot.SLOT_15_00, 0, List.of(1L, 2L)),
+                    new TimeBlockVo(date, TimeSlot.SLOT_16_00, 0, List.of(1L))
             );
 
             when(meetingRepository.findById(1L)).thenReturn(Optional.of(meeting));
             when(userMeetingScheduleService.getTimeBlocks(1L)).thenReturn(timeBlocks);
-            when(userRetrieveService.getUsersFromMeetingId(1L)).thenReturn(List.of(user, user2));
-            when(userRetrieveService.getUserNamesFromId(List.of(1L, 2L))).thenReturn(List.of(new String[]{"KWY", "DSH"}));
-            when(userRetrieveService.getUserNamesFromId(List.of(1L))).thenReturn(List.of(new String[]{"KWY"}));
+            when(userRetrieveService.getUsersFromMeetingId(1L)).thenReturn(List.of(user, user2, user3, user4, user5));
+            when(userRetrieveService.getUserNamesFromId(List.of(1L, 2L, 3L, 4L, 5L))).thenReturn(List.of("KWY", "DSH", "SJW", "SCW", "KTH"));
+            when(userRetrieveService.getUserNamesFromId(List.of(1L, 2L, 3L, 4L))).thenReturn(List.of("KWY", "DSH", "SJW", "SCW"));
+            when(userRetrieveService.getUserNamesFromId(List.of(1L, 2L, 3L))).thenReturn(List.of("KWY", "DSH", "SJW"));
+            when(userRetrieveService.getUserNamesFromId(List.of(1L, 2L))).thenReturn(List.of("KWY", "DSH"));
+            when(userRetrieveService.getUserNamesFromId(List.of(1L))).thenReturn(List.of("KWY"));
 
 
-            List<TimeSlotRetrieveDto> expectedTimeSlotDto = List.of(
-                    new TimeSlotRetrieveDto("12:00", List.of("KWY", "DSH"), 5),
-                    new TimeSlotRetrieveDto("13:00", List.of("KWY"), 3),
-                    new TimeSlotRetrieveDto("14:00", List.of("KWY", "DSH"), 5)
+            List<TimeBlockRetrieveDto> expectedTimeSlotDto = List.of(
+                    new TimeBlockRetrieveDto("12:00", List.of("KWY", "DSH", "SJW", "SCW", "KTH"), 5),
+                    new TimeBlockRetrieveDto("13:00", List.of("KWY", "DSH", "SJW", "SCW"), 4),
+                    new TimeBlockRetrieveDto("14:00", List.of("KWY", "DSH", "SJW"), 3),
+                    new TimeBlockRetrieveDto("15:00", List.of("KWY", "DSH"), 2),
+                    new TimeBlockRetrieveDto("16:00", List.of("KWY"), 1)
             );
 
             List<AvailableDatesRetrieveDto> expectedAvailableDto = List.of(
@@ -305,13 +324,13 @@ class MeetingRetrieveServiceTest {
                     )
             );
             TimeTableRetrieveDto expected = TimeTableRetrieveDto.of(
-                    List.of(new String[]{"KWY", "DSH"}),
+                    List.of("KWY", "DSH", "SJW", "SCW", "KTH"),
                     expectedAvailableDto
             );
 
             TimeTableRetrieveDto result = meetingRetrieveService.getTimeTable(1L, 1L);
 
-            assertThat(expected).isEqualTo(result);
+            assertThat(result).isEqualTo(expected);
         }
 
     }
