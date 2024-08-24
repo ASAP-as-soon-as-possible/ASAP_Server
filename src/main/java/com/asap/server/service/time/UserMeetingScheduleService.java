@@ -8,13 +8,14 @@ import com.asap.server.service.time.dto.register.UserMeetingScheduleRegisterDto;
 import com.asap.server.service.time.vo.TimeBlockVo;
 import com.asap.server.service.time.vo.UserScheduleByTimeSlotVo;
 import com.asap.server.service.time.vo.UserScheduleByTimeSlotVo.CompositeKey;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,7 @@ public class UserMeetingScheduleService {
                 .availableDate(DateUtil.transformLocalDate(registerDto.month(), registerDto.day()))
                 .startTimeSlot(registerDto.startTime())
                 .endTimeSlot(registerDto.endTime())
+                .weight(registerDto.priority())
                 .build();
         userMeetingScheduleRepository.save(userMeetingSchedule);
     }
