@@ -92,16 +92,6 @@ public class UserService {
                 .build();
     }
 
-    public List<String> findUserNameByMeeting(final Meeting meeting) {
-        List<User> users = userRepository.findByMeeting(meeting);
-        if (users.isEmpty()) {
-            throw new NotFoundException(USER_NOT_FOUND_EXCEPTION);
-        }
-        return users.stream()
-                .map(User::getName)
-                .collect(Collectors.toList());
-    }
-
     private void createUserTimeBlock(
             final Meeting meeting,
             final User user,

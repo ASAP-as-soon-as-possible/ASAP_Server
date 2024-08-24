@@ -143,29 +143,6 @@ public class MeetingService {
                 .build();
     }
 
-    public TimeTableResponseDto getTimeTable(final Long userId, final Long meetingId) {
-        Meeting meeting = meetingRepository.findById(meetingId)
-                .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-
-        if (!meeting.authenticateHost(userId))
-            throw new UnauthorizedException(INVALID_MEETING_HOST_EXCEPTION);
-
-        if (meeting.isConfirmedMeeting())
-            throw new ConflictException(MEETING_VALIDATION_FAILED_EXCEPTION);
-
-        List<String> memberNames = userService.findUserNameByMeeting(meeting);
-
-        List<AvailableDatesDto> availableDatesDtos = availableDateService.findAvailableDateByMeeting(meeting).stream()
-                .map(availableDate -> availableDateService.getAvailableDatesDto(availableDate, memberNames.size()))
-                .collect(Collectors.toList());
-
-        return TimeTableResponseDto.builder()
-                .totalUserNames(memberNames)
-                .memberCount(memberNames.size())
-                .availableDateTimes(availableDatesDtos)
-                .build();
-    }
-
     public MeetingTitleResponseDto getIsFixedMeeting(final Long meetingId) throws ConflictException {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
