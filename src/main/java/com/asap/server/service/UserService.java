@@ -68,7 +68,7 @@ public class UserService {
             throw new ConflictException(Error.HOST_TIME_EXIST_EXCEPTION);
         }
 
-        createUserTimeBlock(meetingId, hostId, requestDtos);
+        userMeetingScheduleService.createUserMeetingSchedule(meetingId, hostId, requestDtos);
 
         String accessToken = jwtService.issuedToken(meeting.getHost().getId().toString());
 
@@ -88,39 +88,13 @@ public class UserService {
 
         User user = createUser(meeting, new Name(registerDto.name()), Role.MEMBER);
 
-        createUserTimeBlock(meetingId, user.getId(), registerDto.availableSchedules());
+        userMeetingScheduleService.createUserMeetingSchedule(meetingId, user.getId(), registerDto.availableSchedules());
 
         return UserTimeResponseDto.builder()
                 .role(Role.MEMBER.getRole())
                 .build();
     }
 
-    private void createUserTimeBlock(
-            final long meetingId,
-            final long userId,
-            final List<UserMeetingScheduleRegisterDto> availableDates
-    ) {
-        isDuplicatedDate(availableDates);
-        availableDates.forEach(
-                requestDto -> userMeetingScheduleService.createUserMeetingSchedule(userId, meetingId, requestDto)
-        );
-    }
-
-    private void isDuplicatedDate(final List<UserMeetingScheduleRegisterDto> registerDto) {
-        Map<String, List<TimeSlot>> meetingTimeAvailable = new HashMap<>();
-        for (UserMeetingScheduleRegisterDto requestDto : registerDto) {
-            String col = String.format("%s %s", requestDto.month(), requestDto.day());
-            List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(requestDto.startTime().ordinal(),
-                    requestDto.endTime().ordinal() - 1);
-            if (meetingTimeAvailable.containsKey(col)) {
-                if (meetingTimeAvailable.get(col).stream().anyMatch(timeSlots::contains)) {
-                    throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
-                }
-            } else {
-                meetingTimeAvailable.put(col, timeSlots);
-            }
-        }
-    }
 
     public List<String> getFixedUsers(final Meeting meeting) {
         return userRepository
