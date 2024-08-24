@@ -4,7 +4,7 @@ import com.asap.server.common.utils.DateUtil;
 import com.asap.server.persistence.domain.enums.TimeSlot;
 import com.asap.server.persistence.domain.time.UserMeetingSchedule;
 import com.asap.server.persistence.repository.UserMeetingScheduleRepository;
-import com.asap.server.service.time.dto.UserMeetingScheduleRegisterDto;
+import com.asap.server.service.time.dto.register.UserMeetingScheduleRegisterDto;
 import com.asap.server.service.time.vo.TimeBlockVo;
 import com.asap.server.service.time.vo.UserScheduleByTimeSlotVo;
 import com.asap.server.service.time.vo.UserScheduleByTimeSlotVo.CompositeKey;
