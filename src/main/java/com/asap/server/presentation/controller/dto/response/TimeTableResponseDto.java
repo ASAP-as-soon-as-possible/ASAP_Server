@@ -1,11 +1,8 @@
 package com.asap.server.presentation.controller.dto.response;
 
 import com.asap.server.service.time.dto.retrieve.TimeTableRetrieveDto;
-import lombok.Builder;
-
 import java.util.List;
 
-@Builder
 public record TimeTableResponseDto(
         int memberCount,
         List<String> totalUserNames,

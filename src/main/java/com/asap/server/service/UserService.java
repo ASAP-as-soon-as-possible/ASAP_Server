@@ -1,7 +1,6 @@
 package com.asap.server.service;
 
 import static com.asap.server.common.exception.Error.INVALID_MEETING_HOST_EXCEPTION;
-import static com.asap.server.common.exception.Error.USER_NOT_FOUND_EXCEPTION;
 
 import com.asap.server.common.exception.Error;
 import com.asap.server.common.exception.model.BadRequestException;
@@ -9,7 +8,6 @@ import com.asap.server.common.exception.model.ConflictException;
 import com.asap.server.common.exception.model.NotFoundException;
 import com.asap.server.common.exception.model.UnauthorizedException;
 import com.asap.server.common.jwt.JwtService;
-import com.asap.server.persistence.domain.AvailableDate;
 import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.enums.Role;
 import com.asap.server.persistence.domain.enums.TimeSlot;
@@ -36,9 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final TimeBlockService timeBlockService;
-    private final TimeBlockUserService timeBlockUserService;
-    private final AvailableDateService availableDateService;
     private final MeetingRepository meetingRepository;
     private final JwtService jwtService;
     private final UserMeetingScheduleService userMeetingScheduleService;
@@ -57,18 +52,23 @@ public class UserService {
     }
 
     @Transactional
-    public UserMeetingTimeResponseDto createHostTime(final Long meetingId,
-                                                     final Long userId,
-                                                     final List<UserMeetingScheduleRegisterDto> requestDtos) {
+    public UserMeetingTimeResponseDto createHostTime(
+            final Long meetingId,
+            final Long hostId,
+            final List<UserMeetingScheduleRegisterDto> requestDtos
+    ) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
-        if (!meeting.authenticateHost(userId))
-            throw new UnauthorizedException(INVALID_MEETING_HOST_EXCEPTION);
-        if (!timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost()))
-            throw new ConflictException(Error.HOST_TIME_EXIST_EXCEPTION);
 
-        isDuplicatedDate(requestDtos);
-        requestDtos.forEach(requestDto -> createUserTimeBlock(meeting, meeting.getHost(), requestDto));
+        if (!meeting.authenticateHost(hostId)) {
+            throw new UnauthorizedException(INVALID_MEETING_HOST_EXCEPTION);
+        }
+
+        if (!userMeetingScheduleService.isEmptyHostTimeBlock(meeting.getHost().getId())) {
+            throw new ConflictException(Error.HOST_TIME_EXIST_EXCEPTION);
+        }
+
+        userMeetingScheduleService.createUserMeetingSchedule(meetingId, hostId, requestDtos);
 
         String accessToken = jwtService.issuedToken(meeting.getHost().getId().toString());
 
@@ -79,54 +79,22 @@ public class UserService {
     }
 
     @Transactional
-    public UserTimeResponseDto createUserTime(final Long meetingId,
-                                              final UserTimeRegisterDto registerDto) {
+    public UserTimeResponseDto createUserTime(
+            final Long meetingId,
+            final UserTimeRegisterDto registerDto
+    ) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new NotFoundException(Error.MEETING_NOT_FOUND_EXCEPTION));
 
         User user = createUser(meeting, new Name(registerDto.name()), Role.MEMBER);
-        isDuplicatedDate(registerDto.availableSchedules());
-        registerDto.availableSchedules().forEach(availableTime -> createUserTimeBlock(meeting, user, availableTime));
+
+        userMeetingScheduleService.createUserMeetingSchedule(meetingId, user.getId(), registerDto.availableSchedules());
+
         return UserTimeResponseDto.builder()
                 .role(Role.MEMBER.getRole())
                 .build();
     }
 
-    public List<String> findUserNameByMeeting(final Meeting meeting) {
-        List<User> users = userRepository.findByMeeting(meeting);
-        if (users.isEmpty()) {
-            throw new NotFoundException(USER_NOT_FOUND_EXCEPTION);
-        }
-        return users.stream()
-                .map(User::getName)
-                .collect(Collectors.toList());
-    }
-
-    private void createUserTimeBlock(final Meeting meeting,
-                                     final User user,
-                                     final UserMeetingScheduleRegisterDto registerDto) {
-        AvailableDate availableDate = availableDateService.findByMeetingAndDate(meeting, registerDto.month(), registerDto.day());
-        TimeSlot.getTimeSlots(registerDto.startTime().ordinal(), registerDto.endTime().ordinal() - 1)
-                .stream()
-                .map(timeSlot -> timeBlockService.searchTimeBlock(timeSlot, availableDate, registerDto.priority())).toList()
-                .forEach(timeBlock -> timeBlock.addTimeBlockUsers(timeBlockUserService.create(timeBlock, user)));
-        userMeetingScheduleService.createUserMeetingSchedule(user.getId(), meeting.getId(), registerDto);
-    }
-
-    private void isDuplicatedDate(final List<UserMeetingScheduleRegisterDto> registerDto) {
-        Map<String, List<TimeSlot>> meetingTimeAvailable = new HashMap<>();
-        for (UserMeetingScheduleRegisterDto requestDto : registerDto) {
-            String col = String.format("%s %s", requestDto.month(), requestDto.day());
-            List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(requestDto.startTime().ordinal(), requestDto.endTime().ordinal() - 1);
-            if (meetingTimeAvailable.containsKey(col)) {
-                if (meetingTimeAvailable.get(col).stream().anyMatch(timeSlots::contains)) {
-                    throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
-                }
-            } else {
-                meetingTimeAvailable.put(col, timeSlots);
-            }
-        }
-    }
 
     public List<String> getFixedUsers(final Meeting meeting) {
         return userRepository

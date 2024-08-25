@@ -11,7 +11,7 @@ import com.asap.server.common.jwt.JwtService;
 import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.domain.user.Name;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;
-import com.asap.server.service.TimeBlockUserService;
+import com.asap.server.service.time.UserMeetingScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,9 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserLoginService {
     private final MeetingRepository meetingRepository;
+    private final UserMeetingScheduleService userMeetingScheduleService;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
-    private final TimeBlockUserService timeBlockUserService;
 
     @Transactional
     public String loginByHost(
@@ -50,7 +50,7 @@ public class UserLoginService {
 
         String hostAccessToken = jwtService.issuedToken(meeting.getHost().getId().toString());
 
-        if (timeBlockUserService.isEmptyHostTimeBlock(meeting.getHost())) {
+        if (userMeetingScheduleService.isEmptyHostTimeBlock(meeting.getHost().getId())) {
             throw new HostTimeForbiddenException(Error.HOST_MEETING_TIME_NOT_PROVIDED, hostAccessToken);
         }
 

@@ -1,5 +1,7 @@
 package com.asap.server.service.time;
 
+import com.asap.server.common.exception.Error;
+import com.asap.server.common.exception.model.BadRequestException;
 import com.asap.server.common.utils.DateUtil;
 import com.asap.server.persistence.domain.enums.TimeSlot;
 import com.asap.server.persistence.domain.time.UserMeetingSchedule;
@@ -8,14 +10,15 @@ import com.asap.server.service.time.dto.register.UserMeetingScheduleRegisterDto;
 import com.asap.server.service.time.vo.TimeBlockVo;
 import com.asap.server.service.time.vo.UserScheduleByTimeSlotVo;
 import com.asap.server.service.time.vo.UserScheduleByTimeSlotVo.CompositeKey;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,19 +27,25 @@ public class UserMeetingScheduleService {
 
     @Transactional
     public void createUserMeetingSchedule(
-            final Long userId,
-            final Long meetingId,
-            final UserMeetingScheduleRegisterDto registerDto
+            final long meetingId,
+            final long userId,
+            final List<UserMeetingScheduleRegisterDto> availableDates
     ) {
-        UserMeetingSchedule userMeetingSchedule = UserMeetingSchedule.builder()
-                .userId(userId)
-                .meetingId(meetingId)
-                .availableDate(DateUtil.transformLocalDate(registerDto.month(), registerDto.day()))
-                .startTimeSlot(registerDto.startTime())
-                .endTimeSlot(registerDto.endTime())
-                .weight(registerDto.priority())
-                .build();
-        userMeetingScheduleRepository.save(userMeetingSchedule);
+        isDuplicatedDate(availableDates);
+
+        availableDates.forEach(availableDate -> {
+                    UserMeetingSchedule userMeetingSchedule = UserMeetingSchedule.builder()
+                            .userId(userId)
+                            .meetingId(meetingId)
+                            .availableDate(DateUtil.transformLocalDate(availableDate.month(), availableDate.day()))
+                            .startTimeSlot(availableDate.startTime())
+                            .endTimeSlot(availableDate.endTime())
+                            .weight(availableDate.priority())
+                            .build();
+
+                    userMeetingScheduleRepository.save(userMeetingSchedule);
+                }
+        );
     }
 
     @Transactional(readOnly = true)
@@ -50,6 +59,26 @@ public class UserMeetingScheduleService {
                 .map(this::convertToTimeBlock)
                 .sorted()
                 .toList();
+    }
+
+    public boolean isEmptyHostTimeBlock(final long hostId) {
+        return userMeetingScheduleRepository.countAllByUserId(hostId) == 0;
+    }
+
+    private void isDuplicatedDate(final List<UserMeetingScheduleRegisterDto> registerDto) {
+        Map<String, List<TimeSlot>> meetingTimeAvailable = new HashMap<>();
+        for (UserMeetingScheduleRegisterDto requestDto : registerDto) {
+            String col = String.format("%s %s", requestDto.month(), requestDto.day());
+            List<TimeSlot> timeSlots = TimeSlot.getTimeSlots(requestDto.startTime().ordinal(),
+                    requestDto.endTime().ordinal() - 1);
+            if (meetingTimeAvailable.containsKey(col)) {
+                if (meetingTimeAvailable.get(col).stream().anyMatch(timeSlots::contains)) {
+                    throw new BadRequestException(Error.DUPLICATED_TIME_EXCEPTION);
+                }
+            } else {
+                meetingTimeAvailable.put(col, timeSlots);
+            }
+        }
     }
 
     private Stream<UserScheduleByTimeSlotVo> convertToUserScheduleByTimeSlot(

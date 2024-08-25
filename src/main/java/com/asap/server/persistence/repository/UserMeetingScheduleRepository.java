@@ -8,4 +8,6 @@ public interface UserMeetingScheduleRepository extends Repository<UserMeetingSch
     void save(final UserMeetingSchedule userMeetingSchedule);
 
     List<UserMeetingSchedule> findAllByMeetingId(final long meetingId);
+
+    int countAllByUserId(final long hostId);
 }

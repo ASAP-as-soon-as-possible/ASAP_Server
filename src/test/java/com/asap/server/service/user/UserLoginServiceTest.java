@@ -15,7 +15,7 @@ import com.asap.server.persistence.domain.enums.Role;
 import com.asap.server.persistence.domain.user.Name;
 import com.asap.server.persistence.domain.user.User;
 import com.asap.server.persistence.repository.meeting.MeetingRepository;
-import com.asap.server.service.TimeBlockUserService;
+import com.asap.server.service.time.UserMeetingScheduleService;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,18 +35,18 @@ class UserLoginServiceTest {
     private MeetingRepository meetingRepository;
     @Mock
     private JwtService jwtService;
-    private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     @Mock
-    private TimeBlockUserService timeBlockUserService;
+    private UserMeetingScheduleService userMeetingScheduleService;
+    private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     UserLoginService userLoginService;
 
     @BeforeEach
     void setUp() {
         userLoginService = new UserLoginService(
                 meetingRepository,
+                userMeetingScheduleService,
                 jwtService,
-                passwordEncoder,
-                timeBlockUserService
+                passwordEncoder
         );
     }
 
@@ -70,7 +70,7 @@ class UserLoginServiceTest {
                 .build();
         meeting.setHost(host);
         when(meetingRepository.findByIdWithHost(meetingId)).thenReturn(Optional.of(meeting));
-        when(timeBlockUserService.isEmptyHostTimeBlock(host)).thenReturn(false);
+        when(userMeetingScheduleService.isEmptyHostTimeBlock(host.getId())).thenReturn(false);
         when(jwtService.issuedToken("1")).thenReturn("access token");
 
         String expected = "access token";
@@ -187,7 +187,7 @@ class UserLoginServiceTest {
         meeting.setHost(host);
         when(meetingRepository.findByIdWithHost(meetingId)).thenReturn(Optional.of(meeting));
         when(jwtService.issuedToken("1")).thenReturn("access token");
-        when(timeBlockUserService.isEmptyHostTimeBlock(host)).thenReturn(true);
+        when(userMeetingScheduleService.isEmptyHostTimeBlock(host.getId())).thenReturn(true);
 
         // when, then
         assertThatThrownBy(() -> {
