@@ -1,11 +1,8 @@
 package com.asap.server.presentation.controller.dto.response;
 
 import com.asap.server.service.time.dto.retrieve.AvailableDatesRetrieveDto;
-import lombok.Builder;
-
 import java.util.List;
 
-@Builder
 public record AvailableDatesDto(
         String month,
         String day,
