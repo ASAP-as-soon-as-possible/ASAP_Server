@@ -86,7 +86,7 @@ public class UserMeetingScheduleService {
     ) {
         return TimeSlot.getTimeSlots(
                         userMeetingSchedule.getStartTimeSlot().getIndex(),
-                        userMeetingSchedule.getEndTimeSlot().getIndex()
+                        userMeetingSchedule.getEndTimeSlot().getIndex() - 1
                 )
                 .stream()
                 .map(timeSlot -> new UserScheduleByTimeSlotVo(
