@@ -166,4 +166,58 @@ class UserMeetingScheduleServiceTest {
         // then
         assertThat(response).isEqualTo(expected);
     }
+
+    @Test
+    @DisplayName("input [유저 1: 6:00 - 6:30] return [06:00, 유저 1]")
+    void test5() {
+        // given
+        UserMeetingSchedule userMeetingSchedule = UserMeetingSchedule
+                .builder()
+                .userId(1L)
+                .availableDate(LocalDate.of(2024, 7, 9))
+                .startTimeSlot(TimeSlot.SLOT_6_00)
+                .endTimeSlot(TimeSlot.SLOT_6_30)
+                .weight(0)
+                .build();
+
+        List<UserMeetingSchedule> userMeetingSchedules = List.of(userMeetingSchedule);
+        when(userMeetingScheduleRepository.findAllByMeetingId(1L)).thenReturn(userMeetingSchedules);
+
+        List<TimeBlockVo> expected = List.of(
+                new TimeBlockVo(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_6_00, 0, List.of(1L))
+        );
+
+        // when
+        List<TimeBlockVo> response = userMeetingScheduleService.getTimeBlocks(1L);
+
+        // then
+        assertThat(response).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("input [유저 1: 23:30 - 24:00] return [23:30, 유저 1]")
+    void test6() {
+        // given
+        UserMeetingSchedule userMeetingSchedule = UserMeetingSchedule
+                .builder()
+                .userId(1L)
+                .availableDate(LocalDate.of(2024, 7, 9))
+                .startTimeSlot(TimeSlot.SLOT_23_30)
+                .endTimeSlot(TimeSlot.SLOT_24_00)
+                .weight(0)
+                .build();
+
+        List<UserMeetingSchedule> userMeetingSchedules = List.of(userMeetingSchedule);
+        when(userMeetingScheduleRepository.findAllByMeetingId(1L)).thenReturn(userMeetingSchedules);
+
+        List<TimeBlockVo> expected = List.of(
+                new TimeBlockVo(LocalDate.of(2024, 7, 9), TimeSlot.SLOT_23_30, 0, List.of(1L))
+        );
+
+        // when
+        List<TimeBlockVo> response = userMeetingScheduleService.getTimeBlocks(1L);
+
+        // then
+        assertThat(response).isEqualTo(expected);
+    }
 }
