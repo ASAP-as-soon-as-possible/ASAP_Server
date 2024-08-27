@@ -1,5 +1,6 @@
 package com.asap.server.persistence.domain.time;
 
+import com.asap.server.persistence.domain.AuditingTimeEntity;
 import com.asap.server.persistence.domain.enums.TimeSlot;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +19,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserMeetingSchedule {
+public class UserMeetingSchedule extends AuditingTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
