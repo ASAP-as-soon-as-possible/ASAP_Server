@@ -5,7 +5,6 @@ import static com.asap.server.common.exception.Error.INVALID_DATE_FORMAT_EXCEPTI
 import com.asap.server.common.exception.model.BadRequestException;
 import com.asap.server.infra.slack.MetricsEvent;
 import com.asap.server.persistence.repository.internal.MetricsRepository;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,8 +26,14 @@ public class MetricsService {
             throw new BadRequestException(INVALID_DATE_FORMAT_EXCEPTION);
         }
 
-        LocalDateTime from = LocalDate.parse(fromStr, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay();
-        LocalDateTime to = LocalDate.parse(toStr, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay();
+        LocalDateTime from = null;
+        LocalDateTime to = null;
+        if (fromStr != null) {
+            from = LocalDate.parse(fromStr, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay();
+        }
+        if (toStr != null) {
+            to = LocalDate.parse(toStr, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay();
+        }
 
         Map<String, String> metrics = new HashMap<>();
         metrics.put("개설된 총 회의 수", String.valueOf(metricsRepository.countTotalMeetingCount(from, to)));
@@ -39,6 +44,10 @@ public class MetricsService {
     }
 
     private boolean isValidDate(final String dateStr) {
+        if (dateStr == null) {
+            return true;
+        }
+
         try {
             LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE);
             return true;
