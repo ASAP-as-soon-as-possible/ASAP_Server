@@ -18,10 +18,10 @@ public class MetricsController implements MetricsControllerDocs {
 
     @GetMapping("/metrics")
     public SuccessResponse sendMetrics(
-            @RequestParam("from") final String from,
-            @RequestParam("to") final String to
+            @RequestParam(value = "from", required = false) final String from,
+            @RequestParam(value = "to", required = false) final String to
     ) {
-        metricsService.sendMetrics(from.trim(), to.trim());
+        metricsService.sendMetrics(from, to);
         return SuccessResponse.success(Success.GET_METRICS_SUCCESS);
     }
 }

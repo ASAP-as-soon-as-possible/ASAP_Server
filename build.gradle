@@ -19,6 +19,12 @@ bootJar {
     enabled = true;
 }
 
+tasks.test {
+    testLogging {
+        exceptionFormat = 'full'
+    }
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
