@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import com.asap.server.common.exception.model.BadRequestException;
 import com.asap.server.infra.slack.MetricsEvent;
 import com.asap.server.persistence.repository.internal.MetricsRepository;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -70,5 +69,78 @@ class MetricsServiceTest {
         assertThatThrownBy(() -> metricsService.sendMetrics(fromStr, toStr))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage("유효하지 않은 날짜를 입력했습니다.");
+    }
+
+    @DisplayName("시작, 종료 날짜 모두 들어오지 않을 수 있다.")
+    @Test
+    void test3() {
+        // given
+        String fromStr = null;
+        String toStr = null;
+
+        when(metricsRepository.countTotalMeetingCount(null, null)).thenReturn(1L);
+        when(metricsRepository.countTotalUserCount(null, null)).thenReturn(1L);
+        when(metricsRepository.countTotalConfirmedMeetingCount(null, null)).thenReturn(1L);
+        Map<String, String> metrics = Map.of(
+                "개설된 총 회의 수", "1",
+                "사용한 총 사용자 수", "1",
+                "확정된 총 회의 수", "1"
+        );
+
+        // when
+        metricsService.sendMetrics(fromStr, toStr);
+
+        // then
+        verify(publisher, times(1)).publishEvent(new MetricsEvent(metrics));
+    }
+
+    @DisplayName("시작 날짜는 들어오지 않고, 종료 날짜만 들어올 수 있다.")
+    @Test
+    void test4() {
+        // given
+        String fromStr = null;
+        String toStr = "2024-08-26";
+
+        LocalDateTime to = LocalDate.parse(toStr, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay();
+
+        when(metricsRepository.countTotalMeetingCount(null, to)).thenReturn(1L);
+        when(metricsRepository.countTotalUserCount(null, to)).thenReturn(1L);
+        when(metricsRepository.countTotalConfirmedMeetingCount(null, to)).thenReturn(1L);
+        Map<String, String> metrics = Map.of(
+                "개설된 총 회의 수", "1",
+                "사용한 총 사용자 수", "1",
+                "확정된 총 회의 수", "1"
+        );
+
+        // when
+        metricsService.sendMetrics(fromStr, toStr);
+
+        // then
+        verify(publisher, times(1)).publishEvent(new MetricsEvent(metrics));
+    }
+
+    @DisplayName("시작 날짜는 들어오고, 종료 날짜는 들어오지 않을 수 있다.")
+    @Test
+    void test5() {
+        // given
+        String fromStr = "2024-08-26";
+        String toStr = null;
+
+        LocalDateTime from = LocalDate.parse(fromStr, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay();
+
+        when(metricsRepository.countTotalMeetingCount(from, null)).thenReturn(1L);
+        when(metricsRepository.countTotalUserCount(from, null)).thenReturn(1L);
+        when(metricsRepository.countTotalConfirmedMeetingCount(from, null)).thenReturn(1L);
+        Map<String, String> metrics = Map.of(
+                "개설된 총 회의 수", "1",
+                "사용한 총 사용자 수", "1",
+                "확정된 총 회의 수", "1"
+        );
+
+        // when
+        metricsService.sendMetrics(fromStr, toStr);
+
+        // then
+        verify(publisher, times(1)).publishEvent(new MetricsEvent(metrics));
     }
 }
