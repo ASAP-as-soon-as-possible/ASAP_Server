@@ -2,22 +2,17 @@ package com.asap.server.persistence.repository.internal;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import com.asap.server.persistence.config.querydsl.QueryDslConfig;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-@DataJpaTest
-@Import({QueryDslConfig.class, MetricsRepository.class})
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@SpringBootTest
 class MetricsRepositoryGenerateDateFilterTest {
     private static final String INSERT_QUERY_TEMPLATE = "INSERT INTO meeting (title, password, duration, place_type, additional_info, created_at) VALUES ('title', '1234', 'HALF','ONLINE', '', ?)";
 
