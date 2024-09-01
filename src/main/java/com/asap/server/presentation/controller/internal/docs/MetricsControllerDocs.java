@@ -23,7 +23,7 @@ public interface MetricsControllerDocs {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     SuccessResponse sendMetrics(
-            @Parameter(example = "2024-08-12", required = true) final String from,
-            @Parameter(example = "2024-08-15", required = true) final String to
+            @Parameter(example = "2024-08-12") final String from,
+            @Parameter(example = "2024-08-15") final String to
     );
 }
