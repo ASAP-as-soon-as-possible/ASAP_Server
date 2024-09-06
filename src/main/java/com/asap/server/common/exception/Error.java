@@ -14,13 +14,18 @@ public enum Error {
      **/
     INVALID_MEETING_URL_EXCEPTION(HttpStatus.BAD_REQUEST, "유효하지 않는 URL 입니다."),
     VALIDATION_REQUEST_MISSING_EXCEPTION(HttpStatus.BAD_REQUEST, "요청값이 유효하지 않습니다."),
+    ILLEGAL_ARGUMENT_EXCEPTION(HttpStatus.BAD_REQUEST, "유효하지 않은 값이 입력되었습니다."),
     DUPLICATED_DATE_EXCEPTION(HttpStatus.BAD_REQUEST, "중복 입력된 날짜가 있습니다."),
     DUPLICATED_TIME_EXCEPTION(HttpStatus.BAD_REQUEST, "중복 입력된 시간이 있습니다."),
     INVALID_TIME_RANGE(HttpStatus.BAD_REQUEST, "입력한 시간이 회의 가능 일시에 해당하지 않습니다."),
     INVALID_JSON_INPUT_EXCEPTION(HttpStatus.BAD_REQUEST, "입력 형식이 맞지 않습니다."),
     INVALID_TOKEN_EXCEPTION(HttpStatus.BAD_REQUEST, "유효하지 않은 토큰을 입력했습니다."),
     BAD_REQUEST_EXCEPTION(HttpStatus.BAD_REQUEST, "잘못된 요청이 있습니다."),
-    INVALID_DATE_FORMAT_EXCEPTION(HttpStatus.BAD_REQUEST, "유요하지 않은 날짜를 입력했습니다."),
+    INVALID_DATE_FORMAT_EXCEPTION(HttpStatus.BAD_REQUEST, "유효하지 않은 날짜를 입력했습니다."),
+    // user
+    USERNAME_NOT_NULL_EXCEPTION(HttpStatus.BAD_REQUEST, "사용자 이름에는 null이 들어올 수 없습니다."),
+    USERNAME_NOT_BLANK_EXCEPTION(HttpStatus.BAD_REQUEST, "사용자 이름에는 빈 값이 들어올 수 없습니다."),
+    USERNAME_TOO_LONG_EXCEPTION(HttpStatus.BAD_REQUEST, "사용자 이름의 최대 입력 길이(8자)를 초과했습니다."),
     /**
      * 401 UNAUTHORIZED
      **/
@@ -53,7 +58,7 @@ public enum Error {
      * 409 CONFLICT
      */
     MEETING_VALIDATION_FAILED_EXCEPTION(HttpStatus.CONFLICT, "이미 확정된 회의입니다."),
-    HOST_TIME_EXIST_EXCEPTION(HttpStatus.CONFLICT, "이미 방장의 회의 가능시간이 이미 존재합니다."),
+    HOST_TIME_EXIST_EXCEPTION(HttpStatus.CONFLICT, "이미 가능 시간 입력을 마쳤습니다."),
     /*
     * 429 TOO MANY REQUEST
      */

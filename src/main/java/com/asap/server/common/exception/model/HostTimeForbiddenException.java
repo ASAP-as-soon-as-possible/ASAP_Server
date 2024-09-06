@@ -1,14 +1,13 @@
 package com.asap.server.common.exception.model;
 
-import com.asap.server.presentation.controller.dto.response.HostLoginResponseDto;
 import com.asap.server.common.exception.Error;
 import lombok.Getter;
 
 @Getter
 public class HostTimeForbiddenException extends AsapException {
-    private final HostLoginResponseDto data;
+    private final String data;
 
-    public HostTimeForbiddenException(Error error, HostLoginResponseDto data) {
+    public HostTimeForbiddenException(final Error error, final String data) {
         super(error);
         this.data = data;
     }

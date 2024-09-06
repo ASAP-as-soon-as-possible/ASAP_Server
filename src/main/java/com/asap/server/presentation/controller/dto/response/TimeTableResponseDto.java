@@ -1,17 +1,17 @@
 package com.asap.server.presentation.controller.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
-
+import com.asap.server.service.time.dto.retrieve.TimeTableRetrieveDto;
 import java.util.List;
-@Getter
-@Builder
-@ToString
-@AllArgsConstructor
-public class TimeTableResponseDto {
-    public int memberCount;
-    public List<String> totalUserNames;
-    private List<AvailableDatesDto> availableDateTimes;
+
+public record TimeTableResponseDto(
+        int memberCount,
+        List<String> totalUserNames,
+        List<AvailableDatesDto> availableDateTimes
+) {
+    public static TimeTableResponseDto of(final TimeTableRetrieveDto retrieveDto) {
+        return new TimeTableResponseDto(
+                retrieveDto.memberCount(),
+                retrieveDto.totalUserNames(),
+                AvailableDatesDto.of(retrieveDto.availableDateTimes()));
+    }
 }

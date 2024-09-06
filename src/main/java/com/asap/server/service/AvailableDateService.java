@@ -1,15 +1,13 @@
 package com.asap.server.service;
 
-import com.asap.server.common.utils.DateUtil;
-import com.asap.server.presentation.controller.dto.response.AvailableDateResponseDto;
-import com.asap.server.presentation.controller.dto.response.AvailableDatesDto;
-import com.asap.server.presentation.controller.dto.response.TimeSlotDto;
-import com.asap.server.persistence.domain.AvailableDate;
-import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.common.exception.Error;
 import com.asap.server.common.exception.model.BadRequestException;
 import com.asap.server.common.exception.model.NotFoundException;
+import com.asap.server.common.utils.DateUtil;
+import com.asap.server.persistence.domain.AvailableDate;
+import com.asap.server.persistence.domain.Meeting;
 import com.asap.server.persistence.repository.AvailableDateRepository;
+import com.asap.server.presentation.controller.dto.response.AvailableDateResponseDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +21,6 @@ public class AvailableDateService {
     private static final int DAY_ELEMENT_INDEX = 2;
 
     private final AvailableDateRepository availableDateRepository;
-    private final TimeBlockService timeBlockService;
-    private final TimeBlockUserService timeBlockUserService;
 
 
     public List<AvailableDateResponseDto> getAvailableDates(final Meeting meeting) {
@@ -46,29 +42,6 @@ public class AvailableDateService {
         if (availableDates.isEmpty()) throw new NotFoundException(Error.AVAILABLE_DATE_NOT_FOUND_EXCEPTION);
 
         return availableDates;
-    }
-
-    public AvailableDatesDto getAvailableDatesDto(final AvailableDate availableDate, final int memberCount) {
-        List<TimeSlotDto> timeSlotDtos = timeBlockService.findByAvailableDate(availableDate).stream().map(
-                timeBlock -> timeBlockUserService.getTimeSlotDto(timeBlock, memberCount)
-        ).collect(Collectors.toList());
-
-        return AvailableDatesDto.builder()
-                .timeSlots(timeSlotDtos)
-                .month(DateUtil.getMonth(availableDate.getDate()))
-                .day(DateUtil.getDay(availableDate.getDate()))
-                .dayOfWeek(DateUtil.getDayOfWeek(availableDate.getDate()))
-                .build();
-    }
-
-    ;
-
-    public AvailableDate findByMeetingAndDate(final Meeting meeting,
-                                              final String month,
-                                              final String day) {
-        return availableDateRepository.findByMeetingAndDate(meeting,
-                        DateUtil.transformLocalDate(month, day))
-                .orElseThrow(() -> new NotFoundException(Error.AVAILABLE_DATE_NOT_FOUND_EXCEPTION));
     }
 
     private List<AvailableDate> findAvailableDates(final Meeting meeting) {
