@@ -8,7 +8,7 @@ import java.util.Locale;
 
 public class DateUtil {
     public static LocalDate transformLocalDate(final String month, final String day) {
-        return LocalDate.of(2024, Integer.parseInt(month), Integer.parseInt(day));
+        return LocalDate.of(2025, Integer.parseInt(month), Integer.parseInt(day));
     }
 
     public static String getMonth(final LocalDate localDate) {
