@@ -11,12 +11,10 @@
     </springProfile>
 
     <springProfile name="!local">
-        <include resource="file-info-appender.xml"/>
-        <include resource="file-error-appender.xml"/>
+        <include resource="prod-rolling-file-appender.xml"/>
 
         <root level="INFO">
-            <appender-ref ref="FILE-INFO"/>
-            <appender-ref ref="FILE-ERROR"/>
+            <appender-ref ref="ROLLING-FILE-LOGGING"/>
         </root>
     </springProfile>
 
