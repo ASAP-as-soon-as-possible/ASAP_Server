@@ -1,7 +1,7 @@
 <configuration>
     <timestamp key="BY_DATE" datePattern="yyyy-MM-dd"/>
     <property name="LOG_PATTERN"
-              value="[%d{yyyy-MM-dd'T'HH:mm:ss}:%-4relative] %green([%thread]) %highlight(%-5level) %boldWhite([%C.%M:%yellow(%L)]) - %msg%n"/>
+              value="[%d{yyyy-MM-dd'T'HH:mm:ss}:%-4relative] - [%X{traceId}] %green([%thread]) %highlight(%-5level) %boldWhite([%C.%M:%yellow(%L)]) - %msg%n"/>
     <springProfile name="local">
         <include resource="console-appender.xml"/>
 
@@ -11,12 +11,10 @@
     </springProfile>
 
     <springProfile name="!local">
-        <include resource="file-info-appender.xml"/>
-        <include resource="file-error-appender.xml"/>
+        <include resource="prod-rolling-file-appender.xml"/>
 
         <root level="INFO">
-            <appender-ref ref="FILE-INFO"/>
-            <appender-ref ref="FILE-ERROR"/>
+            <appender-ref ref="ROLLING-FILE-LOGGING"/>
         </root>
     </springProfile>
 

@@ -170,7 +170,6 @@ public class ControllerExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     protected ErrorResponse handleException(final Exception error, final HttpServletRequest request) throws IOException {
-        log.error("================================================NEW===============================================");
         log.error(error.getMessage(), error);
         slackUtil.sendAlert(error, request);
         return ErrorResponse.error(Error.INTERNAL_SERVER_ERROR);
