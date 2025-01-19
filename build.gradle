@@ -38,6 +38,9 @@ repositories {
 dependencies {
     implementation "org.redisson:redisson:3.29.0"
 
+    // p6spy
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.10.0'
+
     // QueryDSL Implementation
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"

@@ -1,6 +1,6 @@
 package com.asap.server.presentation.config;
 
-import com.asap.server.presentation.config.interceptor.DuplicatedInterceptor;
+import com.asap.server.presentation.config.duplicate.DuplicatedInterceptor;
 import com.asap.server.presentation.config.resolver.meeting.MeetingPathVariableResolver;
 import com.asap.server.presentation.config.resolver.user.UserIdResolver;
 import lombok.RequiredArgsConstructor;

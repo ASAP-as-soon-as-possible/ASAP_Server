@@ -1,16 +1,15 @@
-package com.asap.server.presentation.common.wrapper;
+package com.asap.server.presentation.config.duplicate;
 
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
-import lombok.Getter;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import lombok.Getter;
 
 @Getter
 public class CustomHttpServletRequestWrapper extends HttpServletRequestWrapper {
